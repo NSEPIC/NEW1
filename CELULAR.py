@@ -33,23 +33,28 @@ from A_import import *
 #********************************            ██   ██
 #********************************            ███████
 
-# Frame Contenedor de los botones: Ash y Gear
-class A1FrameCls(Frame):
-    def __init__(self, master, *args, **kwargs):
+# TAREAS:
+#_______1- Gestiona la Interface Inamovible: (Logo y Engranaje)
+
+class Container1Cls(Frame):
+    def __init__(self, master, icon_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
-        
-        self.initializer_images()
+
+        #____Colección de Imágenes:
+        self.icon_lst = icon_lst
+
+        #____Métodos Llamados:
         self.create_buttons()
 
-    # Tarea: 1- Crea los botones:
+
     def create_buttons(self):
         # [self.btn_logotipo] : Logo
         # [self.btn_settings] : Engranaje
 
-        #____BOTONES: ( 2 )
-        self.btn_logotipo = Button(self, image=self.image_ash, bg='#11161d', bd=0, activebackground='#11161d',
+        #____BOTONES: 2 ( Logotipo - Settings )
+        self.btn_logotipo = Button(self, image=self.icon_lst[0], bg='#11161d', bd=0, activebackground='#11161d',
                                    command=self.minimize_windows)
-        self.btn_settings = Button(self, image=self.image_gear1, bg='#11161d', bd=0, activebackground='#11161d',
+        self.btn_settings = Button(self, image=self.icon_lst[1], bg='#11161d', bd=0, activebackground='#11161d',
                                    command=self.master.gear_stacking)
                          
         #____Posicionamiento:
@@ -58,8 +63,8 @@ class A1FrameCls(Frame):
 
         #____Eventos:
         self.btn_logotipo .bind('<Double-Button-3>', self.close_windows)  # Cierra Toplevel Secundarias
-        self.btn_settings .bind('<Enter>', self.change_image_gear1)
-        self.btn_settings .bind('<Leave>', self.change_image_gear2)
+        self.btn_settings .bind('<Enter>', self.enter_mouse_settings)
+        self.btn_settings .bind('<Leave>', self.leave_mouse_settings)
 
 
     # Tarea: 1- Cierra las ventanas secundarias:
@@ -122,23 +127,13 @@ class A1FrameCls(Frame):
                 self.master._minimize = False
    
 
-    # Cambia la imagen al pasar el mouse sobre el boton:
-    def change_image_gear1(self, event):   
-        event.widget.config(image=self.image_gear2) 
+    def enter_mouse_settings(self, event):
+        # Entrada del mouse sobre el boton (Imagen: change)
+        event.widget.config(image=self.icon_lst[2]) 
 
-    # Deja la imagen que estaba por defecto:
-    def change_image_gear2(self, event):
-        event.widget.config(image=self.image_gear1)
-
-    
-    def initializer_images(self):
-        ash = Image.open('E:/1-RICHI/MovilesDB/SubList__00.jpg')
-        gear1 = Image.open('E:/1-RICHI/MovilesDB/SubList__01.jpg')
-        gear2 = Image.open('E:/1-RICHI/MovilesDB/SubList__03.jpg')
-        
-        self.image_ash = ImageTk.PhotoImage(ash)
-        self.image_gear1 = ImageTk.PhotoImage(gear1)
-        self.image_gear2 = ImageTk.PhotoImage(gear2)
+    def leave_mouse_settings(self, event):
+        # Salida del mouse sobre el boton (Imagen: default)
+        event.widget.config(image=self.icon_lst[1])
 
 
 #********************************        ██████████████
@@ -153,8 +148,9 @@ class A1FrameCls(Frame):
 #********************************        ██          ██
 #********************************        ██████████████
 
-# Se encarga de:
-# 1- Servir de molde para crear los botones con la configuacion que se desea
+# TAREAS:
+#_______1- Crea Botones con una configuracion ya establecida: (22 Botones)
+
 class DefaultButtonCls(Button):
     def __init__(self, master, *args, **kwargs):
         kwargs = {"font":('Calibri',9,'bold'), 'bg': '#11161d', 'fg':'white', 'activebackground':'#bdfe04', 'width':10, 'bd':0, **kwargs}
@@ -173,9 +169,10 @@ class DefaultButtonCls(Button):
 #********************************        ██          ██
 #********************************        ██████████████
 
-# Se encarga de:
-# 1- Crear los 22 botones
-# 2- Abrir las Ventanas Secundarias con los indices que se indican
+# TAREAS:
+#_______1- Crear los 22 botones
+#_______2- Abrir las Ventanas Secundarias
+
 class B1FrameCls(Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
@@ -393,11 +390,11 @@ class B2FrameCls(Frame):
 
 # Frame Contenedor de Spinbox y Listbox
 class B3FrameCls(Frame):
-    def __init__(self, master, path_lst,  *args, **kwargs):
+    def __init__(self, master, mini_lst,  *args, **kwargs):
         super().__init__(master, *args, kwargs)
 
         #_____Coleccion de imagenes  
-        self.Miniatures = path_lst
+        self.Miniatures = mini_lst
 
         #_____C O N T E N E D O R E S:   [ 2 ]
         self.frame_1 = Frame (self, bg='#31343a', width=116, height=67)    # Color: Plomo       
@@ -1280,16 +1277,11 @@ class RootCls(Tk):
         # [ 1 ] self.toplevel_principal  : Toplevel: Ventana principal
         # [ 2 ] self.frame_interface     : Frame: Interface de control
 
-        # Posicion de los botones "X" y "-"
-        arg1 = ({'side':TOP, 'pady':(0,6)},{'side':BOTTOM, 'pady':0})       
-        # Posicion del frame contenedor de los botones "X" y "-"
-        arg2 = {'side':RIGHT, 'fill':BOTH}
-
         #____VENTANA PRINCIPAL: ( 2 instancias )
         self.toplevel_principal = ToplevelCls(self, arg1, arg2, self.icon_lst)
         self.toplevel_principal .create_frame_manager(side=RIGHT, fill=BOTH)
 
-        self.frame_interface    = InterfazCls(self.toplevel_principal, self.main_lst, self.mini_lst)
+        self.frame_interface    = InterfazCls(self.toplevel_principal, self.main_lst, self.mini_lst, self.icon_lst[2])
 
         #____Posicionamiento:
         self.frame_interface .pack(side=RIGHT, fill=BOTH)
@@ -1302,7 +1294,7 @@ class RootCls(Tk):
         self.toplevel_principal.deiconify()
 
 
-    # Tarea: 1- Inicializa las imagenes que se mandan a las ventanas
+    # Tarea: 1- Inicializa las imagenes
     def generate_list(self, file, option):
 
         ouput = os.listdir(file)
@@ -1365,13 +1357,14 @@ class RootCls(Tk):
 #_______2- Gestiona toda la aplicacion
 
 class InterfazCls(Frame, MoveAllCls):
-    def __init__(self, master=None, main_lst=None, mini_lst=None, *args, **kwargs):
+    def __init__(self, master=None, main_lst=None, mini_lst=None, icon_lst=None, *args, **kwargs):
         Frame.__init__(self, master, *args, **kwargs)
         MoveAllCls.__init__(self)   # Inicializando las variables de control
 
         #____Coleccion de Imagenes:
         self.main_lst = main_lst
         self.mini_lst = mini_lst
+        self.icon_lst = icon_lst
 
         #____Variables de Control de Tamaño y Posición de Todas las Ventanas:
         self.geo_principal = StringVar()
@@ -1486,10 +1479,10 @@ class InterfazCls(Frame, MoveAllCls):
         # [ 4 ] self.frame_listmode   : Spinbox y Listbox
 
         #____INTERFACES DE CONTROL: ( 4 instancias )
-        self.frame_static     = A1FrameCls(self, bg='#11161d', width=60, height=67)    # Posicionado     # Color: Azul
-        self.frame_botones    = B1FrameCls(self, bg='#31343a', width=756, height=67)   # Posicionado     # Color: Plomo
-        self.frame_configurer = B2FrameCls(self, bg='#31343a', width=756, height=67)   # No posicionado  # Color: Plomo
-        self.frame_listmode   = B3FrameCls(self, self.mini_lst)                       # No posicionado  # Color: Azul y Plomo
+        self.frame_static     = A1FrameCls(self, self.icon_lst, bg='#11161d', width=60, height=67)    # Posicionado     # Color: Azul
+        self.frame_botones    = B1FrameCls(self, bg='#31343a', width=756, height=67)                  # Posicionado     # Color: Plomo
+        self.frame_configurer = B2FrameCls(self, bg='#31343a', width=756, height=67)                  # No posicionado  # Color: Plomo
+        self.frame_listmode   = B3FrameCls(self, self.mini_lst)                                       # No posicionado  # Color: Azul y Plomo
          
         #____Posicionamiento:
         self.frame_static .pack(side=LEFT, fill=BOTH)
