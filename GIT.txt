@@ -1,0 +1,39 @@
+Git add con un punto.    es para agregar todo
+Git log --oneline para ver los comit resumidos
+Git config --global user.name ""
+Git config --global user.email "" sin el nombre , devuelve el actual
+Git commit -m "descripción"
+Git diff para ver diferencias
+Git restore --staged _____=nombre del archivo.   
+Este restore    devuelve el archivo al área de trabajo, no tiene que estar comiteado
+Git restore ___= nombre d/a siempre con su extensiom ,restaura los cambios
+hechos en el archivo específico y si le agregas un punto restablece los cambios de todos, pero no tienen que estar comiteados
+Git checkout ___= id del commit ejm: jdh3737 ,este es para moverse entre los commit
+Git checkout máster  te establece en el último commit creado
+Git diff ____ _____ == id,s de los comit  te da la diferencia entre dos commit
+Ramas:
+Git branch.    Te devuelve todas las ramas creadas y donde estás ubicado
+Git branch ____ = nombre de una nueva rama para crearla
+Git checkout ____= nombre de la rama  ala q deseamos movernos
+Git switch ___= nombre de la rama ala que deseamos movernos
+Git merge___= nombre de la rama que deseamos unir a nuestra rama , tienes q posicionarte en la rama que máster, dependiendo
+Git log --oneline --graph.   Te da un diagrama de los comit creados con distintas ramas
+
+Git remote.     Para ver los remotos locales que tienes
+Git remote add ____ = nombre del remoto usualmente es "origin" sin comillas ,luego la ___= url del remoto ejm: http/github..../xx.git   Para agregar un remoto
+Git remote remove ______= nombre del remoto   / Elimina el remoto en cuestion
+Git push origin master.  Origin es el nombre del remoto, puede ser cualquiera y máster es la rama de los comit que quieres subir al repositorio, puede ser otra rama no importa la sube al mismo remoto osea irigin
+Git pull origin master  Baja los archivos creados a tu IDE
+
+PIP
+
+pip freeze  listar modulos instalados con pip creo
+
+GIT
+
+pwd : para ver en q ruta de nuestro sistema está ubicado nuestro terminal
+
+
+CONFIGURACION terminal
+"terminal.integrated.automatiomSehll.window":
+    "C:\\Program Files\\Git\bin\\bash.exe"
