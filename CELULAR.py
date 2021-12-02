@@ -1039,12 +1039,14 @@ class FrameManagerCls(Frame):
 
     def create_buttons(self):
         self.update_idletasks()
-        t = self.winfo_name()
+        yy = self.winfo_toplevel().winfo_reqheight()
+        xx = self.winfo_toplevel().winfo_reqwidth()
+
         y = self.winfo_reqheight()
         x = self.winfo_reqwidth()
 
         f = self.master.master.winfo_name()
-        print('nombre:', t)
+        print('toplevel es:', yy, 'x', xx)
         print('alto:',y,'   ancho:',x )
 
         #____Posicion de los botones: ( PRINCIPAL )
