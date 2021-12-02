@@ -3,13 +3,13 @@ from A_import import *
 #from B_Frames import *
 
 
-# INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE: eeeeee
+# INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
 
-# [ 1 ]  : A1FrameCls         : Botones: Ash y Gear                       : ( Frame )
+# [ 1 ]  : LogotipoCls        : Botones: Ash y Gear                       : ( Frame )
 # [ 2 ]  : DefaultButtonCls   : Opciones default para los 22 botones      : ( Button )
-# [ 3 ]  : B1FrameCl          : Botones: 22                               : ( Frame )
-# [ 4 ]  : B2FrameCls         : Labels y Checkbuttons                     : ( Frame )
-# [ 5 ]  : B3FrameCls         : Spinbox y Listbox                         : ( Frame )
+# [ 3 ]  : ModeButtonsCls     : Botones: 22                               : ( Frame )
+# [ 4 ]  : ModeConfigurerCls  : Labels y Checkbuttons                     : ( Frame )
+# [ 5 ]  : ModeListCls        : Spinbox y Listbox                         : ( Frame )
 # [ 6 ]  : Checkbutton_class  : Sin uso eficiente                         : ( Checkbutton )
 # [ 7 ]  : ResizeCls          : Redimensiona Imagenes                     : ( Frame )
 # [ 8 ]  : TopIzqCls          : Ventana Izquierda                         : ( Frame )
@@ -36,12 +36,12 @@ from A_import import *
 # TAREAS:
 #_______1- Gestiona la Interface Inamovible: (Logo y Engranaje)
 
-class Container1Cls(Frame):
-    def __init__(self, master, icon_lst=None, *args, **kwargs):
+class LogotipoCls(Frame):
+    def __init__(self, master, ico3_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
 
         #____Colección de Imágenes:
-        self.icon_lst = icon_lst
+        self.ico3_lst = ico3_lst
 
         #____Métodos Llamados:
         self.create_buttons()
@@ -52,9 +52,9 @@ class Container1Cls(Frame):
         # [self.btn_settings] : Engranaje
 
         #____BOTONES: 2 ( Logotipo - Settings )
-        self.btn_logotipo = Button(self, image=self.icon_lst[0], bg='#11161d', bd=0, activebackground='#11161d',
+        self.btn_logotipo = Button(self, image=self.ico3_lst[0], bg='#11161d', bd=0, activebackground='#11161d',
                                    command=self.minimize_windows)
-        self.btn_settings = Button(self, image=self.icon_lst[1], bg='#11161d', bd=0, activebackground='#11161d',
+        self.btn_settings = Button(self, image=self.ico3_lst[1], bg='#11161d', bd=0, activebackground='#11161d',
                                    command=self.master.gear_stacking)
                          
         #____Posicionamiento:
@@ -129,11 +129,11 @@ class Container1Cls(Frame):
 
     def enter_mouse_settings(self, event):
         # Entrada del mouse sobre el boton (Imagen: change)
-        event.widget.config(image=self.icon_lst[2]) 
+        event.widget.config(image=self.ico3_lst[2]) 
 
     def leave_mouse_settings(self, event):
         # Salida del mouse sobre el boton (Imagen: default)
-        event.widget.config(image=self.icon_lst[1])
+        event.widget.config(image=self.ico3_lst[1])
 
 
 #********************************        ██████████████
@@ -173,7 +173,7 @@ class DefaultButtonCls(Button):
 #_______1- Crear los 22 botones
 #_______2- Abrir las Ventanas Secundarias
 
-class B1FrameCls(Frame):
+class ModeButtonsCls(Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         #_____C O N T E N E D O R E S:   [ 1 ]
@@ -193,9 +193,9 @@ class B1FrameCls(Frame):
         arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, = 0, 1, 2, 3, 4, 5, 6, 7 
 
         return  lambda: self.master.windows_123(
-                lambda top1: TopIzqCls  (top1, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.path_lst, self.master.path_mini),
-                lambda top2: TopDerCls  (top2, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.path_lst, self.master.path_mini),
-                lambda top3: TopStufCls (top3, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.path_lst, self.master.path_mini), indice)
+                lambda top1: TopIzqCls  (top1, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
+                lambda top2: TopDerCls  (top2, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
+                lambda top3: TopStufCls (top3, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst), indice)
 
         
     # Crea los 22 botones y las posiciona:
@@ -317,7 +317,7 @@ class B1FrameCls(Frame):
 #********************************                ██████
 
 # Frame contenedor de checkbuttons y labels
-class B2FrameCls(Frame):
+class ModeConfigurerCls(Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, kwargs)
 
@@ -389,7 +389,7 @@ class B2FrameCls(Frame):
 #********************************        ██████████████
 
 # Frame Contenedor de Spinbox y Listbox
-class B3FrameCls(Frame):
+class ModeListCls(Frame):
     def __init__(self, master, mini_lst,  *args, **kwargs):
         super().__init__(master, *args, kwargs)
 
@@ -490,9 +490,9 @@ class B3FrameCls(Frame):
         for index, i in enumerate(self.spinbox_values):     
             if self.spinbox_variable.get() == i:            # ANTES DABA ERROR CON: self.spinboxx .!toplvel.!frame,etc
                 self.master.windows_123(
-                lambda top1: TopIzqCls  (top1, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.path_lst, self.master.path_mini),
-                lambda top2: TopDerCls  (top2, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.path_lst, self.master.path_mini),
-                lambda top3: TopStufCls (top3, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.path_lst, self.master.path_mini), index)
+                lambda top1: TopIzqCls  (top1, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
+                lambda top2: TopDerCls  (top2, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
+                lambda top3: TopStufCls (top3, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst), index)
                 break                                       # Sin breack el programa seguiria buscando coincidencias despues del enter, y guardaria un error
         
 
@@ -707,7 +707,7 @@ class IconsIzqCls(Frame):
 
 #____V E N T A N A___I Z Q U I E R D A:
 class TopIzqCls(Frame):
-    def __init__(self, master, indice, arg_0=None, arg_1=None, arg_2=None, arg_3=None, arg_4=None, arg_5=None, arg_6=None, arg_7=None, path_lst=None, path_mini=None, *args, **kwargs):
+    def __init__(self, master, indice, arg_0=None, arg_1=None, arg_2=None, arg_3=None, arg_4=None, arg_5=None, arg_6=None, arg_7=None, main_lst=None, path_mini=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
 
         # Variables de Control y Seguimiento:
@@ -729,11 +729,11 @@ class TopIzqCls(Frame):
         # POSICIONAMIENTO DE IMAGENES:    
 
         # Imagen: Delay completo del mobil
-        self.frame_image_delay_complete = ResizeCls(self, path_lst[indice][arg_0], bd=0)
+        self.frame_image_delay_complete = ResizeCls(self, main_lst[indice][arg_0], bd=0)
         self.frame_image_delay_complete       .grid(column=0, row=1, sticky='news')
 
         # Imagen: Miniatura del mobil para ayudar a medir las distancias
-        self.frame_image_mobil_tutorial = ResizeCls(self, path_lst[indice][arg_1], bd=0)
+        self.frame_image_mobil_tutorial = ResizeCls(self, main_lst[indice][arg_1], bd=0)
         self.frame_image_mobil_tutorial       .grid(column=0, row=1, sticky='news')
 
 
@@ -807,7 +807,7 @@ class TopIzqCls(Frame):
 
 #____V E N T A N A___D E R E C H A:
 class TopDerCls(Frame):
-    def __init__(self, master, indice, arg_0=None, arg_1=None, arg_2=None, arg_3=None, arg_4=None, arg_5=None, arg_6=None, arg_7=None, path_lst=None, path_mine=None, *args, **kwargs):
+    def __init__(self, master, indice, arg_0=None, arg_1=None, arg_2=None, arg_3=None, arg_4=None, arg_5=None, arg_6=None, arg_7=None, main_lst=None, path_mine=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         # Variables de Control para mostrar la imagen del angulo 77:
         self.x1 = 0
@@ -816,12 +816,12 @@ class TopDerCls(Frame):
         self.y2 = 100
 
         # Imagen: Base inicial del mobil:
-        self.frame_image_base_initial = ResizeCls (self, path_lst [indice][arg_2], bd=0)
+        self.frame_image_base_initial = ResizeCls (self, main_lst [indice][arg_2], bd=0)
         self.frame_image_base_initial       .grid (column=0, row=0, sticky='news')
         self.frame_image_base_initial       .grid_propagate(0)
 
         # Imagen: Base 77 del mobil:
-        self.frame_image_base_77      = ResizeCls (self, path_lst [indice][arg_3], bd=0)
+        self.frame_image_base_77      = ResizeCls (self, main_lst [indice][arg_3], bd=0)
         self.frame_image_base_77            .grid(column=0, row=0, sticky='news')                  # [ NO POSICIONADO ]
 
         # Texto: "Haga click" para mostrar el angulo 77" :  -->  Cambia la imagen a la base 77 del mobil:
@@ -927,7 +927,7 @@ class TopDerCls(Frame):
 
 #____V E N T A N A___S T U F:
 class TopStufCls(Frame):
-    def __init__(self, master, indice, arg_0=None, arg_1=None, arg_2=None, arg_3=None, arg_4=None, arg_5=None, arg_6=None, arg_7=None, path_lst=None, path_mine=None, *args, **kwargs):
+    def __init__(self, master, indice, arg_0=None, arg_1=None, arg_2=None, arg_3=None, arg_4=None, arg_5=None, arg_6=None, arg_7=None, main_lst=None, path_mine=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         pass
         
@@ -1027,19 +1027,25 @@ class MoveAllCls():
 #************************            ███████    ██████████████
 
 class FrameManagerCls(Frame):
-    def __init__(self, master=None, icon_lst=None, listmode=None, *args, **kwargs):
+    def __init__(self, master=None, ico1_lst=None, listmode=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
-        self.listmode = listmode
-        self.icon_lst = icon_lst
-        print(self.listmode)
+        self.listmode = [1,2]
+        #self.listmode = listmode
+        self.ico1_lst = ico1_lst
 
         #___Métodos Llamados:
         self.create_buttons()
 
 
     def create_buttons(self):
-        y = self.master.winfo_reqheight()
-        x = self.master.winfo_reqwidth()
+        self.update_idletasks()
+        t = self.winfo_name()
+        y = self.winfo_reqheight()
+        x = self.winfo_reqwidth()
+
+        f = self.master.master.winfo_name()
+        print('nombre:', t)
+        print('alto:',y,'   ancho:',x )
 
         #____Posicion de los botones: ( PRINCIPAL )
         close1 = {'side':TOP, 'pady':(0,6)}                   
@@ -1050,12 +1056,12 @@ class FrameManagerCls(Frame):
         minimize2 = {'side':RIGHT, 'padx':(2,10), 'pady':(0)}
 
         #____BOTONES: 2 ( Cerrar - Minimizar )
-        self.button_close = Button(self, image=self.icon_lst[0], command=self.close, bd=0, bg='#1d2126', activebackground='black')
-        self.button_minimize = Button(self, image=self.icon_lst[1], command=self.minimize, bd=0, bg='#1d2126', activebackground='black')
+        self.button_close = Button(self, image=self.ico1_lst[0], command=self.close, bd=0, bg='#1d2126', activebackground='black')
+        self.button_minimize = Button(self, image=self.ico1_lst[1], command=self.minimize, bd=0, bg='#1d2126', activebackground='black')
 
         #____Posicionamiento:
-        self.button_close .pack(close1 if y > x == True else close2)
-        self.button_minimize .pack(minimize1 if y > x == True else minimize2)
+        self.button_close .pack(close1 if y >= x  else close2)
+        self.button_minimize .pack(minimize1 if y >= x else minimize2)
 
         #____Enlaces: Cambian la imagen de los botones
         self.button_close.bind("<Enter>", self.enter_mouse_close)
@@ -1067,19 +1073,19 @@ class FrameManagerCls(Frame):
 
     def enter_mouse_close(self, event):
         # Entrada del mouse sobre el boton (Imagen: change)
-        event.widget.config(image=self.icon_lst[2], bg='red')
+        event.widget.config(image=self.ico1_lst[2], bg='red')
 
     def leave_mouse_close(self, event):
         # Salida del mouse sobre el boton (Imagen: default)
-        event.widget.config(image=self.icon_lst[0], bg='#1d2126')
+        event.widget.config(image=self.ico1_lst[0], bg='#1d2126')
 
     def enter_mouse_minimize(self, event):
         # Entrada del mouse sobre el boton (Imagen: change)
-        event.widget.config(image=self.icon_lst[3], bg='#4ca6ff')
+        event.widget.config(image=self.ico1_lst[3], bg='#4ca6ff')
 
     def leave_mouse_minimize(self, event):
         # Salida del mouse sobre el boton (Imagen: default)
-        event.widget.config(image=self.icon_lst[1], bg='#1d2126')
+        event.widget.config(image=self.ico1_lst[1], bg='#1d2126')
 
 
     def close(self):     # SOLUCIONAR SI QUEDAN PROCESOS ABIERTOS POR USO INADECUADO DE QUIT()
@@ -1120,10 +1126,12 @@ class FrameManagerCls(Frame):
 #************************            ███████    ██████████████
 
 class ToplevelCls(Toplevel):
-    def __init__(self, master=None, icon_lst=None, *args, **kwargs):
+    def __init__(self, master=None, ico1_lst=None, ico2_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+        self.arg1 = [1,2,3,4]
         self.overrideredirect(True)
-        self.icon_lst = icon_lst
+        self.ico1_lst = ico1_lst
+        self.ico2_lst = ico2_lst
 
         self._x = 0
         self._y = 0
@@ -1131,11 +1139,11 @@ class ToplevelCls(Toplevel):
         #___Metodos Llamados: 0
 
 
-    def create_frame_manager(self, *position):
-        # [ 1 ] self.frame_manager  : Frame(contenedor): Botones:[X] y [-]
+    def create_frame_manager(self, **position):
+        # [ 1 ] self.frame_manager  : Frame(contenedor):  Botones: [X] [-]
 
         #____GESTOR DE VENTANA: ( 1 instancia )
-        self.frame_manager = FrameManagerCls(self, self.icon_lst[0], bg="#1d2126")
+        self.frame_manager = FrameManagerCls(self, self.ico1_lst, bg="#1d2126", height=2)
         self.frame_manager .pack(position)
 
         #____Enlaces: Mueven la ventana
@@ -1143,7 +1151,7 @@ class ToplevelCls(Toplevel):
         self.frame_manager .bind("<ButtonRelease-1>", self.stop_move)
         self.frame_manager .bind("<B1-Motion>", self.on_move)
 
-        if len(self.arg1) < 3:  # Toplevel Secundarias
+        if not isinstance(self.master.winfo_toplevel(), Tk):  # Toplevel Secundarias
             self.frame_manager .bind("<Map>",self.mapped_manager)
 
         #self.master .bind("<Map>", self.deiconify_1)                       # Estado: Inactivo, esta definido en Root_class: (Solo sirve para root)
@@ -1163,7 +1171,7 @@ class ToplevelCls(Toplevel):
 
     def create_button_menu(self, metodo=None):
         #____BOTONES: 1 ( Menu )
-        self.button_menu = Button(self.frame_manager, image=self.icon_lst[1][0], command=metodo, bg="green", bd=0)   
+        self.button_menu = Button(self.frame_manager, image=self.ico2_lst[0], command=metodo, bg="green", bd=0)   
         self.button_menu .pack(side=LEFT)
 
         #____Enlaces: Cambian la imagen del boton menu
@@ -1174,20 +1182,20 @@ class ToplevelCls(Toplevel):
 
     def enter_mouse_menu(self, event):
         # Entrada del mouse sobre el boton (Imagen: change)
-        event.widget .config(image=self.icon_lst[1][1])
+        event.widget .config(image=self.ico2_lst[1])
 
     def leave_mouse_menu(self, event):
         # Salida del mouse sobre el boton (Imagen: default)
-        event.widget .config(image=self.icon_lst[1][0])
+        event.widget .config(image=self.ico2_lst[0])
 
     def press_mouse_menu(self, event):
         # Botón presionado (Imagen: change)
         self.button_press = event.widget
-        self.button_press .config(image=self.icon_lst[1][2])
+        self.button_press .config(image=self.ico2_lst[2])
 
     def release_mouse_menu(self, event):
         # Botón soltado (Imagen: default) $$-$$$
-        self.button_press .config(image=self.icon_lst[1][1])
+        self.button_press .config(image=self.ico2_lst[1])
 
 
     #def open_
@@ -1214,8 +1222,9 @@ class ToplevelCls(Toplevel):
         new_position = "+{}+{}".format(self.winfo_x() + deltax, self.winfo_y() + deltay)
         self.geometry(new_position)                 # Mueve todas las ventanas en general menos root
 
-        if len(self.arg1) < 3:                      # Default
-            self.master.geometry(new_position)      # Mueve la ventana root
+        #Dice: Si el padre de la ventana es una instancia de Tk():
+        if isinstance(self.master.winfo_toplevel(), Tk):     
+            self.master.geometry(new_position)                       # Mueve la ventana root
 
 
     def configure_toplevel(self, title, size):  # Opciones de las Ventanas Secundarias
@@ -1256,8 +1265,7 @@ class RootCls(Tk):
         #____Coleccion de Imagenes:
         self.main_lst = self.generate_list (path, 1)
         self.mini_lst = self.generate_list (path, 2)
-        self.icon_lst = self.generate_list (path, 3)
-
+        self.ico1_lst,  self.ico2_lst, self.ico3_lst = self.generate_list (path, 3)
 
         #____Enlaces para Minimizar y Mostrar: @@@@ver como funciona esto
         self.bind("<Map>", self.deiconify_on)  # Deiconiza Toplevel Principal
@@ -1278,10 +1286,10 @@ class RootCls(Tk):
         # [ 2 ] self.frame_interface     : Frame: Interface de control
 
         #____VENTANA PRINCIPAL: ( 2 instancias )
-        self.toplevel_principal = ToplevelCls(self, arg1, arg2, self.icon_lst)
+        self.toplevel_principal = ToplevelCls(self, self.ico1_lst, self.ico2_lst)
         self.toplevel_principal .create_frame_manager(side=RIGHT, fill=BOTH)
 
-        self.frame_interface    = InterfazCls(self.toplevel_principal, self.main_lst, self.mini_lst, self.icon_lst[2])
+        self.frame_interface    = InterfazCls(self.toplevel_principal, self.main_lst, self.mini_lst, self.ico1_lst, self.ico2_lst, self.ico3_lst)
 
         #____Posicionamiento:
         self.frame_interface .pack(side=RIGHT, fill=BOTH)
@@ -1327,7 +1335,7 @@ class RootCls(Tk):
 
         # Descripción: (3) Genera la lista de imagenes de iconos inicializadas ddd
         if option == 3:
-            multilist = [[]]*3
+            empty1, empty2, empty3 = [],[],[]
             icons = ['Ico1', 'Ico2', 'Ico3']
 
             for i in ouput:
@@ -1336,8 +1344,15 @@ class RootCls(Tk):
                         full = file + '/' + i
                         open = Image.open(full)
                         img  = ImageTk.PhotoImage(open)
-                        multilist[index] .append(img)
-            return multilist
+                        if icon in 'Ico1':
+                            empty1 .append(img)
+                        if icon in 'Ico2':
+                            empty2 .append(img)
+                        if icon in 'Ico3':
+                            empty3 .append(img) 
+            return empty1, empty2, empty3
+        
+        
 
 
 #************************            ███████    ██████████████
@@ -1357,14 +1372,16 @@ class RootCls(Tk):
 #_______2- Gestiona toda la aplicacion
 
 class InterfazCls(Frame, MoveAllCls):
-    def __init__(self, master=None, main_lst=None, mini_lst=None, icon_lst=None, *args, **kwargs):
+    def __init__(self, master=None, main_lst=None, mini_lst=None, ico1_lst=None, ico2_lst=None, ico3_lst=None, *args, **kwargs):
         Frame.__init__(self, master, *args, **kwargs)
         MoveAllCls.__init__(self)   # Inicializando las variables de control
 
         #____Coleccion de Imagenes:
         self.main_lst = main_lst
         self.mini_lst = mini_lst
-        self.icon_lst = icon_lst
+        self.ico1_lst = ico1_lst
+        self.ico2_lst = ico2_lst
+        self.ico3_lst = ico3_lst
 
         #____Variables de Control de Tamaño y Posición de Todas las Ventanas:
         self.geo_principal = StringVar()
@@ -1479,10 +1496,10 @@ class InterfazCls(Frame, MoveAllCls):
         # [ 4 ] self.frame_listmode   : Spinbox y Listbox
 
         #____INTERFACES DE CONTROL: ( 4 instancias )
-        self.frame_static     = A1FrameCls(self, self.icon_lst, bg='#11161d', width=60, height=67)    # Posicionado     # Color: Azul
-        self.frame_botones    = B1FrameCls(self, bg='#31343a', width=756, height=67)                  # Posicionado     # Color: Plomo
-        self.frame_configurer = B2FrameCls(self, bg='#31343a', width=756, height=67)                  # No posicionado  # Color: Plomo
-        self.frame_listmode   = B3FrameCls(self, self.mini_lst)                                       # No posicionado  # Color: Azul y Plomo
+        self.frame_static     = LogotipoCls(self, self.ico3_lst, bg='#11161d', width=60, height=67)    # Posicionado     # Color: Azul
+        self.frame_botones    = ModeButtonsCls(self, bg='#31343a', width=756, height=67)               # Posicionado     # Color: Plomo
+        self.frame_configurer = ModeConfigurerCls(self, bg='#31343a', width=756, height=67)            # No posicionado  # Color: Plomo
+        self.frame_listmode   = ModeListCls(self, self.mini_lst)                                       # No posicionado  # Color: Azul y Plomo
          
         #____Posicionamiento:
         self.frame_static .pack(side=LEFT, fill=BOTH)
@@ -1591,19 +1608,19 @@ class InterfazCls(Frame, MoveAllCls):
         #                                  V E N T A N A:   1
         #__________________________________________________________________________________________________________
         if not self._open_1:   # ----> Si open_1 es False:
-            self.toplevel_LEFT = ToplevelCls (self, arg1, arg2)  # AQUI no se sabe quien es el padre correcto : self o self.master
+            self.toplevel_LEFT = ToplevelCls (self, self.ico1_lst, self.ico2_lst)  # AQUI no se sabe quien es el padre correcto : self o self.master
             #____Submetodos Llamados:
             self.toplevel_LEFT .configure_toplevel('Hoja Izquierda', self.geo_izq.get())
             self.toplevel_LEFT .create_frame_manager(side=TOP, fill=BOTH)
-            self.toplevel_LEFT .create_label_title('AshmanBot: 1')
-            self.toplevel_LEFT .create_button_menu() #Metodo
+            #self.toplevel_LEFT .create_label_title('AshmanBot: 1')
+            #self.toplevel_LEFT .create_button_menu() #Metodo
             #self.toplevel_LEFT .config(bg='green2')
                                 
         container_frame_left = var_1 (self.toplevel_LEFT)  #  var_1 es un frame
 
         if self._frame_1 is not None:  
             self._frame_1 .destroy()
-            self._frame_1 .frame_container_icons .destroy() #new
+            #self._frame_1 .frame_container_icons .destroy() #new
         self._frame_1 = container_frame_left
         self._frame_1 .pack(fill='both', expand=True)
 
@@ -1611,12 +1628,12 @@ class InterfazCls(Frame, MoveAllCls):
         #                                  V E N T A N A:   2
         #__________________________________________________________________________________________________________
         if not self._open_2:
-            self.toplevel_RIGHT = ToplevelCls (self, arg1, arg2)
+            self.toplevel_RIGHT = ToplevelCls (self, self.ico1_lst, self.ico2_lst)
             #____Submetodos Llamados:
             self.toplevel_RIGHT .configure_toplevel ('Hoja Derecha', self.geo_der.get())
             self.toplevel_LEFT .create_frame_manager(side=TOP, fill=BOTH)
-            self.toplevel_LEFT .create_label_title('AshmanBot: 2')
-            self.toplevel_LEFT .create_button_menu() #Metodo
+            #self.toplevel_LEFT .create_label_title('AshmanBot: 2')
+            #self.toplevel_LEFT .create_button_menu() #Metodo
 
         container_frame_right = var_2 (self.toplevel_RIGHT) 
 
@@ -1630,12 +1647,12 @@ class InterfazCls(Frame, MoveAllCls):
         #                                  V E N T A N A:   3
         #__________________________________________________________________________________________________________
         if not self._open_3:
-            self.toplevel_STUF = ToplevelCls (self, arg1, arg2)
+            self.toplevel_STUF = ToplevelCls (self, self.ico1_lst, self.ico2_lst)
             #____Submetodos Llamados:
             self.toplevel_STUF .configure_toplevel ('Game Stuff', self.geo_stuf.get())
             self.toplevel_LEFT .create_frame_manager(side=TOP, fill=BOTH)
-            self.toplevel_LEFT .create_label_title('AshmanBot: 3')
-            self.toplevel_LEFT .create_button_menu() #Metodo
+            #self.toplevel_LEFT .create_label_title('AshmanBot: 3')
+            #self.toplevel_LEFT .create_button_menu() #Metodo
 
         container_frame_stuf = var_3 (self.toplevel_STUF) 
 
@@ -1684,13 +1701,13 @@ class InterfazCls(Frame, MoveAllCls):
         if isinstance(event.widget, Toplevel):
             if number == 1:
                 self._open_1 = False
-                self.toplevel_LEFT.destroy()
+                #self.toplevel_LEFT.destroy()
             if number == 2:
                 self._open_2 = False
-                self.toplevel_RIGHT.destroy()
+                #self.toplevel_RIGHT.destroy()
             if number == 3: 
                 self._open_3 = False
-                self.toplevel_STUF.destroy()
+                #self.toplevel_STUF.destroy()
 
             if not self._open_1 == True and not self._open_2 == True and not self._open_3:
                 try:  # Esto se ejecuta ademas de la condicion, cuando cierra de emproviso la aplicacion con ventanas secundarias. abiertas
