@@ -3,7 +3,7 @@ from A_import import *
 #from B_Frames import *
 
 
-# INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
+# INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE: eeeeee
 
 # [ 1 ]  : A1FrameCls         : Botones: Ash y Gear                       : ( Frame )
 # [ 2 ]  : DefaultButtonCls   : Opciones default para los 22 botones      : ( Button )
