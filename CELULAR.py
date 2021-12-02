@@ -1039,8 +1039,8 @@ class FrameManagerCls(Frame):
 
     def create_buttons(self):
         self.update_idletasks()
-        yy = self.winfo_toplevel().winfo_reqheight()
-        xx = self.winfo_toplevel().winfo_reqwidth()
+        yy = self.master.winfo_toplevel().winfo_reqheight()
+        xx = self.master.winfo_toplevel().winfo_reqwidth()
 
         y = self.winfo_reqheight()
         x = self.winfo_reqwidth()
