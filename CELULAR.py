@@ -1143,7 +1143,7 @@ class ToplevelCls(Toplevel):
         # [ 1 ] self.frame_manager  : Frame(contenedor):  Botones: [X] [-]
 
         #____GESTOR DE VENTANA: ( 1 instancia )
-        self.frame_manager = FrameManagerCls(self, self.ico1_lst, bg="#1d2126", height=2)
+        self.frame_manager = FrameManagerCls(self, self.ico1_lst, bg="#1d2126")
         self.frame_manager .pack(position)
 
         #____Enlaces: Mueven la ventana
