@@ -1188,7 +1188,7 @@ class ToplevelCls(Toplevel):
 
     def release_mouse_menu(self, event):
         # Botón soltado (Imagen: default) $$-$$$
-        self.button_press .config(image=self.ico2_lst[1])
+        self.button_press .config(image=self.ico2_lst[1], bg='#252b34')
 
 
     #def open_
