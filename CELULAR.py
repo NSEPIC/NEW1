@@ -1253,10 +1253,9 @@ class RootCls(Tk):
         self.mini_lst = self.generate_list (path, 2)
         self.ico1_lst, self.ico2_lst, self.ico3_lst = self.generate_list (path, 3)
 
-        #____Enlaces para Minimizar y Mostrar:
+        #____Enlaces para Ocultar y Mostrar la Ventana Principal: ( 1 forma )
         self.bind("<Unmap>", self.iconify_on)    # Activacion: Click en el icono de la barra de tareas
         self.bind("<Map>", self.deiconify_on)    # Activacion: Click en el icono de la barra de tareas
-
 
         #____Métodos Llamados:
         self.configure_root()
