@@ -1671,11 +1671,11 @@ class InterfazCls(Frame, MoveAllCls):
         self.windows[number] .destroy()
 
 
-            if not self._open[0] == True and not self._open[1] == True and not self._open[2]:
-                try:  # Esto se ejecuta ademas de la condicion, cuando cierra de emproviso la aplicacion con ventanas secundarias. abiertas
-                    self.frame_botones .uncheck_selection()
-                    self.mobil_selected = None
-                except: pass
+        if not self._open[0] == True and not self._open[1] == True and not self._open[2]:
+            try:  # Esto se ejecuta ademas de la condicion, cuando cierra de emproviso la aplicacion con ventanas secundarias. abiertas
+                self.frame_botones .uncheck_selection()
+                self.mobil_selected = None
+            except: pass
             
 
 
