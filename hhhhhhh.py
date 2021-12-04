@@ -15,3 +15,8 @@ photoimage = PhotoImage(file="11.png")
 canvas.create_image(150, 150, image=photoimage) 
 
 t.mainloop() 
+
+
+""" #____Detectanda el tipo de ventana:
+    self.window = event.widget.master.winfo_toplevel()
+    print('detect', self.window.master) """
