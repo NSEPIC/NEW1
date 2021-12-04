@@ -1597,31 +1597,34 @@ class InterfazCls(Frame, MoveAllCls):
         
         #___________________________________________________________________________________________________________
 
-        titles = ['Hoja Izquierda', 'Hoja Derecha', 'Game Stuff']
-        sizes = [self.geo_izq.get(), self.geo_der.get(), self.geo_stuf.get()]
-        texts = ['AshmanBot:  1', 'AshmanBot:  2', 'AshmanBot:  3']
-        
-        #____Instancias:
-        var = [var_1, var_2, var_3]
+        #____Lista de argumentos de la funcion: ( 3 instancias(Frame) )
+        instans = [var_1, var_2, var_3]
 
+        #____Lista de contenedores temporales de los frames:
+
+        #____Lista de argumentos de los metodos de la ventana:
+        title = ['Hoja Izquierda', 'Hoja Derecha', 'Game Stuff']
+        text = ['AshmanBot:  1', 'AshmanBot:  2', 'AshmanBot:  3']
+        size = [self.geo_izq.get(), self.geo_der.get(), self.geo_stuf.get()]
+        
         for i in range(len(self._open)):
             if not self._open[i] == True:
                 
                 window = ToplevelCls (self, self.ico2_lst)
                 #____SubMétodos Llamados:
-                window .configure_toplevel(titles[i], sizes[i])
+                window .configure_toplevel(title[i], size[i])
                 window .create_frame_manager(self.ico1_lst, side=TOP, fill=BOTH)
                 window .create_button_menu()
-                window .create_label_title(text=texts[i])
+                window .create_label_title(text=text[i])
 
                 window .bind('<Destroy>', lambda event, number=i: self.closing_toplevel(number, event)) 
 
                 #____Actualizando la lista
                 self.windows[i] = window
                 self._open[i] = True
-        
-        for i in range(len(self._open)):
-            self.container[i] = var[i] (self.windows[i])
+
+
+            self.container[i] = frame[i] (self.windows[i])
             print('45454', self.container[i])
             if self._frame[i] is not None:
                 print('233333333333')
@@ -1671,13 +1674,12 @@ class InterfazCls(Frame, MoveAllCls):
         self.windows[number] .destroy()
         print('ventanas', len(self.windows))
 
-
-        if not self._open[0] == True and not self._open[1] == True and not self._open[2]:
+        # Dice: Si todas las ventanas secundarias están cerradas:
+        if self._open == [False] * len(self._open):
             try:  # Esto se ejecuta ademas de la condicion, cuando cierra de emproviso la aplicacion con ventanas secundarias. abiertas
                 self.frame_botones .uncheck_selection()
                 self.mobil_selected = None
             except: pass
-            
 
 
 def main (): #-----------------------------------------------
