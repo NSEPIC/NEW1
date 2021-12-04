@@ -69,21 +69,17 @@ class LogotipoCls(Frame):
 
     # Tarea: 1- Cierra las ventanas secundarias:
     def close_windows(self, event):   # ACTIVA: CON DOBLE CLICK DERECHO EN EL LOGO 
+        """for index in range(len(self.master._open))
+            if self.master._open[index] == True:
+                self.master._open[index] = False
+                self.master._window[index] .destroy()"""
 
-        """ window = event.widget.winfo_toplevel()
-        if window
-            window.destroy """
-        """ try:
-            self.master.toplevel_LEFT .destroy() 
-            self.master._open_1 = False
 
-            self.master.toplevel_RIGHT .destroy()
-            self.master._open_2 = False
+        for index, window in enumerate(self.master.windows):
+            window.destroy()
+            #self.master._windows[index].destroy()
+            #self.master._open[index] = False
 
-            self.master.toplevel_STUF .destroy()
-            self.master._open_3 = False
-        except: 
-            pass """
             
     # Minimiza las ventanas secundarias:
     def minimize_windows(self):   # ACTIVA: CON CLICK IZQUIERDO AL LOGO 
@@ -1388,7 +1384,7 @@ class InterfazCls(Frame, MoveAllCls):
         self._open = [False] * 3
         self.windows = [None] * 3
 
-        self.container = [None] *3
+        #self.container = [None] *3
 
         #____Variables de Seguimiento del Boton Seleccionado en la Interface de Botones:
         self.mobil_selected = None
@@ -1598,9 +1594,10 @@ class InterfazCls(Frame, MoveAllCls):
         #___________________________________________________________________________________________________________
 
         #____Lista de argumentos de la funcion: ( 3 instancias(Frame) )
-        instans = [var_1, var_2, var_3]
+        args = [var_1, var_2, var_3]
 
-        #____Lista de contenedores temporales de los frames:
+        #____Lista de contenedores de frames:
+        container = [None] * 3
 
         #____Lista de argumentos de los metodos de la ventana:
         title = ['Hoja Izquierda', 'Hoja Derecha', 'Game Stuff']
@@ -1611,7 +1608,7 @@ class InterfazCls(Frame, MoveAllCls):
             if not self._open[i] == True:
                 
                 window = ToplevelCls (self, self.ico2_lst)
-                #____SubMétodos Llamados:
+                #____Métodos Llamados:
                 window .configure_toplevel(title[i], size[i])
                 window .create_frame_manager(self.ico1_lst, side=TOP, fill=BOTH)
                 window .create_button_menu()
@@ -1624,13 +1621,13 @@ class InterfazCls(Frame, MoveAllCls):
                 self._open[i] = True
 
 
-            self.container[i] = frame[i] (self.windows[i])
-            print('45454', self.container[i])
+            container[i] = args[i] (self.windows[i])
+            print('45454', container[i])
             if self._frame[i] is not None:
                 print('233333333333')
                 self._frame[i] .destroy()
                 print('entreeeeeeeeeeeee')
-            self._frame[i] = self.container[i]
+            self._frame[i] = container[i]
             self._frame[i] .pack(fill='both', expand=True)
 
                 
@@ -1638,16 +1635,6 @@ class InterfazCls(Frame, MoveAllCls):
             self.grip .place (relx=1.0, rely=1.0, anchor='center')
             ttk.Style().configure('TSizegrip', bg='black') """
 
-            
-
-        
-
-        #_______________________________
-        #self.toplevel_LEFT .mainloop()   # Funcionaba el principio
-        #self.toplevel_RIGHT .mainloop()
-        #self.toplevel_STUF .mainloop()
-        #___________________________________________________________________________________________________________
-        
 
     # Tareas:
     #    1- Permitir la apertura de las ventanas secundarias en la siguiente llamada
