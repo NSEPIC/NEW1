@@ -1651,16 +1651,25 @@ class InterfazCls(Frame, MoveAllCls):
     #    2- Desactiva la seleccion del boton en la interface de botones
     def closing_toplevel(self,  number, event=None):
         
-        if isinstance(event.widget, Toplevel):
-            if number == 1:
+        """if isinstance(event.widget, Toplevel):
+            if number == 0:
                 self._open[0] = False
                 #self.toplevel_LEFT.destroy()
-            if number == 2:
+            if number == 1:
                 self._open[1] = False
                 #self.toplevel_RIGHT.destroy()
-            if number == 3: 
+            if number == 2: 
                 self._open[2] = False
-                #self.toplevel_STUF.destroy()
+                #self.toplevel_STUF.destroy()"""
+
+        # verifico si la ventana ya estaba cerrada
+        if not self._open[number]:
+            return
+
+        #____Actualiza y cierra la ventana indicada:
+        self._open[number] = False
+        self.windows[number] .destroy()
+
 
             if not self._open[0] == True and not self._open[1] == True and not self._open[2]:
                 try:  # Esto se ejecuta ademas de la condicion, cuando cierra de emproviso la aplicacion con ventanas secundarias. abiertas
