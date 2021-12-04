@@ -1669,6 +1669,7 @@ class InterfazCls(Frame, MoveAllCls):
         #____Actualiza y cierra la ventana indicada:
         self._open[number] = False
         self.windows[number] .destroy()
+        print('ventanas', len(self.windows))
 
 
         if not self._open[0] == True and not self._open[1] == True and not self._open[2]:
