@@ -1666,7 +1666,7 @@ class InterfazCls(Frame, MoveAllCls):
 
         #____Actualiza y cierra la ventana indicada:
         self._open[number] = False
-        self.windows[number] .destroy()
+        self._windows[number] .destroy()
         print('ventanas', len(self.windows))
 
         # Dice: Si todas las ventanas secundarias están cerradas:
