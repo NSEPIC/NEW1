@@ -83,16 +83,24 @@ class LogotipoCls(Frame):
             
     # Minimiza las ventanas secundarias:
     def minimize_windows(self):   # ACTIVA: CON CLICK IZQUIERDO AL LOGO 
- 
-        if self.master._open[0] == True or self.master._open[1] == True or self.master._open[2] == True:
 
-            # OCULTAR VENTANAS
-            if not self.master._minimize:
-                self.master._minimize = True
+        for index in range(len(self.master._open))
+            if self.master._open[index] == True:
+                self.master._windows[index] .frame_manager .minimize()
 
-                if self.master._open[0]:  
-                    #self.master.toplevel_LEFT .withdraw()                            # Esto distorciona el tamaño del icono en la barra de tareas, cuando el mouse se posiciona encima
-                    self.master.toplevel_LEFT .frame_manager .minimize()              # Metodo de Toplevel_class
+            else:
+                self.master._windows[index] .frame_manager .window_manager_off()
+                x = self.master.toplevel_LEFT .winfo_x()                            # Aqui se pide la posicion x  de la ventana, evita que la ventana al minimizar se expanda : solucion temporal
+                y = self.master.toplevel_LEFT .winfo_y()
+                self.master._windows[index] .geometry('+{}+{}'.format(x,y))           # Remarcando la posicion , soluciona el redimensionamiento automatico interior
+
+
+                # OCULTAR VENTANAS
+                if not self.master._minimize:
+                    self.master._minimize = True
+
+                    if self.master._open[index]:  
+                        self.master.toplevel_LEFT .frame_manager .minimize()              # Metodo de Toplevel_class
 
                 if self.master._open[1]:
                     self.master.toplevel_RIGHT .frame_manager .minimize()
