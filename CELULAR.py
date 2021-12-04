@@ -90,8 +90,8 @@ class LogotipoCls(Frame):
 
             else:
                 self.master._windows[index] .frame_manager .window_manager_off()
-                x = self.master.toplevel_LEFT .winfo_x()                            # Aqui se pide la posicion x  de la ventana, evita que la ventana al minimizar se expanda : solucion temporal
-                y = self.master.toplevel_LEFT .winfo_y()
+                x = self.master._windows[index] .winfo_x()                            # Aqui se pide la posicion x  de la ventana, evita que la ventana al minimizar se expanda : solucion temporal
+                y = self.master._windows[index] .winfo_y()
                 self.master._windows[index] .geometry('+{}+{}'.format(x,y))           # Remarcando la posicion , soluciona el redimensionamiento automatico interior
 
 
@@ -1390,7 +1390,7 @@ class InterfazCls(Frame, MoveAllCls):
         self._frame_3 = None """
         self._frame = [None] * 3
         self._open = [False] * 3
-        self.windows = [None] * 3
+        self._windows = [None] * 3
 
         #self.container = [None] *3
 
@@ -1625,7 +1625,7 @@ class InterfazCls(Frame, MoveAllCls):
                 window .bind('<Destroy>', lambda event, number=i: self.closing_toplevel(number, event)) 
 
                 #____Actualizando la lista
-                self.windows[i] = window
+                self._windows[i] = window
                 self._open[i] = True
 
 
