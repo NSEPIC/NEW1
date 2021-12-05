@@ -88,12 +88,12 @@ class LogotipoCls(Frame, Minimize):
 
 
     # Tarea: 1- Cierra las ventanas secundarias:
-    def close_windows(self, event):
+    def full_close_windows(self, event):
         # Evento: Doble clik derecho en el boton
 
         for i in range(len(self.master._open)):
             if self.master._open[i] == True:
-                self.master._open[i] = False
+                #self.master._open[i] = False          # Desactivado:(razón) El metodo update_window(InterfazCls) lo hace
                 self.master._windows[i] .destroy()
 
             
