@@ -75,7 +75,7 @@ class LogotipoCls(Frame, Minimize):
         self.btn_logotipo = Button(self, image=self.ico3_lst[0], bg='#11161d', bd=0, activebackground='#11161d',
                                    command=self.minimize_windows)
         self.btn_settings = Button(self, image=self.ico3_lst[1], bg='#11161d', bd=0, activebackground='#11161d',
-                                   command=self.master.gear_stacking)
+                                   command=self.master.configure_app)
                          
         #____Posicionamiento:
         self.btn_logotipo .grid(column=0, row=0, padx=(6,6))
@@ -1502,7 +1502,7 @@ class InterfazCls(Frame, MoveAllCls):
 
 
     # Tarea: 1- Gestiona los widgets de la ventana principal
-    def gear_stacking(self):
+    def configure_app(self):
 
         # Dice: Si [self._gear] es falso: ( Predeterminado False )
         if not self._gear:
@@ -1660,10 +1660,6 @@ class InterfazCls(Frame, MoveAllCls):
                     # Descripcion: Actualiza el mobil seleccionado
                     self.mobil_selected = None
                 except: pass
-
-class Minimize():
-    def __init__(self):
-        self.nwindow = []
 
 
 def main (): #-----------------------------------------------
