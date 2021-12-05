@@ -82,13 +82,13 @@ class LogotipoCls(Frame, Minimize):
         self.btn_settings .grid(column=0, row=1)
 
         #____Eventos:
-        self.btn_logotipo .bind('<Double-Button-3>', self.close_windows)  # Cierra Toplevel Secundarias
+        self.btn_logotipo .bind('<Double-Button-3>', self.close_all_windows)  # Cierra Toplevel Secundarias
         self.btn_settings .bind('<Enter>', self.enter_mouse_settings)
         self.btn_settings .bind('<Leave>', self.leave_mouse_settings)
 
 
     # Tarea: 1- Cierra las ventanas secundarias:
-    def full_close_windows(self, event):
+    def close_all_windows(self, event):
         # Evento: Doble clik derecho en el boton
 
         for i in range(len(self.master._open)):
@@ -1381,7 +1381,7 @@ class InterfazCls(Frame, MoveAllCls):
         self.geo_der = StringVar()
         self.geo_stuf = StringVar()
         
-        #____Variables de Control de los Frames de las Ventanas Secundarias: [ 1,2,3 ]
+        #____Variables de Control de las Ventanas Secundarias:
         self._open = [False] * 3
         self._windows = [None] * 3
         self._frame = [None] * 3
@@ -1392,18 +1392,15 @@ class InterfazCls(Frame, MoveAllCls):
         #____Variables de Control Secundarias:
         self._gear = False
 
-
-        self.toplevel = [] 
-
         #____Variables de Seguimiento del Frame Contenedor de los Iconos en las Ventanas Secundarias:
         self.resize_1 = False
 
-        #____Enlaces para Mover las Ventanas Globalmente:
+        #____Enlaces: Mueven las Ventanas Globalmente:
         self.bind_all("<ButtonPress-1>", self.start_move_all)             # Punto inicial    
         self.bind_all("<ButtonRelease-1>", self.stop_move_all)            # Punto final
         self.off_move = self.bind_all("<B1-Motion>", self.on_move_all)    # Puntos de movimiento
 
-        #____Enlaces para Marcar el Boton que Inicio las Ventanas:
+        #____Enlaces: Marca el Boton que Inicio las Ventanas:
         self.master.bind('<FocusIn>', self.focus_in)
         self.master.bind('<FocusOut>', self.focus_out)
 
@@ -1613,7 +1610,7 @@ class InterfazCls(Frame, MoveAllCls):
                 window .create_label_title(text=text[i])
 
                 #____Enlaces: Actualiza la lista (self._open):
-                window .bind('<Destroy>', lambda event, number=i: self.update_windows(number, event)) 
+                window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event)) 
 
                 # Descripcion: Actualiza la lista de ventanas y booleanos
                 self._windows[i] = window
@@ -1644,7 +1641,7 @@ class InterfazCls(Frame, MoveAllCls):
 
 
     # Tarea: - 
-    def update_windows(self, number, event=None):
+    def update_open(self, number, event=None):
 
         if isinstance(event.widget, Toplevel):
             # Descripcion: Actualiza la lista de booleanos para volver abrir la ventana.
