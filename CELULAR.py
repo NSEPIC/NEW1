@@ -1381,15 +1381,19 @@ class InterfazCls(Frame, MoveAllCls):
         self.geo_der = StringVar()
         self.geo_stuf = StringVar()
         
-        #____Variables de Control de las Ventanas Secundarias:
+        #____Variables de Control: ( Ventanas Secundarias )
+        # [ 1 ] : self._open     : Número de ventanas abiertas o cerradas
+        # [ 2 ] : self._windows  : Número de ventanas creadas
+        # [ 3 ] : self._frame    : Número de contenedores de los frames
+
         self._open = [False] * 3
         self._windows = [None] * 3
         self._frame = [None] * 3
 
-        #____Variables de Seguimiento del Boton Seleccionado en la Interface de Botones:
+        #____Variable de Seguimiento: Boton Seleccionado en la Interface de Botones:
         self.mobil_selected = None
 
-        #____Variables de Control Secundarias:
+        #____Variables de Control: Boton  Secundarias:
         self._gear = False
 
         #____Variables de Seguimiento del Frame Contenedor de los Iconos en las Ventanas Secundarias:
@@ -1400,7 +1404,7 @@ class InterfazCls(Frame, MoveAllCls):
         self.bind_all("<ButtonRelease-1>", self.stop_move_all)            # Punto final
         self.off_move = self.bind_all("<B1-Motion>", self.on_move_all)    # Puntos de movimiento
 
-        #____Enlaces: Marca el Boton que Inicio las Ventanas:
+        #____Enlaces: Marca el Boton que Abrio las Ventanas:
         self.master.bind('<FocusIn>', self.focus_in)
         self.master.bind('<FocusOut>', self.focus_out)
 
