@@ -33,15 +33,35 @@ from A_import import *
 #********************************            ██   ██
 #********************************            ███████
 
+class Minimize():
+    def __init__(self):
+        self.full_minimize = False
+    
+    def total(self, *nw):
+        print('________',nw)
+        print('55', self.full_minimize)
+        for i in range(3):
+            #print('55', self.full_minimize)
+            if nw != i or i == None:
+                pass
+                #self.toplevel.extend (nw)
+                #print('aaa',self.toplevel)
+                #print(len(self.toplevel))
+
+
 # TAREAS:
 #_______1- Gestiona la Interface Inamovible: (Logo y Engranaje)
 
-class LogotipoCls(Frame):
+class LogotipoCls(Frame, Minimize):
     def __init__(self, master, ico3_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+        Minimize.__init__(self)
 
         #____Colección de Imágenes:
         self.ico3_lst = ico3_lst
+
+        #____Variables de Seguimiento de las Ventanas:
+        self._minimize = False
 
         #____Métodos Llamados:
         self.create_buttons()
@@ -68,74 +88,40 @@ class LogotipoCls(Frame):
 
 
     # Tarea: 1- Cierra las ventanas secundarias:
-    def close_windows(self, event):   # ACTIVA: CON DOBLE CLICK DERECHO EN EL LOGO 
-        """for index in range(len(self.master._open))
-            if self.master._open[index] == True:
-                self.master._open[index] = False
-                self.master._window[index] .destroy()"""
+    def close_windows(self, event):
+        # Evento: Doble clik derecho en el boton
 
-
-        for index, window in enumerate(self.master.windows):
-            window.destroy()
-            #self.master._windows[index].destroy()
-            #self.master._open[index] = False
+        for i in range(len(self.master._open)):
+            if self.master._open[i] == True:
+                self.master._open[i] = False
+                self.master._windows[i] .destroy()
 
             
     # Minimiza las ventanas secundarias:
-    def minimize_windows(self):   # ACTIVA: CON CLICK IZQUIERDO AL LOGO 
+    def minimize_windows(self):
+        # Evento: Clik izquierdo en el boton
 
-        for index in range(len(self.master._open))
-            if self.master._open[index] == True:
-                self.master._windows[index] .frame_manager .minimize()
+        for i in range(len(self.master._open)):
+            # Dice: Si alguna ventana esta abierta:
+            if self.master._open[i] == True:
 
-            else:
-                self.master._windows[index] .frame_manager .window_manager_off()
-                x = self.master._windows[index] .winfo_x()                            # Aqui se pide la posicion x  de la ventana, evita que la ventana al minimizar se expanda : solucion temporal
-                y = self.master._windows[index] .winfo_y()
-                self.master._windows[index] .geometry('+{}+{}'.format(x,y))           # Remarcando la posicion , soluciona el redimensionamiento automatico interior
-
-
-                # OCULTAR VENTANAS
-                if not self.master._minimize:
-                    self.master._minimize = True
-
-                    if self.master._open[index]:  
-                        self.master.toplevel_LEFT .frame_manager .minimize()              # Metodo de Toplevel_class
-
-                if self.master._open[1]:
-                    self.master.toplevel_RIGHT .frame_manager .minimize()
-
-                if self.master._open[2]:
-                    self.master.toplevel_STUF .frame_manager .minimize()
-
-
-            # MOSTRAR VENTANAS
-            else:
-                self.master._minimize = False
-
-                if self.master._open[0]:
-                    self.master.toplevel_LEFT .frame_manager .window_manager_off()                         # Metodo de Toplevel_class
-
-                    x = self.master.toplevel_LEFT .winfo_x()                            # Aqui se pide la posicion x  de la ventana, evita que la ventana al minimizar se expanda : solucion temporal
-                    y = self.master.toplevel_LEFT .winfo_y()
-                    self.master.toplevel_LEFT .geometry('+{}+{}'.format(x,y))           # Remarcando la posicion , soluciona el redimensionamiento automatico interior
-
-                if self.master._open[1]:
-                    self.master.toplevel_RIGHT .frame_manager .window_manager_off()
-
-                    x = self.master.toplevel_RIGHT .winfo_x()
-                    y = self.master.toplevel_RIGHT .winfo_y()
-                    self.master.toplevel_RIGHT .geometry('+{}+{}'.format(x,y))
-
-                if self.master._open[2]:
-                    self.master.toplevel_STUF .frame_manager .window_manager_off()
-
-                    x = self.master.toplevel_STUF .winfo_x()
-                    y = self.master.toplevel_STUF .winfo_y()
-                    self.master.toplevel_STUF .geometry('+{}+{}'.format(x,y))
+                # Dice: Si ... y todas las ventanas estan minimizadas: (self.full_minimize = False)
+                if not self._minimize and not self.full_minimize:
+                    if i == 2: self._minimize = True
+                    # Dice: Si alguna ventana esta abierta:
+                    if self.master._open[i] == True:
+                        self.master._windows[i] .frame_manager .minimize()
+            
+                else:
+                    if i == 2: self._minimize = False
+                    # Dice: Si alguna ventana esta abierta:
+                    if self.master._open[i] == True:
+                        self.master._windows[i] .frame_manager .window_manager_off()
+                        x = self.master._windows[i] .winfo_x()                            # Aqui se pide la posicion x  de la ventana, evita que la ventana al minimizar se expanda : solucion temporal
+                        y = self.master._windows[i] .winfo_y()
+                        self.master._windows[i] .geometry('+{}+{}'.format(x,y))           # Remarcando la posicion , soluciona el redimensionamiento automatico interior
 
    
-
     def enter_mouse_settings(self, event):
         # Entrada del mouse sobre el boton (Imagen: change)
         event.widget.config(image=self.ico3_lst[2]) 
@@ -201,7 +187,7 @@ class ModeButtonsCls(Frame):
         # I N D I C E S :
         arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, = 0, 1, 2, 3, 4, 5, 6, 7 
 
-        return  lambda: self.master.windows_123(
+        return  lambda: self.master.create_windows(
                 lambda top1: TopIzqCls  (top1, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
                 lambda top2: TopDerCls  (top2, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
                 lambda top3: TopStufCls (top3, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst), indice)
@@ -498,7 +484,7 @@ class ModeListCls(Frame):
 
         for index, i in enumerate(self.spinbox_values):     
             if self.spinbox_variable.get() == i:            # ANTES DABA ERROR CON: self.spinboxx .!toplvel.!frame,etc
-                self.master.windows_123(
+                self.master.create_windows(
                 lambda top1: TopIzqCls  (top1, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
                 lambda top2: TopDerCls  (top2, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
                 lambda top3: TopStufCls (top3, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst), index)
@@ -1035,9 +1021,10 @@ class MoveAllCls():
 #************************            ██   ██    ██          ██
 #************************            ███████    ██████████████
 
-class FrameManagerCls(Frame):
+class FrameManagerCls(Frame, Minimize):
     def __init__(self, master=None, path_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+        Minimize.__init__(self)
         #____Coleccion de Imagenes:
         self.Icons = path_lst         # Iconos: cerrar y minimizar las ventanas
 
@@ -1108,6 +1095,9 @@ class FrameManagerCls(Frame):
         else:
             self.window_manager_on()                 # Oculta la Ventana Secundaria( No desaparece )
 
+            window = self.master.winfo_toplevel()
+            #if window != self.ctn:
+            Minimize.total(window)
 
     # Tarea: - Muestra el gestor de ventanas
     def window_manager_on(self, event=None):
@@ -1147,6 +1137,7 @@ class ToplevelCls(Toplevel):
         self._x = 0
         self._y = 0
 
+        self.toplevel = []
 
     def create_frame_manager(self, lst, **position):
         # [ 1 ] self.frame_manager  : Frame(contenedor):  Botones: [X] [-]
@@ -1347,7 +1338,13 @@ class RootCls(Tk):
                         if icon in 'Ico3':
                             empty3 .append(img) 
             return empty1, empty2, empty3
-        
+
+    
+    """ def select_window_minimize(self, window):
+        for i in (self.toplevel):
+            print(self.toplevel)
+            if window != i:
+                self.toplevel.extend (window) """
         
 
 #************************            ███████    ██████████████
@@ -1385,21 +1382,18 @@ class InterfazCls(Frame, MoveAllCls):
         self.geo_stuf = StringVar()
         
         #____Variables de Control de los Frames de las Ventanas Secundarias: [ 1,2,3 ]
-        """ self._frame_1 = None
-        self._frame_2 = None
-        self._frame_3 = None """
-        self._frame = [None] * 3
         self._open = [False] * 3
         self._windows = [None] * 3
-
-        #self.container = [None] *3
+        self._frame = [None] * 3
 
         #____Variables de Seguimiento del Boton Seleccionado en la Interface de Botones:
         self.mobil_selected = None
 
         #____Variables de Control Secundarias:
         self._gear = False
-        self._minimize = False
+
+
+        self.toplevel = [] 
 
         #____Variables de Seguimiento del Frame Contenedor de los Iconos en las Ventanas Secundarias:
         self.resize_1 = False
@@ -1590,91 +1584,85 @@ class InterfazCls(Frame, MoveAllCls):
 
     # G E S T I O N   D E  V E N T A N A S   S U P E R I O R E S :
 
-    def windows_123 (self, var_1, var_2, var_3, mobil=None):
-        # [self.mobil_selected] Almacena el nombre del boton presionado en el modo botones o lista
-
-        for index, name in enumerate(self.frame_listmode .spinbox_values):
-            if mobil == index:
-                self.mobil_selected = name
-                break
-
-        
-        #___________________________________________________________________________________________________________
+    def create_windows(self, var_1, var_2, var_3, mobil=None):
 
         #____Lista de argumentos de la funcion: ( 3 instancias(Frame) )
         args = [var_1, var_2, var_3]
 
-        #____Lista de contenedores de frames:
+        #____Lista de contenedores de los frames:
         container = [None] * 3
 
         #____Lista de argumentos de los metodos de la ventana:
         title = ['Hoja Izquierda', 'Hoja Derecha', 'Game Stuff']
-        text = ['AshmanBot:  1', 'AshmanBot:  2', 'AshmanBot:  3']
-        size = [self.geo_izq.get(), self.geo_der.get(), self.geo_stuf.get()]
+        text  = ['AshmanBot:  1', 'AshmanBot:  2', 'AshmanBot:  3']
+        size  = [self.geo_izq.get(), self.geo_der.get(), self.geo_stuf.get()]
         
+
+    #----------------------------------------APERTURA DE VENTANAS------------------------------------------------------- 
+
         for i in range(len(self._open)):
+            # Dice: Si la ventana esta cerrada:
             if not self._open[i] == True:
-                
-                window = ToplevelCls (self, self.ico2_lst)
+
+                #____VENTANAS:  ( 3 instancias )         
+                window = ToplevelCls (self.master, self.ico2_lst)
                 #____Métodos Llamados:
                 window .configure_toplevel(title[i], size[i])
                 window .create_frame_manager(self.ico1_lst, side=TOP, fill=BOTH)
                 window .create_button_menu()
                 window .create_label_title(text=text[i])
 
-                window .bind('<Destroy>', lambda event, number=i: self.closing_toplevel(number, event)) 
+                #____Enlaces: Actualiza la lista (self._open):
+                window .bind('<Destroy>', lambda event, number=i: self.update_windows(number, event)) 
 
-                #____Actualizando la lista
+                # Descripcion: Actualiza la lista de ventanas y booleanos
                 self._windows[i] = window
                 self._open[i] = True
 
 
-            container[i] = args[i] (self.windows[i])
-            print('45454', container[i])
+            # Descripcion: Reemplaza los elementos de la lista (container)
+            container[i] = args[i] (self._windows[i])
+
             if self._frame[i] is not None:
-                print('233333333333')
                 self._frame[i] .destroy()
-                print('entreeeeeeeeeeeee')
             self._frame[i] = container[i]
             self._frame[i] .pack(fill='both', expand=True)
 
-                
-            """ self.grip = ttk.Sizegrip(self._frame[i], style='TSizegrip')
+            # Descripcion: Redimensiona la ventana
+            self.grip = ttk.Sizegrip(self._frame[i], style='TSizegrip')
             self.grip .place (relx=1.0, rely=1.0, anchor='center')
-            ttk.Style().configure('TSizegrip', bg='black') """
+            ttk.Style().configure('TSizegrip', bg='black')
+
+    #-----------------------------------------------------------------------------------------------------------------
+
+        # Descripcion: Reemplaza el indice que recibe la funcion por el nombre del boton presionado en el modo botones o lista.
+        for index, name in enumerate(self.frame_listmode .spinbox_values):
+            if mobil == index:
+                # Descripcion: Almacena el nombre del boton presionado en el modo botones o lista.
+                self.mobil_selected = name
+                break
 
 
-    # Tareas:
-    #    1- Permitir la apertura de las ventanas secundarias en la siguiente llamada
-    #    2- Desactiva la seleccion del boton en la interface de botones
-    def closing_toplevel(self,  number, event=None):
-        
-        """if isinstance(event.widget, Toplevel):
-            if number == 0:
-                self._open[0] = False
-                #self.toplevel_LEFT.destroy()
-            if number == 1:
-                self._open[1] = False
-                #self.toplevel_RIGHT.destroy()
-            if number == 2: 
-                self._open[2] = False
-                #self.toplevel_STUF.destroy()"""
+    # Tarea: - 
+    def update_windows(self, number, event=None):
 
-        # verifico si la ventana ya estaba cerrada
-        if not self._open[number]:
-            return
+        if isinstance(event.widget, Toplevel):
+            # Descripcion: Actualiza la lista de booleanos para volver abrir la ventana.
+            self._open[number] = False
+            #self._windows[number] .destroy()
 
-        #____Actualiza y cierra la ventana indicada:
-        self._open[number] = False
-        self._windows[number] .destroy()
-        print('ventanas', len(self.windows))
+            # Dice: Si todas las ventanas secundarias están cerradas:
+            if self._open == [False] * 3:
+                try:
+                    # Descripcion: Quita la seleccion del boton presionado en el modo botones.
+                    self.frame_botones .uncheck_selection()
+                    # Descripcion: Actualiza el mobil seleccionado
+                    self.mobil_selected = None
+                except: pass
 
-        # Dice: Si todas las ventanas secundarias están cerradas:
-        if self._open == [False] * len(self._open):
-            try:  # Esto se ejecuta ademas de la condicion, cuando cierra de emproviso la aplicacion con ventanas secundarias. abiertas
-                self.frame_botones .uncheck_selection()
-                self.mobil_selected = None
-            except: pass
+class Minimize():
+    def __init__(self):
+        self.nwindow = []
 
 
 def main (): #-----------------------------------------------
