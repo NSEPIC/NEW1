@@ -118,11 +118,11 @@ class LogotipoCls(Frame):
    
     def enter_mouse_settings(self, event):
         # Entrada del mouse sobre el boton (Imagen: change)
-        event.widget.config(image=self.ico3_lst[2]) 
+        event.widget.config(image=self.Icons[2])
 
     def leave_mouse_settings(self, event):
         # Salida del mouse sobre el boton (Imagen: default)
-        event.widget.config(image=self.ico3_lst[1])
+        event.widget.config(image=self.Icons[1])
 
 
 #********************************        ██████████████
