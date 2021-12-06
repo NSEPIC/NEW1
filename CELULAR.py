@@ -1127,7 +1127,9 @@ class ToplevelCls(Toplevel):
         self._x = 0
         self._y = 0
 
-        self.toplevel = []
+        #____Enlaces:
+        self.bind('<Map>',self. )
+        self.bind('<Unmap>',self. )
 
     def create_frame_manager(self, lst, **position):
         # [ 1 ] self.frame_manager  : Frame(contenedor):  Botones: [X] [-]
