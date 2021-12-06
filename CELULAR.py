@@ -1128,8 +1128,8 @@ class ToplevelCls(Toplevel):
         self._y = 0
 
         #____Enlaces:
-        self.bind('<Map>',self. )
-        self.bind('<Unmap>',self. )
+        self.bind('<Map>',self.visibility_on)
+        self.bind('<Unmap>',self.visibility_off)
 
     def create_frame_manager(self, lst, **position):
         # [ 1 ] self.frame_manager  : Frame(contenedor):  Botones: [X] [-]
@@ -1217,6 +1217,12 @@ class ToplevelCls(Toplevel):
         self.wm_attributes ('-topmost', True)                     # FUNCIONA BIEN pero molesta para editar 
         self.config (bg = 'magenta2')                            # FUNCIONA BIEN pero tiene mal aspecto
         #self.wm_attributes ('-transparentcolor', 'magenta2')     # FUNCIONA BIEN pero tiene mal aspecto
+
+    def visibility_on(self, event=None)
+        print('visible')
+
+    def visibility_off(self, event=None)
+        print('no visible')
 
 
 #************************            ███████    ██████  ██████
