@@ -72,7 +72,7 @@ class LogotipoCls(Frame):
         self.btn_settings .bind('<Leave>', self.leave_mouse_settings)
 
 
-    # Tarea: 1- Cierra las ventanas secundarias:
+    # Tarea: 1- Destruye todas las ventanas secundarias:
     def close_all_windows(self, event):
         # Evento: Doble clik derecho en el boton
 
@@ -82,7 +82,7 @@ class LogotipoCls(Frame):
                 self.master._windows[i] .destroy()
 
             
-    # Minimiza las ventanas secundarias:
+    # Tarea: - Minimiza y las ventanas secundarias:
     def minimize_windows(self):
         # Evento: Clik izquierdo en el boton
 
