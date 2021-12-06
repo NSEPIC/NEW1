@@ -1,4 +1,5 @@
 from A_import import *
+
 #from A_frames import *
 #from B_Frames import *
 
@@ -33,29 +34,14 @@ from A_import import *
 #********************************            ██   ██
 #********************************            ███████
 
-class Minimize():
-    def __init__(self):
-        self.full_minimize = False
-    
-    def total(self, *nw):
-        print('________',nw)
-        print('55', self.full_minimize)
-        for i in range(3):
-            #print('55', self.full_minimize)
-            if nw != i or i == None:
-                pass
-                #self.toplevel.extend (nw)
-                #print('aaa',self.toplevel)
-                #print(len(self.toplevel))
-
 
 # TAREAS:
 #_______1- Gestiona la Interface Inamovible: (Logo y Engranaje)
 
-class LogotipoCls(Frame, Minimize):
+class LogotipoCls(Frame):
     def __init__(self, master, ico3_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
-        Minimize.__init__(self)
+        #Minimize.__init__(self)
 
         #____Colección de Imágenes:
         self.ico3_lst = ico3_lst
@@ -65,6 +51,7 @@ class LogotipoCls(Frame, Minimize):
 
         #____Métodos Llamados:
         self.create_buttons()
+
 
 
     def create_buttons(self):
@@ -104,16 +91,24 @@ class LogotipoCls(Frame, Minimize):
         for i in range(len(self.master._open)):
             # Dice: Si alguna ventana esta abierta:
             if self.master._open[i] == True:
-
+                
+                # MINIMIZAR
                 # Dice: Si ... y todas las ventanas estan minimizadas: (self.full_minimize = False)
-                if not self._minimize and not self.full_minimize:
+                if not self._minimize == True:
                     if i == 2: self._minimize = True
+
+                    print('ifff',self.master.all_minimize)
                     # Dice: Si alguna ventana esta abierta:
                     if self.master._open[i] == True:
                         self.master._windows[i] .frame_manager .minimize()
-            
+                        #self.master.all_minimize[i] = True
+
+                # MOSTRAR
                 else:
+                    
                     if i == 2: self._minimize = False
+
+                    print('else',self.master.all_minimize)
                     # Dice: Si alguna ventana esta abierta:
                     if self.master._open[i] == True:
                         self.master._windows[i] .frame_manager .window_manager_off()
@@ -1021,10 +1016,9 @@ class MoveAllCls():
 #************************            ██   ██    ██          ██
 #************************            ███████    ██████████████
 
-class FrameManagerCls(Frame, Minimize):
+class FrameManagerCls(Frame):
     def __init__(self, master=None, path_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
-        Minimize.__init__(self)
         #____Coleccion de Imagenes:
         self.Icons = path_lst         # Iconos: cerrar y minimizar las ventanas
 
@@ -1095,9 +1089,6 @@ class FrameManagerCls(Frame, Minimize):
         else:
             self.window_manager_on()                 # Oculta la Ventana Secundaria( No desaparece )
 
-            window = self.master.winfo_toplevel()
-            #if window != self.ctn:
-            Minimize.total(window)
 
     # Tarea: - Muestra el gestor de ventanas
     def window_manager_on(self, event=None):
@@ -1390,6 +1381,8 @@ class InterfazCls(Frame, MoveAllCls):
         self._windows = [None] * 3
         self._frame = [None] * 3
 
+        self.all_minimize = [False] * 3
+
         #____Variable de Seguimiento: Boton Seleccionado en la Interface de Botones:
         self.mobil_selected = None
 
@@ -1613,8 +1606,12 @@ class InterfazCls(Frame, MoveAllCls):
                 window .create_button_menu()
                 window .create_label_title(text=text[i])
 
-                #____Enlaces: Actualiza la lista (self._open):
+                #____Enlace: Actualiza la lista (self._open):
                 window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event)) 
+                
+                #____Enlace: Verifica ...
+                window .frame_manager.bind('<Map>', lambda event, indice=i: self.map_windows(indice, event))
+                window .frame_manager.bind('<Unmap>', lambda event, indicee=i: self.unmap_windows(indicee, event))
 
                 # Descripcion: Actualiza la lista de ventanas y booleanos
                 self._windows[i] = window
@@ -1642,7 +1639,7 @@ class InterfazCls(Frame, MoveAllCls):
                 # Descripcion: Almacena el nombre del boton presionado en el modo botones o lista.
                 self.mobil_selected = name
                 break
-
+        
 
     # Tarea: - 
     def update_open(self, number, event=None):
@@ -1661,6 +1658,29 @@ class InterfazCls(Frame, MoveAllCls):
                     self.mobil_selected = None
                 except: pass
 
+
+    def map_windows(self, indice, event=None):
+        # Mapeando Ventanas
+
+        self.all_minimize[indice] = False
+
+        if self.all_minimize == [False] * 3:
+            self.frame_static._minimize = False
+
+        #print(self.all_minimize)
+
+
+    def unmap_windows(self, indicee, event=None):
+        # Ocultando Ventanas
+        self.all_minimize[indicee] = True
+
+        if self.all_minimize == [True] * 3:
+            self.frame_static._minimize = True
+          
+        #print(self.all_minimize)
+
+
+ 
 
 def main (): #-----------------------------------------------
     if len(sys.argv) > 1:
