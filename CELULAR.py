@@ -58,9 +58,9 @@ class LogotipoCls(Frame):
         # [self.btn_settings] : Engranaje
 
         #____BOTONES: 2 ( Logotipo - Settings )
-        self.btn_logotipo = Button(self, image=self.ico3_lst[0], bg='#11161d', bd=0, activebackground='#11161d',
+        self.btn_logotipo = Button(self, image=self.Icons[0], bg='#11161d', bd=0, activebackground='#11161d',
                                    command=self.minimize_windows)
-        self.btn_settings = Button(self, image=self.ico3_lst[1], bg='#11161d', bd=0, activebackground='#11161d',
+        self.btn_settings = Button(self, image=self.Icons[1], bg='#11161d', bd=0, activebackground='#11161d',
                                    command=self.master.configure_app)
                          
         #____Posicionamiento:
