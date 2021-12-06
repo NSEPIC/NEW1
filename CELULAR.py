@@ -52,7 +52,6 @@ class LogotipoCls(Frame):
         self.create_buttons()
 
 
-
     def create_buttons(self):
         # [self.btn_logotipo] : Logo
         # [self.btn_settings] : Engranaje
@@ -88,13 +87,14 @@ class LogotipoCls(Frame):
         # Evento: Clik izquierdo en el boton
 
         for i in range(len(self.master._open)):
+
             # Dice: Si alguna ventana esta abierta:
-            if self.master._open[i] == True:
+            if self.master._open[i]:
                 
-                # MINIMIZAR
-                # Dice: Si ... y todas las ventanas estan minimizadas: (self.full_minimize = False)
+                # OCULTAR
                 if not self._minimize == True:
-                    if i == 2: self._minimize = True
+                    if i == 2: 
+                        self._minimize = True
 
                     print('ifff',self.master.all_minimize)
                     # Dice: Si alguna ventana esta abierta:
