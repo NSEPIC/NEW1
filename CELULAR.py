@@ -82,18 +82,18 @@ class LogotipoCls(Frame):
                 self.master._windows[i] .destroy()
 
             
-    # Tarea: - Minimiza y las ventanas secundarias:
+    # Tarea: - Oculta y muestra todas las ventanas secundarias:
     def minimize_windows(self):
         # Evento: Clik izquierdo en el boton
 
         for i in range(len(self.master._open)):
 
-            # Dice: Si alguna ventana esta abierta:
+            # Dice: Si hay alguna ventana abierta:
             if self.master._open[i]:
                 
-                # OCULTAR
+                # OCULTA:
                 if not self._minimize == True:
-                    if i == 2: 
+                    if i == 2:
                         self._minimize = True
 
                     print('ifff',self.master.all_minimize)
@@ -102,10 +102,10 @@ class LogotipoCls(Frame):
                         self.master._windows[i] .frame_manager .minimize()
                         #self.master.all_minimize[i] = True
 
-                # MOSTRAR
+                # MUESTRA:
                 else:
-                    
-                    if i == 2: self._minimize = False
+                    if i == 2:
+                        self._minimize = False
 
                     print('else',self.master.all_minimize)
                     # Dice: Si alguna ventana esta abierta:
