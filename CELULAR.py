@@ -39,12 +39,11 @@ from A_import import *
 #_______1- Gestiona la Interface Inamovible: (Logo y Engranaje)
 
 class LogotipoCls(Frame):
-    def __init__(self, master, ico3_lst=None, *args, **kwargs):
+    def __init__(self, master, path_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
-        #Minimize.__init__(self)
 
         #____Colección de Imágenes:
-        self.ico3_lst = ico3_lst
+        self.Icons = path_lst
 
         #____Variables de Seguimiento de las Ventanas:
         self._minimize = False
