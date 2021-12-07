@@ -63,24 +63,25 @@ class LogotipoCls(Frame):
         self.btn_settings .grid(column=0, row=1)
 
         #____Eventos:
-        self.btn_logotipo .bind('<Double-Button-3>', self.close_all_windows)  # Cierra Toplevel Secundarias
+        self.btn_logotipo .bind('<Double-Button-3>', self.close_all)  # Cierra Toplevel Secundarias
         self.btn_settings .bind('<Enter>', self.enter_mouse_settings)
         self.btn_settings .bind('<Leave>', self.leave_mouse_settings)
 
 
     # Tarea: - Destruye todas las ventanas secundarias:
-    def close_all_windows(self, event):
-        # Evento: Doble clik derecho en el boton
+    def close_all(self, event):
+        # Evento: Doble clik derecho
 
-        for i in range(len(self.master._open)):
-            if self.master._open[i] == True:
-                self.master._windows[i] .destroy()
-                #self.master._open[i] = False          # Desactivado:(razón) El metodo update_window(InterfazCls) lo hace
+        for indice in range(len(self.master._open)):
+            if self.master._open[indice] == True:
+                self.master._windows[indice] .destroy()
+                # : Actualiza la lista:
+                #self.master._open[indice] = False          # Desactivado:(razón) El metodo update_window(InterfazCls) lo hace
 
             
     # Tarea: - Oculta y muestra todas las ventanas secundarias:
-    def minimize_windows(self):
-        # Evento: Clik izquierdo en el boton
+    def minimize_all(self):
+        # Evento: Clik izquierdo
 
         count = 0
         for i in range(len(self.master._open)):
