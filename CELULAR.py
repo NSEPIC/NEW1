@@ -1,12 +1,9 @@
 from A_import import *
 
-#from A_frames import *
-#from B_Frames import *
-
 
 # INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
 
-# [ 1 ]  : LogotipoCls        : Botones: Ash y Gear                       : ( Frame )
+# [ 1 ]  : LogotipoCls        : Botones: Logotipo y Settings              : ( Frame )
 # [ 2 ]  : DefaultButtonCls   : Opciones default para los 22 botones      : ( Button )
 # [ 3 ]  : ModeButtonsCls     : Botones: 22                               : ( Frame )
 # [ 4 ]  : ModeConfigurerCls  : Labels y Checkbuttons                     : ( Frame )
