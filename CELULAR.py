@@ -54,7 +54,7 @@ class LogotipoCls(Frame):
 
         #____BOTONES: 2 ( Logotipo - Settings )
         self.btn_logotipo = Button(self, image=self.Icons[0], bg='#11161d', bd=0, activebackground='#11161d',
-                                   command=self.minimize_windows)
+                                   command=self.minimize_all)
         self.btn_settings = Button(self, image=self.Icons[1], bg='#11161d', bd=0, activebackground='#11161d',
                                    command=self.master.configure_app)
                          
@@ -75,7 +75,7 @@ class LogotipoCls(Frame):
         for indice in range(len(self.master._open)):
             if self.master._open[indice] == True:
                 self.master._windows[indice] .destroy()
-                # : Actualiza la lista:
+                #: Actualiza la lista:
                 #self.master._open[indice] = False          # Desactivado:(razón) El metodo update_window(InterfazCls) lo hace
 
             
