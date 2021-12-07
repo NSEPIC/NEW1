@@ -73,15 +73,16 @@ class LogotipoCls(Frame):
         # Evento: Doble clik derecho
 
         for indice in range(len(self.master._open)):
+            # Dice: Si hay alguna ventana abierta.
             if self.master._open[indice] == True:
+
                 self.master._windows[indice] .destroy()
-                #: Actualiza la lista:
-                #self.master._open[indice] = False          # Desactivado:(razón) El metodo update_window(InterfazCls) lo hace
+                # Description: Actualiza la lista de ventanas cerradas 
+                #self.master._open[indice] = False                         # Desactivado:(razón) El metodo update_window(InterfazCls) lo hace
 
             
     # Tarea: - Oculta y muestra todas las ventanas secundarias:
     def minimize_all(self):
-        # Evento: Clik izquierdo
 
         count = 0
         for i in range(len(self.master._open)):
@@ -118,11 +119,11 @@ class LogotipoCls(Frame):
 
    
     def enter_mouse_settings(self, event):
-        # Entrada del mouse sobre el boton (Imagen: change)
+        # Evento: Entrada del mouse sobre el boton (Imagen: change)
         event.widget.config(image=self.Icons[2])
 
     def leave_mouse_settings(self, event):
-        # Salida del mouse sobre el boton (Imagen: default)
+        # Evento: Salida del mouse sobre el boton (Imagen: default)
         event.widget.config(image=self.Icons[1])
 
 
