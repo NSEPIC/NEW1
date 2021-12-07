@@ -34,7 +34,6 @@ from A_import import *
 #********************************            ██   ██
 #********************************            ███████
 
-
 # TAREAS:
 #_______1- Gestiona la Interface Inamovible: (Logo y Engranaje)
 
@@ -72,19 +71,25 @@ class LogotipoCls(Frame):
         self.btn_settings .bind('<Leave>', self.leave_mouse_settings)
 
 
-    # Tarea: 1- Destruye todas las ventanas secundarias:
+    # Tarea: - Destruye todas las ventanas secundarias:
     def close_all_windows(self, event):
         # Evento: Doble clik derecho en el boton
 
         for i in range(len(self.master._open)):
             if self.master._open[i] == True:
-                #self.master._open[i] = False          # Desactivado:(razón) El metodo update_window(InterfazCls) lo hace
                 self.master._windows[i] .destroy()
+                #self.master._open[i] = False          # Desactivado:(razón) El metodo update_window(InterfazCls) lo hace
 
             
     # Tarea: - Oculta y muestra todas las ventanas secundarias:
     def minimize_windows(self):
         # Evento: Clik izquierdo en el boton
+
+        count = 0
+        for i in range(len(self.master._open)):
+            if self.master._open[i]:    
+                if self.master._windows[i].winfo_ismapped():
+                    count += 1
 
         for i in range(len(self.master._open)):
 
@@ -92,11 +97,10 @@ class LogotipoCls(Frame):
             if self.master._open[i]:
                 
                 # OCULTA:
-                if not self._minimize == True:
+                if not self._minimize == True and count != 0:
                     if i == 2:
                         self._minimize = True
 
-                    print('ifff',self.master.all_minimize)
                     # Dice: Si alguna ventana esta abierta:
                     if self.master._open[i] == True:
                         self.master._windows[i] .frame_manager .minimize()
@@ -107,7 +111,6 @@ class LogotipoCls(Frame):
                     if i == 2:
                         self._minimize = False
 
-                    print('else',self.master.all_minimize)
                     # Dice: Si alguna ventana esta abierta:
                     if self.master._open[i] == True:
                         self.master._windows[i] .frame_manager .window_manager_off()
@@ -165,6 +168,7 @@ class DefaultButtonCls(Button):
 class ModeButtonsCls(Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+
         #_____C O N T E N E D O R E S:   [ 1 ]
         self.frame_1 = Frame (self, bg='#11161d')          # Color: Azul '#11161d'
         self.frame_1 .grid (padx=(10,10), pady=(6,6))
@@ -379,13 +383,15 @@ class ModeConfigurerCls(Frame):
 
 # Frame Contenedor de Spinbox y Listbox
 class ModeListCls(Frame):
-    def __init__(self, master, mini_lst,  *args, **kwargs):
+    def __init__(self, master, mobiles, mini_lst,  *args, **kwargs):
         super().__init__(master, *args, kwargs)
+        #____Lista de mobiles:
+        self.mobiles = mobiles
 
-        #_____Coleccion de imagenes  
+        #____Coleccion de imagenes  
         self.Miniatures = mini_lst
 
-        #_____C O N T E N E D O R E S:   [ 2 ]
+        #____C O N T E N E D O R E S:   [ 2 ]
         self.frame_1 = Frame (self, bg='#31343a', width=116, height=67)    # Color: Plomo       
         self.frame_2 = Frame (self, bg='#11161d', width=60, height=67)     # Color: Azul  
 
@@ -396,7 +402,7 @@ class ModeListCls(Frame):
         self.create_listbox (width=11, height=1)
         self.create_spinbox (width=13)
 
-        #_____G R I D ():
+        #____G R I D ():
         self.frame_1 .grid (column=0, row=0)                                            # MASTER A
         self.frame_2 .grid (column=1, row=0)                                            # MASTER B
 
@@ -409,12 +415,12 @@ class ModeListCls(Frame):
 
         self.miniature_mobil .grid (padx=2, pady=3)                                     # SUB B.1
 
-        #_____G R I D___P R O P A G A T E ():
+        #____G R I D___P R O P A G A T E ():
         self.frame_1 .grid_propagate(False)
         self.frame_2 .grid_propagate(False)
         self.container_2w .grid_propagate(False)
         
-        #_____V A R I A B L E S  DE  C O N T R O L: 
+        #____V A R I A B L E S  DE  C O N T R O L: 
         self._toggle_switch = False
    
 
@@ -425,7 +431,7 @@ class ModeListCls(Frame):
             self.listboxx .delete(0, END)
         else:    
             list_new = []
-            for index, i in enumerate(self.spinbox_values):
+            for index, i in enumerate(self.mobiles):
                 if spin == i:                           
                     self.miniature_mobil .config(image= self.Miniatures[index])
                     self.spinboxx .icursor(END)
@@ -476,7 +482,7 @@ class ModeListCls(Frame):
         # I N D I C E S :
         arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, = 0, 1, 2, 3, 4, 5, 6, 7 
 
-        for index, i in enumerate(self.spinbox_values):     
+        for index, i in enumerate(self.mobiles):     
             if self.spinbox_variable.get() == i:            # ANTES DABA ERROR CON: self.spinboxx .!toplvel.!frame,etc
                 self.master.create_windows(
                 lambda top1: TopIzqCls  (top1, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
@@ -531,10 +537,9 @@ class ModeListCls(Frame):
         self.spinboxx = Spinbox (self.frame_1, **args)
         
         self.spinbox_variable = StringVar()
-        self.spinbox_values = ['Frog', 'Fox', 'Boomer', 'Ice', 'J.d', 'Grub', 'Lightning', 'Aduka', 'Knight', 'Kalsiddon', 'Mage',
-                               'Randomizer', 'Jolteon', 'Turtle', 'Armor','A.sate', 'Raon', 'Trico', 'Nak', 'Bigfoot', 'Barney', 'Dragon']
+
         self.all_register = (self.register(self.validate_text), '%P', '%S')
-        self.spinboxx.config (values=self.spinbox_values,
+        self.spinboxx.config (values=self.mobiles,
                              textvariable=self.spinbox_variable,
                              validate='key',
                              validatecommand=self.all_register,
@@ -1074,11 +1079,12 @@ class FrameManagerCls(Frame):
 
     # Tarea: - Destruye la ventana:
     def close(self):
-        self.master.destroy()                        # Destruye la Ventana
+        self.master.destroy()                        # Destruye la ventana a excepcion de root
 
         if isinstance(self.master.master.winfo_toplevel(), Tk):
-            self.master.master.destroy()             # Destruye la Ventana Root
+            self.master.master.destroy()             # Destruye root
             self.master.quit()                       # SIGO INVESTIGANDO...
+        
 
     # Tarea: - Oculta la ventana:
     def minimize(self):
@@ -1086,21 +1092,20 @@ class FrameManagerCls(Frame):
             self.master.withdraw()                   # Oculta la Ventana Principal( Desaparece )
             self.master.master.iconify()             # Oculta la Ventana Root
         else:
-            self.window_manager_on()                 # Oculta la Ventana Secundaria( No desaparece )
+            self.master.update_idletasks()               # Termina Tareas Pendientes y Actualiza la Aplicacion
+            self.master.wm_attributes("-alpha", 0.0 )
+            self.master.overrideredirect(False)          # Muestra el Gestor de Ventanas
+            self.master.state('iconic')
+            self.master.wm_attributes("-alpha", 1.0 )
 
 
-    # Tarea: - Muestra el gestor de ventanas
-    def window_manager_on(self, event=None):
-        self.master.update_idletasks()               # Termina Tareas Pendientes y Actualiza la Aplicacion
-        self.master.overrideredirect(False)          # Muestra el Gestor de Ventanas
-        self.master.state('iconic')                  # Oculta la Ventana Secundaria en la Barra de Tareas
-    
     # Tarea: - Oculta el gestor de ventanas
     def window_manager_off(self, event=None):
         if not isinstance(self.master.master.winfo_toplevel(), Tk):
             self.master.update_idletasks()
             self.master.overrideredirect(True)       # Oculta el Gestor de Ventanas
             self.master.state('normal')              # SIGO INVESTIGANDO SI ES NECESARIO...
+
 
 
 #************************            ███████    ██████████████
@@ -1118,6 +1123,7 @@ class FrameManagerCls(Frame):
 class ToplevelCls(Toplevel):
     def __init__(self, master=None, path_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+
         self.overrideredirect(True)
 
         #____Coleccion de Imagenes:
@@ -1128,8 +1134,8 @@ class ToplevelCls(Toplevel):
         self._y = 0
 
         #____Enlaces:
-        self.bind('<Map>',self.visibility_on)
-        self.bind('<Unmap>',self.visibility_off)
+        #self.bind('<Map>',self.visibility_on)
+        #self.bind('<Unmap>',self.visibility_off)
 
     def create_frame_manager(self, lst, **position):
         # [ 1 ] self.frame_manager  : Frame(contenedor):  Botones: [X] [-]
@@ -1218,11 +1224,31 @@ class ToplevelCls(Toplevel):
         self.config (bg = 'magenta2')                            # FUNCIONA BIEN pero tiene mal aspecto
         #self.wm_attributes ('-transparentcolor', 'magenta2')     # FUNCIONA BIEN pero tiene mal aspecto
 
-    def visibility_on(self, event=None)
-        print('visible')
 
-    def visibility_off(self, event=None)
-        print('no visible')
+    """ def visibility_on(self, event=None):
+        print(44)
+        # Visibilidad del widget:
+
+        #for i in self.master._window
+        #print(self.master._windows)
+
+        self.update()
+        for i in (self._windows):
+            if i is None:
+                print(11111)
+
+        widget = event.widget
+        if isinstance(widget, Toplevel) and widget.winfo_viewable():
+            if not isinstance(self.master.winfo_toplevel(), Tk):
+                print('visible')
+            
+
+    def visibility_off(self, event=None):
+        # Sin visibilidad del widget:
+
+        widget = event.widget
+        if isinstance(widget, Toplevel) and not widget.winfo_viewable():
+            print('not visible') """
 
 
 #************************            ███████    ██████  ██████
@@ -1338,11 +1364,6 @@ class RootCls(Tk):
             return empty1, empty2, empty3
 
     
-    """ def select_window_minimize(self, window):
-        for i in (self.toplevel):
-            print(self.toplevel)
-            if window != i:
-                self.toplevel.extend (window) """
         
 
 #************************            ███████    ██████████████
@@ -1388,8 +1409,6 @@ class InterfazCls(Frame, MoveAllCls):
         self._windows = [None] * 3
         self._frame = [None] * 3
 
-        self.all_minimize = [False] * 3
-
         #____Variable de Seguimiento: Boton Seleccionado en la Interface de Botones:
         self.mobil_selected = None
 
@@ -1398,6 +1417,9 @@ class InterfazCls(Frame, MoveAllCls):
 
         #____Variables de Seguimiento del Frame Contenedor de los Iconos en las Ventanas Secundarias:
         self.resize_1 = False
+
+        self.mobiles = ['Frog', 'Fox', 'Boomer', 'Ice', 'J.d', 'Grub', 'Lightning', 'Aduka', 'Knight', 'Kalsiddon', 'Mage',
+                        'Randomizer', 'Jolteon', 'Turtle', 'Armor','A.sate', 'Raon', 'Trico', 'Nak', 'Bigfoot', 'Barney', 'Dragon']
 
         #____Enlaces: Mueven las Ventanas Globalmente:
         self.bind_all("<ButtonPress-1>", self.start_move_all)             # Punto inicial    
@@ -1490,7 +1512,7 @@ class InterfazCls(Frame, MoveAllCls):
         self.frame_static     = LogotipoCls(self, self.ico3_lst, bg='#11161d', width=60, height=67)    # Posicionado     # Color: Azul
         self.frame_botones    = ModeButtonsCls(self, bg='#31343a', width=756, height=67)               # Posicionado     # Color: Plomo
         self.frame_configurer = ModeConfigurerCls(self, bg='#31343a', width=756, height=67)            # No posicionado  # Color: Plomo
-        self.frame_listmode   = ModeListCls(self, self.mini_lst)                                       # No posicionado  # Color: Azul y Plomo
+        self.frame_listmode   = ModeListCls(self, self.mobiles, self.mini_lst)                                       # No posicionado  # Color: Azul y Plomo
          
         #____Posicionamiento:
         self.frame_static .pack(side=LEFT, fill=BOTH)
@@ -1614,11 +1636,8 @@ class InterfazCls(Frame, MoveAllCls):
                 window .create_label_title(text=text[i])
 
                 #____Enlace: Actualiza la lista (self._open):
-                window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event)) 
-                
-                #____Enlace: Verifica ...
-                window .frame_manager.bind('<Map>', lambda event, indice=i: self.map_windows(indice, event))
-                window .frame_manager.bind('<Unmap>', lambda event, indicee=i: self.unmap_windows(indicee, event))
+                window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
+               
 
                 # Descripcion: Actualiza la lista de ventanas y booleanos
                 self._windows[i] = window
@@ -1633,22 +1652,26 @@ class InterfazCls(Frame, MoveAllCls):
             self._frame[i] = container[i]
             self._frame[i] .pack(fill='both', expand=True)
 
+
             # Descripcion: Redimensiona la ventana
             self.grip = ttk.Sizegrip(self._frame[i], style='TSizegrip')
             self.grip .place (relx=1.0, rely=1.0, anchor='center')
             ttk.Style().configure('TSizegrip', bg='black')
 
+            # Descripcion: Muestra todas las ventanas ocultas
+            self._windows[i] .frame_manager.window_manager_off()
+
     #-----------------------------------------------------------------------------------------------------------------
 
         # Descripcion: Reemplaza el indice que recibe la funcion por el nombre del boton presionado en el modo botones o lista.
-        for index, name in enumerate(self.frame_listmode .spinbox_values):
+        for index, name in enumerate(self.mobiles):
             if mobil == index:
                 # Descripcion: Almacena el nombre del boton presionado en el modo botones o lista.
                 self.mobil_selected = name
                 break
         
 
-    # Tarea: - 
+    # Tarea: - Actualizar las ventanas cerradas
     def update_open(self, number, event=None):
 
         if isinstance(event.widget, Toplevel):
@@ -1666,28 +1689,6 @@ class InterfazCls(Frame, MoveAllCls):
                 except: pass
 
 
-    def map_windows(self, indice, event=None):
-        # Mapeando Ventanas
-
-        self.all_minimize[indice] = False
-
-        if self.all_minimize == [False] * 3:
-            self.frame_static._minimize = False
-
-        #print(self.all_minimize)
-
-
-    def unmap_windows(self, indicee, event=None):
-        # Ocultando Ventanas
-        self.all_minimize[indicee] = True
-
-        if self.all_minimize == [True] * 3:
-            self.frame_static._minimize = True
-          
-        #print(self.all_minimize)
-
-
- 
 
 def main (): #-----------------------------------------------
     if len(sys.argv) > 1:
@@ -1698,7 +1699,7 @@ def main (): #-----------------------------------------------
 
     root = RootCls(folder)
     root .title('AshmanBot')
-    root .wm_attributes("-alpha", 0.0 )
+    #root .wm_attributes("-alpha", 0.0 )
     root .mainloop()
 
 if __name__=="__main__":  #------------------------------
