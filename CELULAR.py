@@ -1153,18 +1153,19 @@ class FrameManagerCls(Frame):
 #************************            ███████    ██████████████
 
 class ToplevelCls(Toplevel):
-    def __init__(self, master=None, indice=None, frames=None, path_lst=None, *args, **kwargs):
+    def __init__(self, master=None, indice=None, path_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
-
         self.overrideredirect(True)
 
         #____Coleccion de Imagenes:
-        self.Icons = path_lst        # Iconos: menu de opciones
+        self.Icons = path_lst        # Iconos: Menu de opciones
 
         self.indice = indice
-        self.iif = False
-        self.frame= frames
-        #____Variables de Reposo de las Coordenadas de la Ventana:
+
+        #____Variable de Control: Visibilidad de la interface de iconos.
+        self.cascade = False
+
+        #____Variables de Reposo: Coordenadas de la Ventana.
         self._x = 0
         self._y = 0
 
@@ -1172,11 +1173,11 @@ class ToplevelCls(Toplevel):
         #self.bind('<Map>',self.visibility_on)
         #self.bind('<Unmap>',self.visibility_off)
 
-    def create_frame_manager(self, lst, **position):
+    def create_frame_manager(self, path_lst, **position):
         # [ 1 ] self.frame_manager  : Frame(contenedor):  Botones: [X] [-]
 
         #____GESTOR DE VENTANA: ( 1 instancia )
-        self.frame_manager = FrameManagerCls(self, lst, bg="#1b1d22")
+        self.frame_manager = FrameManagerCls(self, path_lst, bg="#1b1d22")
         self.frame_manager .pack(position)
 
         #____Enlaces: Mueven la ventana
@@ -1198,7 +1199,7 @@ class ToplevelCls(Toplevel):
         self.label_title .bind("<B1-Motion>", self.on_move)
 
 
-    def create_button_menu(self, ):
+    def create_button_menu(self):
         #____BOTONES: ( 1 )
         self.button_menu = Button(self.frame_manager, image=self.Icons[0], command=self.create_container_icons, bg="#1b1d22", activebackground='#4ca6ff', bd=0)   
         self.button_menu .pack(side=LEFT)
@@ -1229,42 +1230,16 @@ class ToplevelCls(Toplevel):
 
 
     def create_container_icons(self):
-        if not self.cascade == True:  # es falso
+        if not self.cascade:  # es falso
             self.cascade = True
             self.container_icons = Cls(self, self.Icons)
-            self.container_icons .pack(side=LEFT, fill='x', expand=True)
+            self.container_icons .pack(side=LEFT, fill='y', expand=True)
+            self.container_icons .lift()
 
         else:
             self.cascade = False
             self.container_icons .pack_forget()
-
-        a = [None]*3
-
-        a = Cls(self.frame[0], self.Icons )
-        b = Cls(self.frame[1], self.Icons )
-        c = Cls(self.frame[2], self.Icons )
-
-        a .grid(column=0, row=1, sticky='nsw')
-        b .grid(column=0, row=1, sticky='nsw')
-        c .grid(column=0, row=1, sticky='nsw')
-
-        a.grid_remove()
-        b.grid_remove()
-        c.grid_remove()
-
-        for i in range(len(self.frame)):
-
-            if self.indice == i:
-                if not self.iif: 
-                    print(55555555555)
-                    self.iif = True
-                    a .grid()
-                else:
-                    print(555555554444444444)
-                    self.iif = False
-                    a.grid_remove()
-
-
+            self.container_icons .lower()
 
 
 
