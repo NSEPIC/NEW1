@@ -1229,6 +1229,15 @@ class ToplevelCls(Toplevel):
 
 
     def create_container_icons(self):
+        if not self.cascade == True:  # es falso
+            self.cascade = True
+            self.container_icons = Cls(self, self.Icons)
+            self.container_icons .pack(side=LEFT, fill='x', expand=True)
+
+        else:
+            self.cascade = False
+            self.container_icons .pack_forget()
+
         a = [None]*3
 
         a = Cls(self.frame[0], self.Icons )
