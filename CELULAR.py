@@ -8,7 +8,7 @@ from A_import import *
 # [ 3 ]  : ModeButtonsCls     : Botones: 22                               : ( Frame )
 # [ 4 ]  : ModeConfigurerCls  : Labels y Checkbuttons                     : ( Frame )
 # [ 5 ]  : ModeListCls        : Spinbox y Listbox                         : ( Frame )
-# [ 6 ]  : Checkbutton_class  : Sin uso eficiente                         : ( Checkbutton )
+# [ 6 ]  : Checkbutton_cls  : Sin uso eficiente                         : ( Checkbutton )
 # [ 7 ]  : ResizeCls          : Redimensiona Imagenes                     : ( Frame )
 # [ 8 ]  : TopIzqCls          : Ventana Izquierda                         : ( Frame )
 # [ 9 ]  : TopDerCls          : Ventana Derecha                           : ( Frame )
@@ -75,47 +75,38 @@ class LogotipoCls(Frame):
         for indice in range(len(self.master._open)):
             # Dice: Si hay alguna ventana abierta.
             if self.master._open[indice] == True:
-
                 self.master._windows[indice] .destroy()
+
                 # Description: Actualiza la lista de ventanas cerradas 
                 #self.master._open[indice] = False                         # Desactivado:(razón) El metodo update_window(InterfazCls) lo hace
 
             
     # Tarea: - Oculta y muestra todas las ventanas secundarias:
-    def minimize_all(self):
-
-        count = 0
-        for i in range(len(self.master._open)):
-            if self.master._open[i]:    
-                if self.master._windows[i].winfo_ismapped():
-                    count += 1
+    def minimize_all(self):    
+        visibility = self.check_visible_windows()
 
         for i in range(len(self.master._open)):
 
             # Dice: Si hay alguna ventana abierta:
             if self.master._open[i]:
                 
-                # OCULTA:
-                if not self._minimize == True and count != 0:
-                    if i == 2:
-                        self._minimize = True
+                # OCULTA LAS VENNTANAS:
+                if not self._minimize == True and visibility:
+                    self._minimize = True if i == 2 else False
 
                     # Dice: Si alguna ventana esta abierta:
                     if self.master._open[i] == True:
                         self.master._windows[i] .frame_manager .minimize()
                         #self.master.all_minimize[i] = True
 
-                # MUESTRA:
+                # MUESTRA LAS VENTANAS:
                 else:
-                    if i == 2:
-                        self._minimize = False
+                    self._minimize = False if i == 2 else True
 
                     # Dice: Si alguna ventana esta abierta:
                     if self.master._open[i] == True:
                         self.master._windows[i] .frame_manager .window_manager_off()
-                        x = self.master._windows[i] .winfo_x()                            # Aqui se pide la posicion x  de la ventana, evita que la ventana al minimizar se expanda : solucion temporal
-                        y = self.master._windows[i] .winfo_y()
-                        self.master._windows[i] .geometry('+{}+{}'.format(x,y))           # Remarcando la posicion , soluciona el redimensionamiento automatico interior
+                        self.update_position(self.master._windows[i])                      # Solucion temporal: Evita que la ventana al minimizar se expanda
 
    
     def enter_mouse_settings(self, event):
@@ -125,6 +116,21 @@ class LogotipoCls(Frame):
     def leave_mouse_settings(self, event):
         # Evento: Salida del mouse sobre el boton (Imagen: default)
         event.widget.config(image=self.Icons[1])
+
+
+    # Tarea: - Devuelve verdadero si hay alguna ventana visible.
+    def check_visible_windows(self):
+        for i in range(len(self.master._open)):
+            # Dice: Si hay alguna ventana abierta:
+            if self.master._open[i]:
+                # Dice: Si hay alguna ventana visible:  
+                if self.master._windows[i].winfo_ismapped():
+                    return True                                         # Devuelve True y detiene el bucle
+
+    # Tarea: - Actualiza la posicion de la ventana.
+    def update_position(self, window):
+        x, y = window.winfo_x(), window.winfo_y()                       # Solucion temporal: Evita que la ventana al minimizar se expanda
+        window.geometry('+{}+{}'.format(x,y))
 
 
 #********************************        ██████████████
@@ -168,131 +174,113 @@ class ModeButtonsCls(Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
 
-        #_____C O N T E N E D O R E S:   [ 1 ]
-        self.frame_1 = Frame (self, bg='#11161d')          # Color: Azul '#11161d'
+        #____CONTENEDORES INTERNOS: ( 1 )
+        self.frame_1 = Frame (self, bg='#11161d')          # Color(fondo): Azulino
         self.frame_1 .grid (padx=(10,10), pady=(6,6))
 
-        #_____Métodos Llamados:
+        #____Métodos Llamados:
         self.creator_buttons()
 
-        #_____Variables de Control para los Botones
+        #____Variables de Control: Contenedor del ultimo boton presionado
         self.container1 = None
 
 
-    # Manda los indices para abrir las imagenes en las ventanas:
+    # Tarea: - Manda los indices para abrir las imagenes en las ventanas secundarias:
     def indices(self, indice):
         # I N D I C E S :
         arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, = 0, 1, 2, 3, 4, 5, 6, 7 
 
         return  lambda: self.master.create_windows(
-                lambda top1: TopIzqCls  (top1, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
-                lambda top2: TopDerCls  (top2, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
-                lambda top3: TopStufCls (top3, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst), indice)
+                lambda top1: TopIzqCls  (top1, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.ico2_lst),
+                lambda top2: TopDerCls  (top2, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.ico2_lst),
+                lambda top3: TopStufCls (top3, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.ico2_lst), indice)
 
         
-    # Crea los 22 botones y las posiciona:
+    # Tarea: - Crea los 22 botones y las posiciona:
     def creator_buttons(self):  
         mobiles = [['Frog', 'Fox', 'Boomer', 'Ice', 'J.d', 'Grub', 'Lightning', 'Aduka', 'Knight', 'Kalsiddon', 'Mage'],
                    ['Randomizer', 'Jolteon', 'Turtle', 'Armor', 'A.sate', 'Raon', 'Trico', 'Nak', 'Bigfoot', 'Barney', 'Dragon']]                  
-        self.mobiles2 = ['Fox','Knight','Jolteon','Barney','Dragon'] 
+        self.mobiles2 = ['Fox', 'Knight', 'Jolteon', 'Barney', 'Dragon'] 
 
         self.buttons22 = []                                     # Lista: Sirve para condicionar las funciones vinculadas a eventos: bind -->  mouse_move, mouse_stop, mouse_clic  
-        for index1, mobil in enumerate(mobiles):                # Iterador: (mobil) = 11 elementos: 1 sublistasssss
-            for index2, texto in enumerate(mobil):              # Iterador: (texto) = 1  elemento:  'Frog'
+        for index1, mobil in enumerate(mobiles):                # Iterador(mobil) = 11 elementos: 1 sublistasssss
+            for index2, texto in enumerate(mobil):              # Iterador(texto) = 1  elemento:  'Frog'...
                 number = 11 if index1 == 1 else 0               # number: cambie su valor de 0 a 11 si su condicion se cumple
 
-                btn = DefaultButtonCls (self.frame_1, text=texto, command= self.indices(index2 + number))             
+                btn = DefaultButtonCls (self.frame_1, text=texto, command= self.indices(index2 + number))
                 n1 = 5 if index2 == 0 else 0        
                 n2 = 5 if index2 == 10 else 0
                 btn .grid(column=index2 , row=index1 , pady=3, padx=(n1,n2))
 
+                # Enlaces: Cambian el color de los botones:
                 btn.bind("<Enter>", self.enter_mouse)
                 btn.bind("<Leave>", self.leave_mouse)
                 btn.bind("<ButtonPress-1>", self.press_mouse)
-                btn.bind("<ButtonRelease-1>", self.release_mouse)            
+                btn.bind("<ButtonRelease-1>", self.release_mouse)
 
                 if texto in self.mobiles2: btn.config(fg='yellow')
-                self.buttons22.append(btn)   # Examinar si borrar porque no tiene uso la lista
+                self.buttons22.append(btn)
 
 
 
-    # TAREA:
-    #   1- Cambia el color del boton al pasar el mouse sobre el
     def enter_mouse(self, event):
-        if not event.widget .cget('bg') == '#bdfe04':           # -1  
-            event.widget .config(bg="#24364a")                   # >>>>
-        
-        # 1-  Si el color del boton sobre el que se posa el mouse, NO ES VERDE :▼▼▼▼
-            # >>>>   Cambia el color del boton a un --> [ CELESTE APAGADO ]
+        # Evento: Entrada del mouse sobre el boton.
+        # Dice: Si el color del boton no es verde:
+        if not event.widget .cget('bg') == '#bdfe04':             # Color(fondo): Verde
+            event.widget .config(bg="#24364a")                    # Color(fondo): Azul Celeste
 
-    
-    # TAREA:
-    #   1- Cambia el color del boton al salir el mouse de el
+       
     def leave_mouse(self, event):
-        if not event.widget .cget('bg') == '#bdfe04':            # -1
-            event.widget.config(bg='#11161d')                     # >>>>
+        # Evento: Salida del mouse sobre el boton.
+        # Dice: Si el color del boton no es verde:
+        if not event.widget .cget('bg') == '#bdfe04':             # Color(fondo): Verde
+            event.widget.config(bg='#11161d')                     # Color(fondo): Azulino
 
-        # 1-  Si el color de fondo del boton desde donde sale el mouse, NO ES VERDE :▼▼▼▼
-            # >>>>   Cambia el color del boton a un --> [ AZULINO DEFAULT ]
 
-
-    # TAREA:
-    #   1- Cambia el color del boton presionado actual a [VERDE-NEGRO]
+    # Tarea: - Cambia el color del boton presionado actual a [VERDE-NEGRO]
     def press_mouse(self, event):
-        widget_press = event.widget                                            # -1
-        widget_press .config(bg='#bdfe04', fg='black')                         # -2
+        # Evento: Botón presionado.
+        event.widget .config(bg='#bdfe04', fg='black')            # Color(fondo): Verde  /  Color(texto): Negro
                      
         for btn in (self.buttons22):
-            if btn != widget_press:
+            # Dice: Si cualquiera de los 22 botones no tiene esta configuracion (fondo: Verde - texto: Negro)
+            if btn != event.widget:
+                # Description (if-else): Configura los botones a sus colores por default.
                 if btn .cget('text') in self.mobiles2:
-                    btn .config (bg='#11161d', fg='yellow')
+                    btn .config (bg='#11161d', fg='yellow')       # Color(fondo): Azulino  /  Color(texto): Amarillo 
                 else:
-                    btn .config (bg='#11161d', fg='white') 
+                    btn .config (bg='#11161d', fg='white')        # Color(fondo): Azulino  /  Color(texto): Blanco
 
-        self.container1 = widget_press                                         # -4
-
-        # 1-  Atrapa al boton clickeado [ Nombre ]
-        # 2-  Cambia el background y foreground del boton clikeado a un --> [ VERDE - NEGRO ]
-
-        # 3-  Si [self.container1 = boton clickeado anterior] deja de ser [None] y es diferente al boton clickeado actual :▼▼▼▼
-            # 3.1-  [self.container1 = boton clickeado anterior] tiene de texto algunas de las cadenas de la lista, self.mobiles2 :▼▼▼▼
-                # >>>>  Cambia el background y foreground del boton clikeado anterior a un --> [ AZULINO - AMARILLO ]
-            # 3.2-  Entonces :▼▼▼▼
-                # >>>>  Cambia el background y foreground del boton clikeado anterior a un --> [ AZULINO - BLANCO ]
-        
-        # 4-  Almacena el boton actual en una variable   
+        # Description: Ultimo boton presionado.
+        self.container1 = event.widget
 
 
-    # TAREA:
-    #   1- Cambia el color del boton presionado actual a DEFAULT, si no coincide con el mismo boton presionado
+    # Tarea: - Cambia el color del boton presionado actual a default, si no coincide con el mismo boton presionado
     def release_mouse(self, event):
-        widget_press = event.widget                                                 # -1
-        widget_release = event.widget.winfo_containing(event.x_root, event.y_root)  # -2
+        # Evento: Botón soltado.
+        
+        # Description: Ultimo boton en dejar de ser presionado.
+        widget_press = event.widget 
+        # Description: Ultimo widget en dejar de ser presionado
+        widget_release = event.widget.winfo_containing(event.x_root, event.y_root)
 
-        if widget_press != widget_release:                                          # -3
-
-            if widget_press .cget('text') in self.mobiles2:                          # -3.1
-                widget_press .config (bg='#11161d', fg='yellow')                      # >>>>
-            else:                                                                    # -3.2
-                widget_press .config (bg='#11161d', fg='white')                       # >>>>
-
-        # 1-  Boton clikeado actual, [event.widget lo atrapa x alguna razon que no es muy clara]
-        # 2-  Atrapa al widget sobre el que se solto el clic izquierdo [ Nombre del widget ]
-        # 3-  Si boton clikeado actual, es diferente al widget sobre el que se solto el clic :▼▼▼▼
-
-            # 3.1-  Si el boton clikeado tiene de texto algunas de las cadenas de la lista; self.mobiles2 :▼▼▼▼
-                # >>>>  Cambia el background y foreground del boton clikeado actual a un --> [ AZULINO - AMARILLO ]
-            # 3.2-  Entonces :▼▼▼▼
-                # >>>>  Cambia el background y foreground del boton clikeado actual a un --> [ AZULINO - BLANCO ]
-
-
-    # Deja el color como estaba por defecto
-    def uncheck_selection(self):
-        if self.container1 is not None:
-            if self.container1 .cget('text') in self.mobiles2:
-                self.container1 .config (bg='#11161d', fg='yellow')         # Cambia el color del boton: (bg y fg) que tenian por defecto
+        if widget_press != widget_release:
+            # Description (if-else): Configura el ultimo boton en dejar de ser presionado a sus colores por default.
+            if widget_press .cget('text') in self.mobiles2:
+                widget_press .config (bg='#11161d', fg='yellow')
             else:
-                self.container1 .config (bg='#11161d', fg='white')          # Cambia el color del boton: (bg y fg) que tenian por defecto
+                widget_press .config (bg='#11161d', fg='white')
+
+
+    # Tarea: - Quita la seleccion del boton presionado
+    def uncheck_selection(self):
+        # Dice: Si se presiono un boton.
+        if self.container1 is not None:
+            # Description (if-else): Configura el ultimo boton presionado a sus colores por default.
+            if self.container1 .cget('text') in self.mobiles2:
+                self.container1 .config (bg='#11161d', fg='yellow')
+            else:
+                self.container1 .config (bg='#11161d', fg='white')
         self.container1 = None
 
 
@@ -313,8 +301,7 @@ class ModeConfigurerCls(Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, kwargs)
 
-        #_____C O N T E N E D O R E S:  [ 0 ]
- 
+        #____Métodos Llamados:
         self.create_label()
         self.create_checkbutton()
 
@@ -382,15 +369,18 @@ class ModeConfigurerCls(Frame):
 
 # Frame Contenedor de Spinbox y Listbox
 class ModeListCls(Frame):
-    def __init__(self, master, mobiles, mini_lst,  *args, **kwargs):
+    def __init__(self, master, mobiles, path_lst,  *args, **kwargs):
         super().__init__(master, *args, kwargs)
         #____Lista de mobiles:
         self.mobiles = mobiles
 
         #____Coleccion de imagenes  
-        self.Miniatures = mini_lst
+        self.Miniatures = path_lst
 
-        #____C O N T E N E D O R E S:   [ 2 ]
+        #____Variables de Control: 
+        self._toggle_switch = False
+
+        #____CONTENEDORES INTERNOS: ( 2 )
         self.frame_1 = Frame (self, bg='#31343a', width=116, height=67)    # Color: Plomo       
         self.frame_2 = Frame (self, bg='#11161d', width=60, height=67)     # Color: Azul  
 
@@ -401,7 +391,7 @@ class ModeListCls(Frame):
         self.create_listbox (width=11, height=1)
         self.create_spinbox (width=13)
 
-        #____G R I D ():
+        #____Posicionamiento:
         self.frame_1 .grid (column=0, row=0)                                            # MASTER A
         self.frame_2 .grid (column=1, row=0)                                            # MASTER B
 
@@ -414,13 +404,11 @@ class ModeListCls(Frame):
 
         self.miniature_mobil .grid (padx=2, pady=3)                                     # SUB B.1
 
-        #____G R I D___P R O P A G A T E ():
+        #____Propagacion:
         self.frame_1 .grid_propagate(False)
         self.frame_2 .grid_propagate(False)
         self.container_2w .grid_propagate(False)
         
-        #____V A R I A B L E S  DE  C O N T R O L: 
-        self._toggle_switch = False
    
 
     def change_variable(self, *args):  # ACTIVA: SI SPINBOX_VARIABLE CAMBIA DE VALOR - BORRA LA LISTA DE LISTBOX, MANDA A LLAMAR A UPDATE Y CAMBIA LAS MINIATURAS
@@ -484,9 +472,9 @@ class ModeListCls(Frame):
         for index, i in enumerate(self.mobiles):     
             if self.spinbox_variable.get() == i:            # ANTES DABA ERROR CON: self.spinboxx .!toplvel.!frame,etc
                 self.master.create_windows(
-                lambda top1: TopIzqCls  (top1, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
-                lambda top2: TopDerCls  (top2, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst),
-                lambda top3: TopStufCls (top3, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.mini_lst), index)
+                lambda top1: TopIzqCls  (top1, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.ico2_lst),
+                lambda top2: TopDerCls  (top2, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.ico2_lst),
+                lambda top3: TopStufCls (top3, index, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.ico2_lst), index)
                 break                                       # Sin breack el programa seguiria buscando coincidencias despues del enter, y guardaria un error
         
 
@@ -505,7 +493,8 @@ class ModeListCls(Frame):
 
 
 
-    def change_toggle(self, event=None):  # ACTIVA: CLICK IZQUIERDO EN RED_GREEN - CAMBIA IMAGEN ROJO-VERDE Y VICEVERSA
+    def change_toggle(self, event=None):# CAMBIA IMAGEN ROJO-VERDE Y VICEVERSA
+        # Evento: Click izquierdo.
         if not self._toggle_switch == True:                                                     # -1
             self._toggle_switch = True                                                          # >>>>
             self.lbl_toggle .config(image=self.Miniatures[24])                                  # >>>>
@@ -642,12 +631,42 @@ class ResizeCls(Frame):
         self.img .config(image=self.photo_image)
 
 
-""" class IconsIzqCls(Frame):
-    def __init__(self, master, *args, **kwargs):
+class Cls(Frame):
+    def __init__(self, master, path_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+
+        #____Colección de Imágenes:
+        self.Icons = path_lst
+
+
+        self.frame_container_icons = Frame(self, bg="#1b1d22",)
+        self.frame_container_icons .pack(anchor='nw', fill='y', expand=True)
+
+
+        #____Metodos Llamados:
+        #self.c_frame()
+        self.create_icons()
+
         
 
-        # INTERFACE DE CONTROL: Para cambiar las imagenes
+    
+    def increase_frame(self):
+        pass
+
+
+    def create_icons(self):
+        self.lbl_icon1 = Label(self.frame_container_icons, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
+        self.lbl_icon2 = Label(self.frame_container_icons, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
+        self.lbl_icon3 = Label(self.frame_container_icons, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
+        self.lbl_icon4 = Label(self.frame_container_icons, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
+
+        self.lbl_icon1 .grid(column=0, row=0, padx=5, pady=5) # sticky='ew', para que el color de relleno del label ocupe todo
+        self.lbl_icon2 .grid(column=0, row=1, padx=5, pady=5)
+        self.lbl_icon3 .grid(column=0, row=2, padx=5, pady=5)
+        self.lbl_icon4 .grid(column=0, row=3, padx=5, pady=5)
+        
+
+        """ # INTERFACE DE CONTROL: Para cambiar las imagenes
 
         # Frame: Contenedor de todos los iconos: 
         self.frame_container_icons               = Frame(self, bg='#2f3337')
@@ -700,8 +719,32 @@ class ResizeCls(Frame):
 
 #____V E N T A N A___I Z Q U I E R D A:
 class TopIzqCls(Frame):
-    def __init__(self, master, indice, arg_0=None, arg_1=None, arg_2=None, arg_3=None, arg_4=None, arg_5=None, arg_6=None, arg_7=None, main_lst=None, path_mini=None, *args, **kwargs):
+    def __init__(self, master, indice, arg_0=None, arg_1=None, arg_2=None, arg_3=None, arg_4=None, arg_5=None, arg_6=None, arg_7=None, main_lst=None, icon_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+
+        #____Colección de Imágenes:
+        self.Images = main_lst
+        self.Icons = icon_lst
+
+        #____Variables de Control: Indice de la sublista.
+        self.indice = indice
+
+        #____Lista de imagenes:
+        self._1 = arg_1
+        self._2 = arg_2
+        self._3 = arg_3
+        self._4 = arg_4
+        self._5 = arg_5
+        self._6 = arg_6
+        self._7 = arg_7
+
+        #____Metodos Llamados:
+        self.create_instances()
+        #self.create_frame_container()
+
+
+
+        #--------------------------------------------------------------------------------------------
 
         # Variables de Control y Seguimiento:
         self._motion_1 = False
@@ -713,32 +756,14 @@ class TopIzqCls(Frame):
 
         # INTERFACE DE CONTROL: Para cambiar las imagenes
 
-        # Frame: Contenedor de todos los iconos: 
-        self.frame_container_icons               = Frame(self, bg='#2f3337')
-        self.frame_container_icons                 .grid(column=0, row=0, sticky='new')
-
         
-          
-        # POSICIONAMIENTO DE IMAGENES:    
 
-        # Imagen: Delay completo del mobil
-        self.frame_image_delay_complete = ResizeCls(self, main_lst[indice][arg_0], bd=0)
-        self.frame_image_delay_complete       .grid(column=0, row=1, sticky='news')
-
-        # Imagen: Miniatura del mobil para ayudar a medir las distancias
-        self.frame_image_mobil_tutorial = ResizeCls(self, main_lst[indice][arg_1], bd=0)
-        self.frame_image_mobil_tutorial       .grid(column=0, row=1, sticky='news')
+        # Enlaces: 
+        #self.master.bind('<Motion>',self.open_frame_container_icons)
+        #self.bind('<Leave>', self.remove_frame_container_icons)
 
 
-        # Widgets No Posicionados:
-        self.frame_image_mobil_tutorial .grid_remove()
-        self.frame_container_icons .grid_remove()
-
-        self.master.bind('<Motion>',self.open_frame_container_icons)
-        self.bind('<Leave>', self.remove_frame_container_icons)
-
-
-        # Configuracion principal :
+        # Configuracion de columnas y filas de la clase :
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=0)
         self.grid_rowconfigure(1, weight=1)
@@ -747,9 +772,28 @@ class TopIzqCls(Frame):
         """ self.frame_image_delay_complete .columnconfigure(0, weight=1)
         self.frame_image_delay_complete .rowconfigure(0, weight=1) """
 
-        # Configuracion del contenedor de iconos :
-        self.frame_container_icons.columnconfigure((0,1), weight=1)
-        self.frame_container_icons.rowconfigure(0, weight=1)
+
+
+    # Tarea: - Crea las imagenes 
+    def create_instances(self):
+
+        # Imagen: Delay completo del mobil
+        self.frame_image_delay_complete = ResizeCls(self, self.Images[self.indice][self._1], bd=0)
+        self.frame_image_delay_complete       .grid(column=0, row=1, sticky='news')
+
+        # Imagen: Miniatura del mobil para ayudar a medir las distancias
+        self.frame_image_mobil_tutorial = ResizeCls(self, self.Images[self.indice][self._2], bd=0)
+        self.frame_image_mobil_tutorial       .grid(column=0, row=1, sticky='news')
+
+        self.frame_image_mobil_tutorial .grid_remove()
+
+
+
+    """ def create_frame_container(self):
+
+        self.frame_container_icons = Cls(self, self.Icons )
+        self.frame_container_icons .grid(column=0, row=1, sticky='nsw') """
+
 
 
     # Tarea: Abrir la minuatura del mobil:  [ B U T T O N - 1 ]
@@ -761,23 +805,6 @@ class TopIzqCls(Frame):
             self.frame_image_mobil_tutorial .grid_remove()
 
 
-    # Tarea: Ocultar y mostrar el frame contenedor de los iconos: [ M O T I O N ]
-    def open_frame_container_icons(self, event):
-        """ self.porcentage_x  = event.x / self.master.winfo_width() * 100
-        self.porcentage_y = event.y / self.master.winfo_height() * 100
-        
-        if not self._motion_1 == True:
-        
-            if self.x1 <(self.porcentage_x)< self.x2  and  self.y1 <(self.porcentage_y)< self.y2: """
-        self.master.master.resize_1 = True    # Variable de seguimiento
-
-        self.frame_container_icons .grid()
-        """ else:
-        self.master.master.resize_1 = True     # Variable de seguimiento
-        self.frame_container_icons .grid_remove() """
-
-        """ if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
-            self.lbl_text_mostrar_77     .grid_remove() """
 
     # Tarea: Ocultar y mostrar el frame contenedor de los iconos: [ M O T I O N ]
     def remove_frame_container_icons(self, event):
@@ -802,6 +829,10 @@ class TopIzqCls(Frame):
 class TopDerCls(Frame):
     def __init__(self, master, indice, arg_0=None, arg_1=None, arg_2=None, arg_3=None, arg_4=None, arg_5=None, arg_6=None, arg_7=None, main_lst=None, path_mine=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+
+        #____Colección de Imágenes:
+        self.Images = main_lst
+
         # Variables de Control para mostrar la imagen del angulo 77:
         self.x1 = 0
         self.x2 = 100
@@ -809,12 +840,12 @@ class TopDerCls(Frame):
         self.y2 = 100
 
         # Imagen: Base inicial del mobil:
-        self.frame_image_base_initial = ResizeCls (self, main_lst [indice][arg_2], bd=0)
+        self.frame_image_base_initial = ResizeCls (self, self.Images [indice][arg_2], bd=0)
         self.frame_image_base_initial       .grid (column=0, row=0, sticky='news')
         self.frame_image_base_initial       .grid_propagate(0)
 
         # Imagen: Base 77 del mobil:
-        self.frame_image_base_77      = ResizeCls (self, main_lst [indice][arg_3], bd=0)
+        self.frame_image_base_77      = ResizeCls (self, self.Images [indice][arg_3], bd=0)
         self.frame_image_base_77            .grid(column=0, row=0, sticky='news')                  # [ NO POSICIONADO ]
 
         # Texto: "Haga click" para mostrar el angulo 77" :  -->  Cambia la imagen a la base 77 del mobil:
@@ -925,11 +956,11 @@ class TopStufCls(Frame):
         pass
         
         """ if len(path_lst) > index_1:
-            self.img = ResizeCls (self, path_lst [index_1])
+            self.img = ResizeCls (self, self.Images [index_1])
             self.img.grid(column=0, row=0, sticky='news')
         
         if len(path_lst) > index_2:
-            self.img2 = ResizeCls (self, path_lst [index_2])
+            self.img2 = ResizeCls (self, self.Images [index_2])
             self.img2.grid(column=0, row=1, sticky='news') """
 
         # column 0 will use full width
@@ -1098,8 +1129,10 @@ class FrameManagerCls(Frame):
             self.master.wm_attributes("-alpha", 1.0 )
 
 
-    # Tarea: - Oculta el gestor de ventanas
+    # Tarea: - Muestra la ventana
     def window_manager_off(self, event=None):
+        # Evento: Widget visible
+
         if not isinstance(self.master.master.winfo_toplevel(), Tk):
             self.master.update_idletasks()
             self.master.overrideredirect(True)       # Oculta el Gestor de Ventanas
@@ -1120,7 +1153,7 @@ class FrameManagerCls(Frame):
 #************************            ███████    ██████████████
 
 class ToplevelCls(Toplevel):
-    def __init__(self, master=None, path_lst=None, *args, **kwargs):
+    def __init__(self, master=None, indice=None, frames=None, path_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
 
         self.overrideredirect(True)
@@ -1128,6 +1161,9 @@ class ToplevelCls(Toplevel):
         #____Coleccion de Imagenes:
         self.Icons = path_lst        # Iconos: menu de opciones
 
+        self.indice = indice
+        self.iif = False
+        self.frame= frames
         #____Variables de Reposo de las Coordenadas de la Ventana:
         self._x = 0
         self._y = 0
@@ -1162,9 +1198,9 @@ class ToplevelCls(Toplevel):
         self.label_title .bind("<B1-Motion>", self.on_move)
 
 
-    def create_button_menu(self, metodo=None):
+    def create_button_menu(self, ):
         #____BOTONES: ( 1 )
-        self.button_menu = Button(self.frame_manager, image=self.Icons[0], command=metodo, bg="#1b1d22", activebackground='#4ca6ff', bd=0)   
+        self.button_menu = Button(self.frame_manager, image=self.Icons[0], command=self.create_container_icons, bg="#1b1d22", activebackground='#4ca6ff', bd=0)   
         self.button_menu .pack(side=LEFT)
 
         #____Enlaces: Cambian la imagen del boton menu
@@ -1175,24 +1211,51 @@ class ToplevelCls(Toplevel):
 
 
     def enter_mouse_menu(self, event):
-        # Entrada del mouse sobre el boton (Imagen: change)
+        # Evento: Entrada del mouse sobre el boton (Imagen: change)
         event.widget .config(image=self.Icons[1], bg='#252b34')
 
     def leave_mouse_menu(self, event):
-        # Salida del mouse sobre el boton (Imagen: default)
+        # Evento: Salida del mouse sobre el boton (Imagen: default)
         event.widget .config(image=self.Icons[0], bg='#1b1d22')
 
     def press_mouse_menu(self, event):
-        # Botón presionado (Imagen: change)
+        # Evento: Botón presionado (Imagen: change)
         self.button_press = event.widget
         self.button_press .config(image=self.Icons[2])
 
     def release_mouse_menu(self, event):
-        # Botón soltado (Imagen: default) $$-$$$
+        # Evento: Botón soltado (Imagen: default) $$-$$$
         self.button_press .config(image=self.Icons[1], bg='#252b34')
 
 
-    #def open_
+    def create_container_icons(self):
+        a = [None]*3
+
+        a = Cls(self.frame[0], self.Icons )
+        b = Cls(self.frame[1], self.Icons )
+        c = Cls(self.frame[2], self.Icons )
+
+        a .grid(column=0, row=1, sticky='nsw')
+        b .grid(column=0, row=1, sticky='nsw')
+        c .grid(column=0, row=1, sticky='nsw')
+
+        a.grid_remove()
+        b.grid_remove()
+        c.grid_remove()
+
+        for i in range(len(self.frame)):
+
+            if self.indice == i:
+                if not self.iif: 
+                    print(55555555555)
+                    self.iif = True
+                    a .grid()
+                else:
+                    print(555555554444444444)
+                    self.iif = False
+                    a.grid_remove()
+
+
 
 
 
@@ -1627,7 +1690,7 @@ class InterfazCls(Frame, MoveAllCls):
             if not self._open[i] == True:
 
                 #____VENTANAS:  ( 3 instancias )         
-                window = ToplevelCls (self.master, self.ico2_lst)
+                window = ToplevelCls (self.master, i, self._frame, self.ico2_lst)
                 #____Métodos Llamados:
                 window .configure_toplevel(title[i], size[i])
                 window .create_frame_manager(self.ico1_lst, side=TOP, fill=BOTH)
@@ -1658,7 +1721,7 @@ class InterfazCls(Frame, MoveAllCls):
             ttk.Style().configure('TSizegrip', bg='black')
 
             # Descripcion: Muestra todas las ventanas ocultas
-            self._windows[i] .frame_manager.window_manager_off()
+            #self._windows[i] .frame_manager.window_manager_off()
 
     #-----------------------------------------------------------------------------------------------------------------
 
