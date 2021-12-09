@@ -1153,14 +1153,13 @@ class FrameManagerCls(Frame):
 #************************            ███████    ██████████████
 
 class ToplevelCls(Toplevel):
-    def __init__(self, master=None, indice=None, path_lst=None, *args, **kwargs):
+    def __init__(self, master=None, path_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.overrideredirect(True)
 
         #____Coleccion de Imagenes:
         self.Icons = path_lst        # Iconos: Menu de opciones
 
-        self.indice = indice
 
         #____Variable de Control: Visibilidad de la interface de iconos.
         self.cascade = False
@@ -1674,7 +1673,7 @@ class InterfazCls(Frame, MoveAllCls):
             if not self._open[i] == True:
 
                 #____VENTANAS:  ( 3 instancias )         
-                window = ToplevelCls (self.master, i, self._frame, self.ico2_lst)
+                window = ToplevelCls (self.master, self.ico2_lst)
                 #____Métodos Llamados:
                 window .configure_toplevel(title[i], size[i])
                 window .create_frame_manager(self.ico1_lst, side=TOP, fill=BOTH)
