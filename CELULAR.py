@@ -517,7 +517,7 @@ class ModeListCls(Frame):
 
 
     def validate_text(self, text, arg): # SIEMPRE QUE INSERTE TEXTO EN SPINBOX - NO PERMITE NUMEROS,SIMBOLOS,ESPACIOS Y CONTROLA LA CANTIDAD
-        if all (i not in "0123456789[{!¡¿?<>(|#$%&),_-°'´}] +-*/=" for i in text) and len(text) < 14:   
+        if all (i not in "0123456789ñ[{!¡¿?<>(|#$%&),_-°'}] +-*/=" for i in text) and len(text) < 14:   
                 return True                                                 
         return False  
 
@@ -638,69 +638,50 @@ class Cls(Frame):
         #____Colección de Imágenes:
         self.Icons = path_lst
 
-
-        self.frame_container_icons = Frame(self, bg="#1b1d22",)
-        self.frame_container_icons .pack(anchor='nw', fill='y', expand=True)
-
-
         #____Metodos Llamados:
-        #self.c_frame()
-        self.create_icons()
+        self.create_containers()
 
-        
+
+
+        self.grip = ttk.Sizegrip(self, style='TSizegrip')
+        self.grip .place (relx=1.0, rely=1.0, anchor='center')
+        ttk.Style().configure('TSizegrip', bg='black')
 
     
-    def increase_frame(self):
-        pass
+    def create_containers(self):
+        #____CONTENEDORES PRINCIPALES: ( 2 )
+        self.container1 = Frame(self, bg="#1b1d22",)
+        self.container2 = Frame(self, bg='#2b313c')
+
+        #____Posicionamiento:
+        self.container1 .pack(side='left', fill='y', expand=False)
+        self.container2 .pack(fill='both', expand=True)
+
+        #________Metodos Llamados:
+        self.create_icons()
+        self.create_logotipo()
+
 
 
     def create_icons(self):
-        self.lbl_icon1 = Label(self.frame_container_icons, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
-        self.lbl_icon2 = Label(self.frame_container_icons, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
-        self.lbl_icon3 = Label(self.frame_container_icons, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
-        self.lbl_icon4 = Label(self.frame_container_icons, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
+        #____ICONOS: ( 4 )
+        self.lbl_icon1 = Label(self.container1, image=self.Icons[4], bg='black', cursor="hand2", bd=0)
+        self.lbl_icon2 = Label(self.container1, image=self.Icons[4], bg='black', cursor="hand2", bd=0)
+        self.lbl_icon3 = Label(self.container1, image=self.Icons[4], bg='black', cursor="hand2", bd=0)
+        self.lbl_icon4 = Label(self.container1, image=self.Icons[4], bg='black', cursor="hand2", bd=0)
 
+        #____Posicionamiento:
         self.lbl_icon1 .grid(column=0, row=0, padx=5, pady=5) # sticky='ew', para que el color de relleno del label ocupe todo
         self.lbl_icon2 .grid(column=0, row=1, padx=5, pady=5)
         self.lbl_icon3 .grid(column=0, row=2, padx=5, pady=5)
         self.lbl_icon4 .grid(column=0, row=3, padx=5, pady=5)
-        
+    
+    def create_logotipo(self):
+        #____LOGOTIPO CENTRAL:
+        self.lbl_icon0 = Label(self.container2, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
+        self.lbl_icon0 .place(relx=.5, rely=.5, anchor="center")
 
-        """ # INTERFACE DE CONTROL: Para cambiar las imagenes
 
-        # Frame: Contenedor de todos los iconos: 
-        self.frame_container_icons               = Frame(self, bg='#2f3337')
-        self.frame_container_icons                 .grid(column=0, row=0, sticky='new')
-
-        # Label: Iconos:
-        self.lbl_icon1 = Label(self.frame_container_icons, image=path_mini[26], bg='black', cursor="hand2", bd=0)
-        self.lbl_icon1   .grid(column=0, row=0, padx=0) # sticky='ew', para que el color de relleno del label ocupe todo
-
-        self.lbl_icon2 = Label(self.frame_container_icons, image=path_mini[25], bg='black', cursor="hand2", bd=0)
-        self.lbl_icon2   .grid(column=1, row=0, padx=0)
-
-        # Eventos: Para cambiar las imagenes 1
-        self.lbl_icon1   .bind('<Button-1>', self.open_image_miniature)
-        self.lbl_icon2   .bind('<Button-1>', self.open_image_miniature)
-
-        if indice == 17:
-
-            # Label: Iconos:    
-            self.lbl_icon3 = Label(self.frame_container_icons, text='33', bg='green', height=1, cursor="hand2")
-            self.lbl_icon3   .grid(column=2, row=0, padx=0)
-
-            self.lbl_icon4 = Label(self.frame_container_icons, text='44', bg='green', cursor="hand2")
-            self.lbl_icon4   .grid(column=3, row=0, padx=0)
-
-            # Eventos: Para cambiar las imagenes 2
-            self.lbl_icon3   .bind('<Button-1>', self.open_image_miniature)
-            self.lbl_icon4   .bind('<Button-1>', self.open_image_miniature)
-
-            self.frame_container_icons.columnconfigure((2,3), weight=1)
-          
-        
-    def controllers(self):  
-        pass """
         
 
 #********************************        ██████████████        *********************************
@@ -730,6 +711,7 @@ class TopIzqCls(Frame):
         self.indice = indice
 
         #____Lista de imagenes:
+        self._0 = arg_0
         self._1 = arg_1
         self._2 = arg_2
         self._3 = arg_3
@@ -778,11 +760,11 @@ class TopIzqCls(Frame):
     def create_instances(self):
 
         # Imagen: Delay completo del mobil
-        self.frame_image_delay_complete = ResizeCls(self, self.Images[self.indice][self._1], bd=0)
+        self.frame_image_delay_complete = ResizeCls(self, self.Images[self.indice][self._0], bd=0)
         self.frame_image_delay_complete       .grid(column=0, row=1, sticky='news')
 
         # Imagen: Miniatura del mobil para ayudar a medir las distancias
-        self.frame_image_mobil_tutorial = ResizeCls(self, self.Images[self.indice][self._2], bd=0)
+        self.frame_image_mobil_tutorial = ResizeCls(self, self.Images[self.indice][self._1], bd=0)
         self.frame_image_mobil_tutorial       .grid(column=0, row=1, sticky='news')
 
         self.frame_image_mobil_tutorial .grid_remove()
@@ -1153,15 +1135,16 @@ class FrameManagerCls(Frame):
 #************************            ███████    ██████████████
 
 class ToplevelCls(Toplevel):
-    def __init__(self, master=None, path_lst=None, *args, **kwargs):
+    def __init__(self, master=None, windows=None, frames=None, path_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.overrideredirect(True)
 
         #____Coleccion de Imagenes:
-        self.Icons = path_lst        # Iconos: Menu de opciones
+        self.Icons = path_lst               # Imagenes-Iconos: Menu de opciones
 
-
-        #____Variable de Control: Visibilidad de la interface de iconos.
+        #____Variable de Control: 
+        self.windows = windows
+        self.frames = frames
         self.cascade = False
 
         #____Variables de Reposo: Coordenadas de la Ventana.
@@ -1171,6 +1154,7 @@ class ToplevelCls(Toplevel):
         #____Enlaces:
         #self.bind('<Map>',self.visibility_on)
         #self.bind('<Unmap>',self.visibility_off)
+
 
     def create_frame_manager(self, path_lst, **position):
         # [ 1 ] self.frame_manager  : Frame(contenedor):  Botones: [X] [-]
@@ -1187,6 +1171,13 @@ class ToplevelCls(Toplevel):
         self.frame_manager .bind("<Map>",self.frame_manager .window_manager_off)
 
 
+    def create_container_icons(self):
+        #____GESTOR DE ICONOS: ( 1 instancia )
+        self.container_icons = Cls(self, self.Icons)
+        self.container_icons .pack(fill=BOTH, expand=True)
+        self.container_icons .pack_forget()
+
+
     def create_label_title(self, **kwargs):
         #____TITULO DE LA VENTANA:
         self.label_title = Label(self.frame_manager, font=('Ghotam',8,'bold'), fg="white", bg="#1b1d22", bd=0, **kwargs)
@@ -1200,7 +1191,7 @@ class ToplevelCls(Toplevel):
 
     def create_button_menu(self):
         #____BOTONES: ( 1 )
-        self.button_menu = Button(self.frame_manager, image=self.Icons[0], command=self.create_container_icons, bg="#1b1d22", activebackground='#4ca6ff', bd=0)   
+        self.button_menu = Button(self.frame_manager, image=self.Icons[0], command=self.open_container_icons, bg="#1b1d22", activebackground='#4ca6ff', bd=0)   
         self.button_menu .pack(side=LEFT)
 
         #____Enlaces: Cambian la imagen del boton menu
@@ -1208,7 +1199,7 @@ class ToplevelCls(Toplevel):
         self.button_menu .bind("<Leave>", self.leave_mouse_menu)
         self.button_menu .bind("<ButtonPress-1>", self.press_mouse_menu)
         self.button_menu .bind("<ButtonRelease-1>", self.release_mouse_menu)
-
+        
 
     def enter_mouse_menu(self, event):
         # Evento: Entrada del mouse sobre el boton (Imagen: change)
@@ -1228,17 +1219,28 @@ class ToplevelCls(Toplevel):
         self.button_press .config(image=self.Icons[1], bg='#252b34')
 
 
-    def create_container_icons(self):
-        if not self.cascade:  # es falso
-            self.cascade = True
-            self.container_icons = Cls(self, self.Icons)
-            self.container_icons .pack(side=LEFT, fill='y', expand=True)
-            self.container_icons .lift()
+    def open_container_icons(self):
+        relation = self.winfo_children()
 
+        # MOSTRAR INTERFACE:
+        if not self.cascade:
+            self.cascade = True
+            # Description (for): Encuentra el frame hijo de la ventana y lo oculta.
+            for i in range(len(self.frames)):
+                if self.frames[i] in relation:
+                    self.frames[i]. pack_forget()
+
+            self.container_icons .pack(fill=BOTH, expand=True)
+
+        # OCULTAR INTERFACE:
         else:
             self.cascade = False
+            # Description (for): Encuentra el frame hijo de la ventana y lo muestra.
+            for i in range(len(self.frames)):
+                if self.frames[i] in relation:
+                    self.frames[i] .pack(fill=BOTH, expand=True)
+
             self.container_icons .pack_forget()
-            self.container_icons .lower()
 
 
 
@@ -1673,10 +1675,11 @@ class InterfazCls(Frame, MoveAllCls):
             if not self._open[i] == True:
 
                 #____VENTANAS:  ( 3 instancias )         
-                window = ToplevelCls (self.master, self.ico2_lst)
+                window = ToplevelCls (self.master, self._windows, self._frame, self.ico2_lst)
                 #____Métodos Llamados:
                 window .configure_toplevel(title[i], size[i])
                 window .create_frame_manager(self.ico1_lst, side=TOP, fill=BOTH)
+                window .create_container_icons()
                 window .create_button_menu()
                 window .create_label_title(text=text[i])
 
@@ -1684,21 +1687,24 @@ class InterfazCls(Frame, MoveAllCls):
                 window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
                
 
-                # Descripcion: Actualiza la lista de ventanas y booleanos
+                # Description: Actualiza la lista de ventanas y booleanos
                 self._windows[i] = window
                 self._open[i] = True
 
 
-            # Descripcion: Reemplaza los elementos de la lista (container)
+            # Description: Reemplaza los elementos de la lista (container)
             container[i] = args[i] (self._windows[i])
 
             if self._frame[i] is not None:
                 self._frame[i] .destroy()
             self._frame[i] = container[i]
             self._frame[i] .pack(fill='both', expand=True)
+            # Description: Oculta el frame si la interface de iconos es visible.
+            if self._windows[i].container_icons .winfo_ismapped():
+                self._frame[i] .pack_forget()
 
 
-            # Descripcion: Redimensiona la ventana
+            # Description: Widget para redimensionar el frame.
             self.grip = ttk.Sizegrip(self._frame[i], style='TSizegrip')
             self.grip .place (relx=1.0, rely=1.0, anchor='center')
             ttk.Style().configure('TSizegrip', bg='black')
