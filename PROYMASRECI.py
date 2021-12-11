@@ -40,14 +40,14 @@ class A1FrameCls(Frame):
         super().__init__(master, *args, **kwargs)
         #_____C O N T E N E D O R E S:  [ 0 ]
 
-        self.initializer_images()
+        #self.initializer_images()
         self.controllers()
         
     def controllers(self):  # Botones
         #____B U T T O N S:  [2]:  Logo y rueda
-        self.btn_ash = Button (self, image=self.image_ash, bg='#11161d', bd=0, activebackground='#11161d' ,
+        self.btn_ash = Button (self, text='ASH', bg='#11161d', fg='white', bd=0, activebackground='#11161d' ,
                                command=self.minimize_windows)
-        self.btn_gear = Button (self, image=self.image_gear1, bg='#11161d', bd=0, activebackground='#11161d',
+        self.btn_gear = Button (self, text='CONFIG', bg='#11161d', fg='white', bd=0, activebackground='#11161d',
                                command=self.master.gear_stacking)                               
 
         self.btn_ash .grid (column=0, row=0, padx=(6,6), pady=0)
@@ -55,8 +55,8 @@ class A1FrameCls(Frame):
 
         #____B I N D ():
         self.btn_ash .bind ('<Double-Button-3>', self.close_windows)  # Cierra Toplevel Secundarias
-        self.btn_gear.bind("<Enter>", self.change_image_gear1)
-        self.btn_gear.bind("<Leave>", self.change_image_gear2)
+        #self.btn_gear.bind("<Enter>", self.change_image_gear1)
+        #self.btn_gear.bind("<Leave>", self.change_image_gear2)
 
 
     # Cierra las ventanas secundarias:
@@ -816,7 +816,8 @@ class TopDerCls(Frame):
         # Convierte el tamaño total de la ventana en porcentaje:  100 %
         self.porcentage_total_x = event.x / self.master.winfo_width() * 100              # ---> winfo_width() : Devuelve el ancho actual del widget(Toplevel) en pixeles
         self.porcentage_total_y = event.y / self.master.winfo_height() * 100             # ---> event.x/y     : Devuelve la posicion del mouse en pixeles (click/movimiento)
-      
+
+
         if self.x1 <(self.porcentage_total_x)< self.x2  and  self.y1 <(self.porcentage_total_y)< self.y2: 
 
             if not self._button_1 == True:    # Si es Falso:   ---> Predeterminado: False
@@ -842,6 +843,8 @@ class TopDerCls(Frame):
  
         self.pointer_width_2  = event.x / self.master.winfo_width() * 100
         self.pointer_height_2 = event.y / self.master.winfo_height() * 100
+
+        print(self.pointer_width_2) # LENTO
         
         if not self._motion_1 == True: 
 
@@ -955,23 +958,23 @@ class FrameManagerCls(Frame):
         super().__init__(master, **kwargs)
         self._exception1 = _exception1
         self.master = master
-        self.initializer_images()
+        #self.initializer_images()
 
 
     def type_button(self, pack_1, pack_2):
-        self.button_close = Button(self, image=self.image_close1, command=self.close, bd=0, bg='black', activebackground='black')
-        self.button_minimize = Button(self, image=self.image_minimize1, command=self.minimize, bd=0, bg='black', activebackground='black')
+        self.button_close = Button(self, text='X', command=self.close, bd=0, bg='black', fg='white', activebackground='black')
+        self.button_minimize = Button(self, text='-', command=self.minimize, bd=0, bg='black', fg='white', activebackground='black')
 
         self.button_close .pack (pack_1)       # Orientacion del boton en el frame: Principal: (side=TOP, pady=7)    Secundario: (side=RIGHT) 
         self.button_minimize .pack (pack_2)    # Orientacion del boton en el frame: Principal: (side=BOTTOM, pady=7) Secundario: (side=RIGHT, padx=10)            
            # self.label_title = Label(self, text='', fg="white", bg="green")   
            # self.label_title .pack(side=RIGHT, padx=0, pady=0)                  # Derecha """
 
-        self.button_close.bind("<Enter>", self.change_image_close1)
-        self.button_close.bind("<Leave>", self.change_image_close2)
+        #self.button_close.bind("<Enter>", self.change_image_close1)
+        #self.button_close.bind("<Leave>", self.change_image_close2)
 
-        self.button_minimize.bind("<Enter>", self.change_image_mini1)
-        self.button_minimize.bind("<Leave>", self.change_image_mini2)
+        #self.button_minimize.bind("<Enter>", self.change_image_mini1)
+        #self.button_minimize.bind("<Leave>", self.change_image_mini2)
 
 
     def change_image_close1(self, event):   # Cambia el color al pasar el mouse sobre el      # Color: Celeste apagado

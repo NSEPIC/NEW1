@@ -631,11 +631,13 @@ class ResizeCls(Frame):
         self.img .config(image=self.photo_image)
 
 
-class Cls(Frame):
-    def __init__(self, master, path_lst=None, *args, **kwargs):
+
+class IconsCls(Frame):
+    def __init__(self, master, main_lst=None, path_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
 
         #____Colección de Imágenes:
+        self.Images = main_lst
         self.Icons = path_lst
 
         #____Metodos Llamados:
@@ -655,7 +657,12 @@ class Cls(Frame):
 
         #____Posicionamiento:
         self.container1 .pack(side='left', fill='y', expand=False)
-        self.container2 .pack(fill='both', expand=True)
+        self.container2 .pack(side='right', fill='both', expand=True)
+
+        self.container1 .pack_forget()
+        #____Enlaces:
+        #self.container2 .bind('<Enter>', self.open1)
+        self.master.bind('<Motion>',self.open1)
 
         #________Metodos Llamados:
         self.create_icons()
@@ -665,21 +672,58 @@ class Cls(Frame):
 
     def create_icons(self):
         #____ICONOS: ( 4 )
-        self.lbl_icon1 = Label(self.container1, image=self.Icons[4], bg='black', cursor="hand2", bd=0)
-        self.lbl_icon2 = Label(self.container1, image=self.Icons[4], bg='black', cursor="hand2", bd=0)
-        self.lbl_icon3 = Label(self.container1, image=self.Icons[4], bg='black', cursor="hand2", bd=0)
-        self.lbl_icon4 = Label(self.container1, image=self.Icons[4], bg='black', cursor="hand2", bd=0)
+        self.button_icon1 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
+        self.button_icon2 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
+        self.button_icon3 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
+        self.button_icon4 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
 
         #____Posicionamiento:
-        self.lbl_icon1 .grid(column=0, row=0, padx=5, pady=5) # sticky='ew', para que el color de relleno del label ocupe todo
-        self.lbl_icon2 .grid(column=0, row=1, padx=5, pady=5)
-        self.lbl_icon3 .grid(column=0, row=2, padx=5, pady=5)
-        self.lbl_icon4 .grid(column=0, row=3, padx=5, pady=5)
+        self.button_icon1 .grid(column=0, row=0, padx=5, pady=5) # sticky='ew', para que el color de relleno del label ocupe todo
+        self.button_icon2 .grid(column=0, row=1, padx=5, pady=5)
+        self.button_icon3 .grid(column=0, row=2, padx=5, pady=5)
+        self.button_icon4 .grid(column=0, row=3, padx=5, pady=5)
+
+
+        #____Enlaces:
+        self.button_icon1 .bind()
     
     def create_logotipo(self):
         #____LOGOTIPO CENTRAL:
-        self.lbl_icon0 = Label(self.container2, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
-        self.lbl_icon0 .place(relx=.5, rely=.5, anchor="center")
+        self.label_icon1 = Label(self.container2, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
+        self.label_icon1 .place(relx=.5, rely=.5, anchor="center")
+    
+
+    def open(self):
+        pass
+        """ self.self.frame_image_mobil_tutorial = ResizeCls(self, self.Images[0][self._1], bd=0)
+        self.frame_image_mobil_tutorial       .grid(column=0, row=1, sticky='news') """
+
+
+
+    def open1(self, event=None):
+
+        x  = event.x / self.master.winfo_reqwidth() * 100
+        y = event.y / self.master.winfo_height() * 100
+        #x = int(x) AQUI
+        print(x)
+        
+        if 0 <= x < 21:
+            print(11111)
+            self.container1 .pack(side='left', fill='y', expand=False)
+
+        else:
+            self.container1 .pack_forget()
+        """ if not self._motion_1 == True: 
+
+            if self.x1 <(self.pointer_width_2)< self.x2  and  self.y1 <(self.pointer_height_2)< self.y2:    
+                self.lbl_text_mostrar_77 .grid()
+
+            else:
+                self.lbl_text_mostrar_77 .grid_remove()
+
+        if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
+            self.lbl_text_mostrar_77     .grid_remove() """
+
 
 
         
@@ -767,7 +811,7 @@ class TopIzqCls(Frame):
         self.frame_image_mobil_tutorial = ResizeCls(self, self.Images[self.indice][self._1], bd=0)
         self.frame_image_mobil_tutorial       .grid(column=0, row=1, sticky='news')
 
-        self.frame_image_mobil_tutorial .grid_remove()
+        #self.frame_image_mobil_tutorial .grid_remove()
 
 
 
@@ -1135,15 +1179,15 @@ class FrameManagerCls(Frame):
 #************************            ███████    ██████████████
 
 class ToplevelCls(Toplevel):
-    def __init__(self, master=None, windows=None, frames=None, path_lst=None, *args, **kwargs):
+    def __init__(self, master=None, frames=None, main_lst=None, path_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.overrideredirect(True)
 
         #____Coleccion de Imagenes:
+        self.Images = main_lst
         self.Icons = path_lst               # Imagenes-Iconos: Menu de opciones
 
         #____Variable de Control: 
-        self.windows = windows
         self.frames = frames
         self.cascade = False
 
@@ -1173,7 +1217,7 @@ class ToplevelCls(Toplevel):
 
     def create_container_icons(self):
         #____GESTOR DE ICONOS: ( 1 instancia )
-        self.container_icons = Cls(self, self.Icons)
+        self.container_icons = IconsCls(self, self.Images, self.Icons)
         self.container_icons .pack(fill=BOTH, expand=True)
         self.container_icons .pack_forget()
 
@@ -1211,15 +1255,14 @@ class ToplevelCls(Toplevel):
 
     def press_mouse_menu(self, event):
         # Evento: Botón presionado (Imagen: change)
-        self.button_press = event.widget
-        self.button_press .config(image=self.Icons[2])
+        event.widget .config(image=self.Icons[2])
 
     def release_mouse_menu(self, event):
-        # Evento: Botón soltado (Imagen: default) $$-$$$
-        self.button_press .config(image=self.Icons[1], bg='#252b34')
+        # Evento: Botón soltado (Imagen: default)
+        event.widget .config(image=self.Icons[1], bg='#252b34')
 
 
-    def open_container_icons(self):
+    def open_container_icons(self, event=None):
         relation = self.winfo_children()
 
         # MOSTRAR INTERFACE:
@@ -1231,6 +1274,8 @@ class ToplevelCls(Toplevel):
                     self.frames[i]. pack_forget()
 
             self.container_icons .pack(fill=BOTH, expand=True)
+            #self.container_icons .bind('<Leave>', self.forget_container_icons)
+            
 
         # OCULTAR INTERFACE:
         else:
@@ -1241,7 +1286,6 @@ class ToplevelCls(Toplevel):
                     self.frames[i] .pack(fill=BOTH, expand=True)
 
             self.container_icons .pack_forget()
-
 
 
     def start_move(self, event=None):   # Activado temporalmente:  Razon: Arriba lo dice  
@@ -1333,7 +1377,7 @@ class RootCls(Tk):
 
     def configure_root(self):
         #self.resizable(0, 0)                     # Deja un rastro de root en pantalla, no solucionado
-        self.geometry('0x0+350+0')                # Tamaño de Root
+        self.geometry('0x0+300+0')                # Tamaño de Root
 
 
     def create_window(self):
@@ -1675,7 +1719,7 @@ class InterfazCls(Frame, MoveAllCls):
             if not self._open[i] == True:
 
                 #____VENTANAS:  ( 3 instancias )         
-                window = ToplevelCls (self.master, self._windows, self._frame, self.ico2_lst)
+                window = ToplevelCls (self.master, self._frame, self.main_lst, self.ico2_lst)
                 #____Métodos Llamados:
                 window .configure_toplevel(title[i], size[i])
                 window .create_frame_manager(self.ico1_lst, side=TOP, fill=BOTH)
@@ -1685,7 +1729,7 @@ class InterfazCls(Frame, MoveAllCls):
 
                 #____Enlace: Actualiza la lista (self._open):
                 window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
-               
+                window .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
 
                 # Description: Actualiza la lista de ventanas y booleanos
                 self._windows[i] = window
@@ -1709,8 +1753,6 @@ class InterfazCls(Frame, MoveAllCls):
             self.grip .place (relx=1.0, rely=1.0, anchor='center')
             ttk.Style().configure('TSizegrip', bg='black')
 
-            # Descripcion: Muestra todas las ventanas ocultas
-            #self._windows[i] .frame_manager.window_manager_off()
 
     #-----------------------------------------------------------------------------------------------------------------
 
@@ -1738,6 +1780,18 @@ class InterfazCls(Frame, MoveAllCls):
                     # Descripcion: Actualiza el mobil seleccionado
                     self.mobil_selected = None
                 except: pass
+
+
+    # Tarea: - Ocultar la interface de iconos y mostrar la interface visual.
+    def forget_container_icons(self, number, event=None):
+        # Dice: Si el widget que desencadeno el evento es la ventana:
+        if event.widget == self._windows[number]:
+            self._windows[number] .cascade = False
+            self._windows[number] .container_icons .pack_forget()
+            self._frame[number] .pack(fill='both', expand=True)
+
+
+
 
 
 
