@@ -632,6 +632,7 @@ class ResizeCls(Frame):
 
 
 
+
 class IconsCls(Frame):
     def __init__(self, master, main_lst=None, path_lst=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
@@ -642,6 +643,7 @@ class IconsCls(Frame):
 
         #____Metodos Llamados:
         self.create_containers()
+
 
         master.bind('<Motion>',self.open1)
 
@@ -655,15 +657,14 @@ class IconsCls(Frame):
     def create_containers(self):
         #____CONTENEDORES PRINCIPALES: ( 2 )
         self.container1 = Frame(self, bg="#1b1d22",)
-        self.container2 = Frame(self, bg='#2b313c')
-
-        #____Posicionamiento:
         self.container1 .pack(side='left', fill='y', expand=False)
+
+        self.container2 = Frame(self, bg='#2b313c')
         self.container2 .pack(side='right', fill='both', expand=True)
 
+        #____Ocultando:
         self.container1 .pack_forget()
         #____Enlaces:
-        self.container1 .bind('<Leave>', self.open2)
 
         #________Metodos Llamados:
         self.create_icons()
@@ -690,42 +691,31 @@ class IconsCls(Frame):
     
     def create_logotipo(self):
         #____LOGOTIPO CENTRAL:
-        self.label_icon1 = Label(self.container2, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
-        self.label_icon1 .place(relx=.5, rely=.5, anchor="center")
+        pass
+        #self.label_icon1 = Label(self.container2, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
+        #self.label_icon1 .place(relx=.5, rely=.5, anchor="center")
     
 
     def open(self):
         pass
-        """ self.self.frame_image_mobil_tutorial = ResizeCls(self, self.Images[0][self._1], bd=0)
-        self.frame_image_mobil_tutorial       .grid(column=0, row=1, sticky='news') """
+        #self.label_icon1 .place_forget()
+        self.frame_image_mobil_tutorial = ResizeCls(self.container2, self.Images[0][1], bd=0)
+        self.frame_image_mobil_tutorial       .pack(side='right', expand=True)
 
 
 
     def open1(self, event=None):
-        print(999999999999999)
 
-        x  = event.x / self.master.winfo_width() * 100
-        y = event.y / self.master.winfo_height() * 100
-
-        x = int(x)
-        a = self.master.winfo_pointerx() - self.master.winfo_rootx() 
-        print(a)
-
+        x = self.master.winfo_pointerx() - self.master.winfo_rootx()
+        print(x) 
         
-        if 0 <= a < 37:
-            #print(11111)
+        if 0 <= (x) < 37:
             self.container1 .pack(side='left', fill='y', expand=False)
 
         else:
             self.container1 .pack_forget()
   
   
-
-    def open2(self, event=None):
-        self.container1.pack_forget()
-
-
-        
 
 #********************************        ██████████████        *********************************
 #********************************        ██          ██        *********************************
