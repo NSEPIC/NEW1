@@ -643,6 +643,8 @@ class IconsCls(Frame):
         #____Metodos Llamados:
         self.create_containers()
 
+        master.bind('<Motion>',self.open1)
+
 
 
         self.grip = ttk.Sizegrip(self, style='TSizegrip')
@@ -661,8 +663,7 @@ class IconsCls(Frame):
 
         self.container1 .pack_forget()
         #____Enlaces:
-        #self.container2 .bind('<Enter>', self.open1)
-        self.master.bind('<Motion>',self.open1)
+        self.container1 .bind('<Leave>', self.open2)
 
         #________Metodos Llamados:
         self.create_icons()
@@ -701,29 +702,27 @@ class IconsCls(Frame):
 
 
     def open1(self, event=None):
+        print(999999999999999)
 
-        x  = event.x / self.master.winfo_reqwidth() * 100
+        x  = event.x / self.master.winfo_width() * 100
         y = event.y / self.master.winfo_height() * 100
-        #x = int(x) AQUI
-        print(x)
+
+        x = int(x)
+        a = self.master.winfo_pointerx() - self.master.winfo_rootx() 
+        print(a)
+
         
-        if 0 <= x < 21:
-            print(11111)
+        if 0 <= a < 37:
+            #print(11111)
             self.container1 .pack(side='left', fill='y', expand=False)
 
         else:
             self.container1 .pack_forget()
-        """ if not self._motion_1 == True: 
+  
+  
 
-            if self.x1 <(self.pointer_width_2)< self.x2  and  self.y1 <(self.pointer_height_2)< self.y2:    
-                self.lbl_text_mostrar_77 .grid()
-
-            else:
-                self.lbl_text_mostrar_77 .grid_remove()
-
-        if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
-            self.lbl_text_mostrar_77     .grid_remove() """
-
+    def open2(self, event=None):
+        self.container1.pack_forget()
 
 
         
