@@ -615,7 +615,7 @@ class CheckbuttonCls(Checkbutton):
 class ResizeCls(Frame):
     def __init__(self, master, index, *args, **kwargs):
         super().__init__(master, bg='black', *args, **kwargs)
-        
+
         self.image = Image.open(index)
         self.image_copy = self.image .copy()
 
@@ -634,8 +634,13 @@ class ResizeCls(Frame):
 
 
 class IconsCls(Frame):
-    def __init__(self, master, main_lst=None, path_lst=None, *args, **kwargs):
+    def __init__(self, master, main_lst=None, path_lst=None, indice=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+        
+        #____Variables de Control: Indice de la sublista.
+        self.indice = indice
+
+        print(self.indice)
 
         #____Colección de Imágenes:
         self.Images = main_lst
@@ -644,8 +649,8 @@ class IconsCls(Frame):
         #____Metodos Llamados:
         self.create_containers()
 
-
-        master.bind('<Motion>',self.open1)
+        #____Enlaces: 
+        self.master.bind('<Motion>',self.open_buttons)
 
 
 
@@ -658,22 +663,26 @@ class IconsCls(Frame):
         #____CONTENEDORES PRINCIPALES: ( 2 )
         self.container1 = Frame(self, bg="#1b1d22",)
         self.container1 .pack(side='left', fill='y', expand=False)
+        self.container1 .pack_forget()
 
         self.container2 = Frame(self, bg='#2b313c')
         self.container2 .pack(side='right', fill='both', expand=True)
 
-        #____Ocultando:
-        self.container1 .pack_forget()
+        self.container2 .columnconfigure(0, weight=1)
+        self.container2 .rowconfigure(0, weight=1)
+
         #____Enlaces:
 
         #________Metodos Llamados:
         self.create_icons()
         self.create_logotipo()
 
+        
+
 
 
     def create_icons(self):
-        #____ICONOS: ( 4 )
+        #____BOTONES: ( 4 )
         self.button_icon1 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
         self.button_icon2 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
         self.button_icon3 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
@@ -685,34 +694,41 @@ class IconsCls(Frame):
         self.button_icon3 .grid(column=0, row=2, padx=5, pady=5)
         self.button_icon4 .grid(column=0, row=3, padx=5, pady=5)
 
-
         #____Enlaces:
         self.button_icon1 .bind()
     
+
     def create_logotipo(self):
-        #____LOGOTIPO CENTRAL:
-        pass
-        #self.label_icon1 = Label(self.container2, image=self.Icons[3], bg='black', cursor="hand2", bd=0)
-        #self.label_icon1 .place(relx=.5, rely=.5, anchor="center")
+        #____LOGO: ( 1 )
+        self.label_icon1 = Label(self.container2, image=self.Icons[3], bg='black', bd=0)
+        self.label_icon1 .grid(column=0, row=0)
     
 
     def open(self):
-        pass
-        #self.label_icon1 .place_forget()
-        self.frame_image_mobil_tutorial = ResizeCls(self.container2, self.Images[0][1], bd=0)
-        self.frame_image_mobil_tutorial       .pack(side='right', expand=True)
+        # Description: Oculta el logo  
+        self.label_icon1 .grid_remove()
+
+        # Imagen: Miniatura del mobil para ayudar a medir las distancias    
+        self.frame_image_mobil_tutorial = ResizeCls(self.container2, self.Images[self.indice][1], bd=0)
+        self.frame_image_mobil_tutorial .grid(column=0, row=0, sticky='nswe')
 
 
 
-    def open1(self, event=None):
-
+    # Tarea: -  Mostrar y ocultar la interface vertical de botones.
+    def open_buttons(self, event=None):
+        # Description: Coordenada 'X' del mouse.      
         x = self.master.winfo_pointerx() - self.master.winfo_rootx()
-        print(x) 
         
         if 0 <= (x) < 37:
-            self.container1 .pack(side='left', fill='y', expand=False)
+            # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1.
+            self.container2 .pack_forget()
+            self.container2 .pack(side='right', fill='both', expand=True)
 
+            # Description: Muestra la nterface de botones.
+            self.container1 .pack(side='left', fill='y', expand=False)
         else:
+            # Description: Oculta la interface de botones.
+            self.update_idletasks()
             self.container1 .pack_forget()
   
   
@@ -800,7 +816,7 @@ class TopIzqCls(Frame):
         self.frame_image_mobil_tutorial = ResizeCls(self, self.Images[self.indice][self._1], bd=0)
         self.frame_image_mobil_tutorial       .grid(column=0, row=1, sticky='news')
 
-        #self.frame_image_mobil_tutorial .grid_remove()
+        self.frame_image_mobil_tutorial .grid_remove()
 
 
 
@@ -1168,13 +1184,15 @@ class FrameManagerCls(Frame):
 #************************            ███████    ██████████████
 
 class ToplevelCls(Toplevel):
-    def __init__(self, master=None, frames=None, main_lst=None, path_lst=None, *args, **kwargs):
+    def __init__(self, master=None, path_1_lst=None, path_2_lst=None, frames=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.overrideredirect(True)
 
+        self.indice = None
+
         #____Coleccion de Imagenes:
-        self.Images = main_lst
-        self.Icons = path_lst               # Imagenes-Iconos: Menu de opciones
+        self.Icons = path_1_lst               # Imagenes-Iconos: Menu de opciones
+        self.Images = path_2_lst
 
         #____Variable de Control: 
         self.frames = frames
@@ -1204,11 +1222,11 @@ class ToplevelCls(Toplevel):
         self.frame_manager .bind("<Map>",self.frame_manager .window_manager_off)
 
 
-    def create_container_icons(self):
+    def create_container_icons(self, indice=None):
         #____GESTOR DE ICONOS: ( 1 instancia )
-        self.container_icons = IconsCls(self, self.Images, self.Icons)
-        self.container_icons .pack(fill=BOTH, expand=True)
-        self.container_icons .pack_forget()
+        self.icons_interface = IconsCls(self, self.Images, self.Icons, indice)
+        self.icons_interface .pack(fill=BOTH, expand=True)
+        self.icons_interface .pack_forget()
 
 
     def create_label_title(self, **kwargs):
@@ -1262,7 +1280,7 @@ class ToplevelCls(Toplevel):
                 if self.frames[i] in relation:
                     self.frames[i]. pack_forget()
 
-            self.container_icons .pack(fill=BOTH, expand=True)
+            self.icons_interface .pack(fill=BOTH, expand=True)
             #self.container_icons .bind('<Leave>', self.forget_container_icons)
             
 
@@ -1274,7 +1292,7 @@ class ToplevelCls(Toplevel):
                 if self.frames[i] in relation:
                     self.frames[i] .pack(fill=BOTH, expand=True)
 
-            self.container_icons .pack_forget()
+            self.icons_interface .pack_forget()
 
 
     def start_move(self, event=None):   # Activado temporalmente:  Razon: Arriba lo dice  
@@ -1489,6 +1507,11 @@ class InterfazCls(Frame, MoveAllCls):
         self._windows = [None] * 3
         self._frame = [None] * 3
 
+
+        self.indice = IntVar()
+        #self.indice .trace_add('write', lambda *arg: self.indice.set (self.indice.get()))
+        #self.indice .trace_add ('write', self.change_variable)
+
         #____Variable de Seguimiento: Boton Seleccionado en la Interface de Botones:
         self.mobil_selected = None
 
@@ -1689,6 +1712,8 @@ class InterfazCls(Frame, MoveAllCls):
 
     def create_windows(self, var_1, var_2, var_3, mobil=None):
 
+    #---------------------------------------------ARGUMENTOS------------------------------------------------------------
+
         #____Lista de argumentos de la funcion: ( 3 instancias(Frame) )
         args = [var_1, var_2, var_3]
 
@@ -1708,11 +1733,11 @@ class InterfazCls(Frame, MoveAllCls):
             if not self._open[i] == True:
 
                 #____VENTANAS:  ( 3 instancias )         
-                window = ToplevelCls (self.master, self._frame, self.main_lst, self.ico2_lst)
+                window = ToplevelCls (self.master, self.ico2_lst, self.main_lst, self._frame)
                 #____Métodos Llamados:
                 window .configure_toplevel(title[i], size[i])
                 window .create_frame_manager(self.ico1_lst, side=TOP, fill=BOTH)
-                window .create_container_icons()
+                window .create_container_icons(mobil)
                 window .create_button_menu()
                 window .create_label_title(text=text[i])
 
@@ -1730,10 +1755,11 @@ class InterfazCls(Frame, MoveAllCls):
 
             if self._frame[i] is not None:
                 self._frame[i] .destroy()
+                self._windows[i] .create_container_icons(mobil)
             self._frame[i] = container[i]
             self._frame[i] .pack(fill='both', expand=True)
             # Description: Oculta el frame si la interface de iconos es visible.
-            if self._windows[i].container_icons .winfo_ismapped():
+            if self._windows[i] .icons_interface .winfo_ismapped():
                 self._frame[i] .pack_forget()
 
 
@@ -1744,7 +1770,7 @@ class InterfazCls(Frame, MoveAllCls):
 
 
     #-----------------------------------------------------------------------------------------------------------------
-
+        
         # Descripcion: Reemplaza el indice que recibe la funcion por el nombre del boton presionado en el modo botones o lista.
         for index, name in enumerate(self.mobiles):
             if mobil == index:
@@ -1776,7 +1802,7 @@ class InterfazCls(Frame, MoveAllCls):
         # Dice: Si el widget que desencadeno el evento es la ventana:
         if event.widget == self._windows[number]:
             self._windows[number] .cascade = False
-            self._windows[number] .container_icons .pack_forget()
+            self._windows[number] .icons_interface .pack_forget()
             self._frame[number] .pack(fill='both', expand=True)
 
 
