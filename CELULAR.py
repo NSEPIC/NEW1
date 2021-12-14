@@ -1,5 +1,4 @@
-from A_import import *
-
+from importaciones import *
 
 # INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
 
@@ -664,16 +663,22 @@ class IconsCls(Frame):
 
     
     def create_containers(self):
-        #____CONTENEDORES PRINCIPALES: ( 2 )
-        self.container1 = Frame(self, bg="#1b1d22",)
-        self.container1 .pack(side='left', fill='y', expand=False)
-        self.container1 .pack_forget()
+        # [ 1 ] self.frame_manager_button  : Interface de botones   : NO POSICIONADO
+        # [ 2 ] self.frame_manager_image   : Interface de imagenes  : POSICIONADO
 
-        self.container2 = Frame(self, bg='#2b313c')
-        self.container2 .pack(side='right', fill='both', expand=True)
+        #____INTEFACES DE CONTROL: ( 2 )
+        self.frame_manager_button = Frame(self, bg="#1b1d22",)     # Color(fondo): Gris oscuro
+        self.frame_manager_image  = Frame(self, bg='#2b313c')      # Color(fondo): Gris claro
 
-        self.container2 .columnconfigure(0, weight=1)
-        self.container2 .rowconfigure(0, weight=1)
+        #____Posicionamiento:
+        self.frame_manager_button .pack(side='left', fill='y', expand=False)
+        self.frame_manager_button .pack_forget()
+
+        self.frame_manager_image  .pack(side='right', fill='both', expand=True)
+
+        #____Peso:
+        self.frame_manager_image .columnconfigure(0, weight=1)
+        self.frame_manager_image .rowconfigure(0, weight=1)
 
         #____Enlaces:
 
@@ -687,10 +692,10 @@ class IconsCls(Frame):
 
     def create_icons(self):
         #____BOTONES: ( 4 )
-        self.button_icon1 = Button(self.container1, image=self.Icons[4], command=self.open_mobil_tutorial, bg='black',  bd=0)
-        self.button_icon2 = Button(self.container1, image=self.Icons[4], command=self.open_delay_general, bg='black',  bd=0)
-        self.button_icon3 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
-        self.button_icon4 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
+        self.button_icon1 = Button(self.frame_manager_button, image=self.Icons[4], command=self.open_mobil_tutorial, bg='black',  bd=0)
+        self.button_icon2 = Button(self.frame_manager_button, image=self.Icons[4], command=self.open_delay_general, bg='black',  bd=0)
+        self.button_icon3 = Button(self.frame_manager_button, image=self.Icons[4], command=self.open, bg='black',  bd=0)
+        self.button_icon4 = Button(self.frame_manager_button, image=self.Icons[4], command=self.open, bg='black',  bd=0)
 
         #____Posicionamiento:
         self.button_icon1 .grid(column=0, row=0, padx=5, pady=5) # sticky='ew', para que el color de relleno del label ocupe todo
@@ -704,7 +709,7 @@ class IconsCls(Frame):
 
     def create_logotipo(self):
         #____LOGO: ( 1 )
-        self.label_icon1 = Label(self.container2, image=self.Icons[3], bg='black', bd=0)
+        self.label_icon1 = Label(self.frame_manager_image, image=self.Icons[3], bg='black', bd=0)
         self.label_icon1 .grid(column=0, row=0)
     
 
@@ -716,7 +721,7 @@ class IconsCls(Frame):
         if not self.var1 == True:
             self.var1 = True
             # Imagen: Miniatura del mobil para ayudar a medir las distancias    
-            self.frame_image_mobil_tutorial = ResizeCls(self.container2, self.Images[self.indice][1], bd=0)
+            self.frame_image_mobil_tutorial = ResizeCls(self.frame_manager_image, self.Images[self.indice][1], bd=0)
             self.frame_image_mobil_tutorial .grid(column=0, row=0, sticky='nswe')
         else:
             self.var1 = False
@@ -761,15 +766,15 @@ class IconsCls(Frame):
         
         if 0 <= (x) < 37:
             # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1.
-            self.container2 .pack_forget()
-            self.container2 .pack(side='right', fill='both', expand=True)
+            self.frame_manager_image .pack_forget()
+            self.frame_manager_image .pack(side='right', fill='both', expand=True)
 
             # Description: Muestra la nterface de botones.
-            self.container1 .pack(side='left', fill='y', expand=False)
+            self.frame_manager_button .pack(side='left', fill='y', expand=False)
         else:
             # Description: Oculta la interface de botones.
             self.update_idletasks()
-            self.container1 .pack_forget()
+            self.frame_manager_button .pack_forget()
   
   
 
