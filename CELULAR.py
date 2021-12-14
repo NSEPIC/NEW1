@@ -642,6 +642,10 @@ class IconsCls(Frame):
 
         print(self.indice)
 
+        #____Variable de Control: (if-else)
+        self.var1 = False
+        self.var2 = False
+
         #____Colección de Imágenes:
         self.Images = main_lst
         self.Icons = path_lst
@@ -650,7 +654,7 @@ class IconsCls(Frame):
         self.create_containers()
 
         #____Enlaces: 
-        self.master.bind('<Motion>',self.open_buttons)
+        self.master.bind('<Motion>',self.open_interface_buttons)
 
 
 
@@ -683,8 +687,8 @@ class IconsCls(Frame):
 
     def create_icons(self):
         #____BOTONES: ( 4 )
-        self.button_icon1 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
-        self.button_icon2 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
+        self.button_icon1 = Button(self.container1, image=self.Icons[4], command=self.open_mobil_tutorial, bg='black',  bd=0)
+        self.button_icon2 = Button(self.container1, image=self.Icons[4], command=self.open_delay_general, bg='black',  bd=0)
         self.button_icon3 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
         self.button_icon4 = Button(self.container1, image=self.Icons[4], command=self.open, bg='black',  bd=0)
 
@@ -704,18 +708,54 @@ class IconsCls(Frame):
         self.label_icon1 .grid(column=0, row=0)
     
 
-    def open(self):
+    # Tarea: - Muestra y oculta la imagen de guia de tiro
+    def open_mobil_tutorial(self, indice=None):
         # Description: Oculta el logo  
         self.label_icon1 .grid_remove()
 
-        # Imagen: Miniatura del mobil para ayudar a medir las distancias    
-        self.frame_image_mobil_tutorial = ResizeCls(self.container2, self.Images[self.indice][1], bd=0)
-        self.frame_image_mobil_tutorial .grid(column=0, row=0, sticky='nswe')
+        if not self.var1 == True:
+            self.var1 = True
+            # Imagen: Miniatura del mobil para ayudar a medir las distancias    
+            self.frame_image_mobil_tutorial = ResizeCls(self.container2, self.Images[self.indice][1], bd=0)
+            self.frame_image_mobil_tutorial .grid(column=0, row=0, sticky='nswe')
+        else:
+            self.var1 = False
+            # Description: Oculta la imagen
+            self.frame_image_mobil_tutorial .grid_remove()
+            # Description: Posiciona el logo
+            self.label_icon1 .grid()
+
+
+
+    # Tarea: - Muestra y oculta la imagen del delay general
+    def open_delay_general(self):
+        pass
+        
+        self.label_icon2 .grid_remove()
+
+        if not self.var2 == True:
+            self.var2 = True
+            # Imagen: Miniatura del mobil para ayudar a medir las distancias    
+            self.frame_image_delay_general = ResizeCls(self.container2, self.Images[self.indice][1], bd=0)
+            self.frame_image_delay_general .grid(column=0, row=0, sticky='nswe')
+        else:
+            self.var2 = False
+            # Description: Oculta la imagen
+            self.frame_image_delay_general .grid_remove()
+            # Description: Posiciona el logo
+            self.label_icon1 .grid()
+
+    def open(self):
+        pass
+
+
+
+
 
 
 
     # Tarea: -  Mostrar y ocultar la interface vertical de botones.
-    def open_buttons(self, event=None):
+    def open_interface_buttons(self, event=None):
         # Description: Coordenada 'X' del mouse.      
         x = self.master.winfo_pointerx() - self.master.winfo_rootx()
         
@@ -1418,8 +1458,8 @@ class RootCls(Tk):
 
         # Descripción: (1) Genera la lista principal de imagenes sin ininicializarlas
         if option == 1:
-            multilist = [[] for x in range(22)]
-            mobiles = ['Fro','Fox','Boo','Ice','JD','Gru','Lig','Adu','Kni','Kal','Mag','Ran','Jol','Tur','Arm','Asa','Rao','Tri','Nak','Big','Bar','Dra']
+            multilist = [[] for x in range(23)]  # antes 22
+            mobiles = ['Fro','Fox','Boo','Ice','JD','Gru','Lig','Adu','Kni','Kal','Mag','Ran','Jol','Tur','Arm','Asa','Rao','Tri','Nak','Big','Bar','Dra',  'Otros'] # antes sin Otros
 
             for i in ouput:
                 for index, mobil in enumerate(mobiles):
