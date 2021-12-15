@@ -1,4 +1,4 @@
-from A_import import *
+from Importaciones import *
 
 class ResizeCls(Frame):
     def __init__(self, master, index, *args, **kwargs):

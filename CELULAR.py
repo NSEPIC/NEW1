@@ -1,4 +1,4 @@
-from importaciones import *
+from Importaciones import *
 
 # INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
 
@@ -667,35 +667,39 @@ class IconsCls(Frame):
         # [ 2 ] self.frame_manager_image   : Interface de imagenes  : POSICIONADO
 
         #____INTEFACES DE CONTROL: ( 2 )
-        self.frame_manager_button = Frame(self, bg="#1b1d22",)     # Color(fondo): Gris oscuro
-        self.frame_manager_image  = Frame(self, bg='#2b313c')      # Color(fondo): Gris claro
+        self.frame_manager_buttons = Frame(self, bg="#1b1d22",)     # Color(fondo): Gris oscuro
+        self.frame_manager_images  = Frame(self, bg='#2b313c')      # Color(fondo): Gris claro
 
         #____Posicionamiento:
-        self.frame_manager_button .pack(side='left', fill='y', expand=False)
-        self.frame_manager_button .pack_forget()
+        self.frame_manager_buttons .pack(side='left', fill='y', expand=False)
+        self.frame_manager_images  .pack(side='right', fill='both', expand=True)
 
-        self.frame_manager_image  .pack(side='right', fill='both', expand=True)
+        #____No posicionado:
+        self.frame_manager_buttons .pack_forget()
 
-        #____Peso:
-        self.frame_manager_image .columnconfigure(0, weight=1)
-        self.frame_manager_image .rowconfigure(0, weight=1)
+
+        #____Pesos:
+        self.frame_manager_images .columnconfigure(0, weight=1)
+        self.frame_manager_images .rowconfigure(0, weight=1)
 
         #____Enlaces:
 
+
         #________Metodos Llamados:
-        self.create_icons()
-        self.create_logotipo()
+        self.create_widgets()
 
         
 
+    def create_widgets(self):
+        # Opcion 1:
+        _1 = self.Images[self.indice][1]
+        _2 = self.Images[22][0]
 
-
-    def create_icons(self):
         #____BOTONES: ( 4 )
-        self.button_icon1 = Button(self.frame_manager_button, image=self.Icons[4], command=self.open_mobil_tutorial, bg='black',  bd=0)
-        self.button_icon2 = Button(self.frame_manager_button, image=self.Icons[4], command=self.open_delay_general, bg='black',  bd=0)
-        self.button_icon3 = Button(self.frame_manager_button, image=self.Icons[4], command=self.open, bg='black',  bd=0)
-        self.button_icon4 = Button(self.frame_manager_button, image=self.Icons[4], command=self.open, bg='black',  bd=0)
+        self.button_icon1 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(_1), bg='black',  bd=0)
+        self.button_icon2 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(_2), bg='black',  bd=0)
+        self.button_icon3 = Button(self.frame_manager_buttons, image=self.Icons[4], command=self.open, bg='black',  bd=0)
+        self.button_icon4 = Button(self.frame_manager_buttons, image=self.Icons[4], command=self.open, bg='black',  bd=0)
 
         #____Posicionamiento:
         self.button_icon1 .grid(column=0, row=0, padx=5, pady=5) # sticky='ew', para que el color de relleno del label ocupe todo
@@ -703,25 +707,23 @@ class IconsCls(Frame):
         self.button_icon3 .grid(column=0, row=2, padx=5, pady=5)
         self.button_icon4 .grid(column=0, row=3, padx=5, pady=5)
 
-        #____Enlaces:
-        self.button_icon1 .bind()
-    
-
-    def create_logotipo(self):
         #____LOGO: ( 1 )
-        self.label_icon1 = Label(self.frame_manager_image, image=self.Icons[3], bg='black', bd=0)
+        self.label_icon1 = Label(self.frame_manager_images, image=self.Icons[3], bg='black', bd=0)
         self.label_icon1 .grid(column=0, row=0)
+
     
 
     # Tarea: - Muestra y oculta la imagen de guia de tiro
-    def open_mobil_tutorial(self, indice=None):
+    def open_mobil_tutorial(self, option=None):
+
+        #print('__',indice)
         # Description: Oculta el logo  
         self.label_icon1 .grid_remove()
 
         if not self.var1 == True:
             self.var1 = True
             # Imagen: Miniatura del mobil para ayudar a medir las distancias    
-            self.frame_image_mobil_tutorial = ResizeCls(self.frame_manager_image, self.Images[self.indice][1], bd=0)
+            self.frame_image_mobil_tutorial = ResizeCls(self.frame_manager_images, option, bd=0)
             self.frame_image_mobil_tutorial .grid(column=0, row=0, sticky='nswe')
         else:
             self.var1 = False
@@ -736,7 +738,7 @@ class IconsCls(Frame):
     def open_delay_general(self):
         pass
         
-        self.label_icon2 .grid_remove()
+        """ self.label_icon2 .grid_remove()
 
         if not self.var2 == True:
             self.var2 = True
@@ -748,14 +750,7 @@ class IconsCls(Frame):
             # Description: Oculta la imagen
             self.frame_image_delay_general .grid_remove()
             # Description: Posiciona el logo
-            self.label_icon1 .grid()
-
-    def open(self):
-        pass
-
-
-
-
+            self.label_icon1 .grid() """
 
 
 
@@ -766,15 +761,19 @@ class IconsCls(Frame):
         
         if 0 <= (x) < 37:
             # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1.
-            self.frame_manager_image .pack_forget()
-            self.frame_manager_image .pack(side='right', fill='both', expand=True)
+            self.frame_manager_images .pack_forget()
+            self.frame_manager_images .pack(side='right', fill='both', expand=True)
 
             # Description: Muestra la nterface de botones.
-            self.frame_manager_button .pack(side='left', fill='y', expand=False)
+            self.frame_manager_buttons .pack(side='left', fill='y', expand=False)
         else:
             # Description: Oculta la interface de botones.
             self.update_idletasks()
-            self.frame_manager_button .pack_forget()
+            self.frame_manager_buttons .pack_forget()
+
+    def open(self):
+        pass
+
   
   
 
@@ -1417,6 +1416,8 @@ class RootCls(Tk):
         self.main_lst = self.generate_list (path, 1)
         self.mini_lst = self.generate_list (path, 2)
         self.ico1_lst, self.ico2_lst, self.ico3_lst = self.generate_list (path, 3)
+
+        print('eee', len(self.main_lst[22]))
 
         #____Enlaces para Ocultar y Mostrar la Ventana Principal: ( 1 forma )
         self.bind("<Unmap>", self.iconify_on)    # Activacion: Click en el icono de la barra de tareas
