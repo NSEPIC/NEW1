@@ -645,6 +645,9 @@ class IconsCls(Frame):
         self.var1 = False
         self.var2 = False
 
+
+        self.var = None
+
         #____Colección de Imágenes:
         self.Images = main_lst
         self.Icons = path_lst
@@ -657,11 +660,13 @@ class IconsCls(Frame):
 
 
 
+
         self.grip = ttk.Sizegrip(self, style='TSizegrip')
         self.grip .place (relx=1.0, rely=1.0, anchor='center')
         ttk.Style().configure('TSizegrip', bg='black')
 
-    
+
+
     def create_containers(self):
         # [ 1 ] self.frame_manager_button  : Interface de botones   : NO POSICIONADO
         # [ 2 ] self.frame_manager_image   : Interface de imagenes  : POSICIONADO
@@ -756,20 +761,23 @@ class IconsCls(Frame):
 
     # Tarea: -  Mostrar y ocultar la interface vertical de botones.
     def open_interface_buttons(self, event=None):
-        # Description: Coordenada 'X' del mouse.      
-        x = self.master.winfo_pointerx() - self.master.winfo_rootx()
         
-        if 0 <= (x) < 37:
-            # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1.
-            self.frame_manager_images .pack_forget()
-            self.frame_manager_images .pack(side='right', fill='both', expand=True)
+        if self.var is None:
+            # Description: Coordenada 'X' del mouse.      
+            x = self.winfo_pointerx() - self.winfo_rootx()
+            
+            if 0 <= (x) < 37:
+                # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1.
+                self.frame_manager_images .pack_forget()
+                self.frame_manager_images .pack(side='right', fill='both', expand=True)
 
-            # Description: Muestra la nterface de botones.
-            self.frame_manager_buttons .pack(side='left', fill='y', expand=False)
-        else:
-            # Description: Oculta la interface de botones.
-            self.update_idletasks()
-            self.frame_manager_buttons .pack_forget()
+                # Description: Muestra la nterface de botones.
+                self.frame_manager_buttons .pack(side='left', fill='y', expand=False)
+            else:
+                # Description: Oculta la interface de botones.
+                print(5)
+                self.update_idletasks()
+                self.frame_manager_buttons .pack_forget()
 
     def open(self):
         pass
@@ -1079,15 +1087,16 @@ class MoveAllCls():
         return widget in self.immovable
 
     
-    def start_move_all(self, event):        
+    def start_move_all(self, event):
         self._x = event.x
         self._y = event.y
-   
+
     def stop_move_all(self, event):
         self._x = None
         self._y = None
 
     def on_move_all(self, event):
+        print(1111)
         # [self.movable]   : Lista que permite mover su ventana
         # [self.immovable] : Lista que no permite mover su ventana
 
@@ -1355,6 +1364,7 @@ class ToplevelCls(Toplevel):
 
         #Dice: Si el padre de la ventana es una instancia de Tk():
         if isinstance(self.master.winfo_toplevel(), Tk):
+            print('moveee')
             self.master.geometry(new_position)                    # Mueve la ventana root
 
 
