@@ -761,6 +761,8 @@ class IconsCls(Frame):
 
     # Tarea: -  Mostrar y ocultar la interface vertical de botones.
     def open_interface_buttons(self, event=None):
+        a = self.winfo_children()
+        
         
         if self.var is None:
             # Description: Coordenada 'X' del mouse.      
@@ -771,7 +773,7 @@ class IconsCls(Frame):
                 self.frame_manager_images .pack_forget()
                 self.frame_manager_images .pack(side='right', fill='both', expand=True)
 
-                # Description: Muestra la nterface de botones.
+                # Description: Muestra la interface de botones.
                 self.frame_manager_buttons .pack(side='left', fill='y', expand=False)
             else:
                 # Description: Oculta la interface de botones.
