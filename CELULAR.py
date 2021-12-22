@@ -639,14 +639,12 @@ class IconsCls(Frame):
         #____Variables de Control: Indice de la sublista.
         self.indice = indice
 
-        print(self.indice)
-
         #____Variable de Control: (if-else)
         self.var1 = False
         self.var2 = False
 
-
-        self.var = None
+        #____Variable de Control: (ventana )
+        self.var = False
 
         #____Colección de Imágenes:
         self.Images = main_lst
@@ -657,7 +655,6 @@ class IconsCls(Frame):
 
         #____Enlaces: 
         self.master.bind('<Motion>',self.open_interface_buttons)
-
 
 
 
@@ -688,26 +685,28 @@ class IconsCls(Frame):
         self.frame_manager_images .rowconfigure(0, weight=1)
 
         #____Enlaces:
-
+        self.master.bind("<ButtonPress-1>", self._press)
+        self.master.bind("<ButtonRelease-1>", self._release)
 
         #________Metodos Llamados:
         self.create_widgets()
-
         
 
     def create_widgets(self):
         # Opcion 1:
-        _1 = self.Images[self.indice][1]
-        _2 = self.Images[22][0]
+        _1 = self.Images[self.indice][1]       # Imagen: Guia de tiro
+        _2 = self.Images[22][0]                # Imagen: 
+        _3 = None
+        _4 = None
 
         #____BOTONES: ( 4 )
         self.button_icon1 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(_1), bg='black',  bd=0)
         self.button_icon2 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(_2), bg='black',  bd=0)
-        self.button_icon3 = Button(self.frame_manager_buttons, image=self.Icons[4], command=self.open, bg='black',  bd=0)
-        self.button_icon4 = Button(self.frame_manager_buttons, image=self.Icons[4], command=self.open, bg='black',  bd=0)
+        self.button_icon3 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(_3), bg='black',  bd=0)
+        self.button_icon4 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(_4), bg='black',  bd=0)
 
         #____Posicionamiento:
-        self.button_icon1 .grid(column=0, row=0, padx=5, pady=5) # sticky='ew', para que el color de relleno del label ocupe todo
+        self.button_icon1 .grid(column=0, row=0, padx=5, pady=5)
         self.button_icon2 .grid(column=0, row=1, padx=5, pady=5)
         self.button_icon3 .grid(column=0, row=2, padx=5, pady=5)
         self.button_icon4 .grid(column=0, row=3, padx=5, pady=5)
@@ -718,17 +717,17 @@ class IconsCls(Frame):
 
     
 
-    # Tarea: - Muestra y oculta la imagen de guia de tiro
-    def open_mobil_tutorial(self, option=None):
+    # Tarea: - Muestra y oculta las imagenes
+    def open_mobil_tutorial(self, number=None):
 
-        #print('__',indice)
-        # Description: Oculta el logo  
+        # Description: Oculta el logo
         self.label_icon1 .grid_remove()
 
-        if not self.var1 == True:
+        # Dice: Si la variable de control es falsa: 
+        if not self.var1:
             self.var1 = True
             # Imagen: Miniatura del mobil para ayudar a medir las distancias    
-            self.frame_image_mobil_tutorial = ResizeCls(self.frame_manager_images, option, bd=0)
+            self.frame_image_mobil_tutorial = ResizeCls(self.frame_manager_images, number, bd=0)
             self.frame_image_mobil_tutorial .grid(column=0, row=0, sticky='nswe')
         else:
             self.var1 = False
@@ -761,11 +760,9 @@ class IconsCls(Frame):
 
     # Tarea: -  Mostrar y ocultar la interface vertical de botones.
     def open_interface_buttons(self, event=None):
-        a = self.winfo_children()
-        
-        
-        if self.var is None:
-            # Description: Coordenada 'X' del mouse.      
+
+        if not self.var:
+            # Description: Coordenada 'x' del mouse.      
             x = self.winfo_pointerx() - self.winfo_rootx()
             
             if 0 <= (x) < 37:
@@ -775,11 +772,22 @@ class IconsCls(Frame):
 
                 # Description: Muestra la interface de botones.
                 self.frame_manager_buttons .pack(side='left', fill='y', expand=False)
+
             else:
                 # Description: Oculta la interface de botones.
-                print(5)
                 self.update_idletasks()
                 self.frame_manager_buttons .pack_forget()
+
+
+    def _press(self, event=None):
+        self.var = True
+
+    def _release(self, event=None):
+        self.var = False
+        self.open_interface_buttons()
+        self.open_interface_buttons()
+
+    
 
     def open(self):
         pass
