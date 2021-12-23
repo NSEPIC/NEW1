@@ -641,10 +641,10 @@ class IconsCls(Frame):
 
         #____Variable de Control: (if-else)
         self.var1 = False
-        self.var2 = False
+        self.widget = None
 
         #____Variable de Control: (ventana )
-        self.var = False
+        self.variable = False
 
         #____Colección de Imágenes:
         self.Images = main_lst
@@ -700,10 +700,10 @@ class IconsCls(Frame):
         _4 = None
 
         #____BOTONES: ( 4 )
-        self.button_icon1 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(_1), bg='black',  bd=0)
-        self.button_icon2 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(_2), bg='black',  bd=0)
-        self.button_icon3 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(_3), bg='black',  bd=0)
-        self.button_icon4 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(_4), bg='black',  bd=0)
+        self.button_icon1 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(0), bg='black',  bd=0)
+        self.button_icon2 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(1), bg='black',  bd=0)
+        self.button_icon3 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(2), bg='black',  bd=0)
+        self.button_icon4 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(3), bg='black',  bd=0)
 
         #____Posicionamiento:
         self.button_icon1 .grid(column=0, row=0, padx=5, pady=5)
@@ -715,27 +715,58 @@ class IconsCls(Frame):
         self.label_icon1 = Label(self.frame_manager_images, image=self.Icons[3], bg='black', bd=0)
         self.label_icon1 .grid(column=0, row=0)
 
-    
+        #________Metodos Llamados:
+        self.create_list()
+
+
+    def create_list(self):
+
+        images = [self.Images[self.indice][1], self.Images[22][0]]
+        self.frames = []
+
+        for i in (images):
+
+                frame = ResizeCls (self.frame_manager_images, i, bd=0)
+                self.frames .append(frame)    
+
+
 
     # Tarea: - Muestra y oculta las imagenes
     def open_mobil_tutorial(self, number=None):
+        print('___',len(self.frames))
 
-        # Description: Oculta el logo
-        self.label_icon1 .grid_remove()
+        if self.widget != number and self.widget is not None:
+            print('nuevo valor')
+            self.widget = number
+            self.var1 = False
+            
+        self.widget = number
 
         # Dice: Si la variable de control es falsa: 
         if not self.var1:
             self.var1 = True
+
+
+            # Description: Oculta el logo
+            self.label_icon1 .grid_remove()
+
             # Imagen: Miniatura del mobil para ayudar a medir las distancias    
-            self.frame_image_mobil_tutorial = ResizeCls(self.frame_manager_images, number, bd=0)
-            self.frame_image_mobil_tutorial .grid(column=0, row=0, sticky='nswe')
+            #self.frames[number]
+            self.frames[number] .grid(column=0, row=0, sticky='nswe')
+
+            print('ifff')
+
         else:
             self.var1 = False
+
+
             # Description: Oculta la imagen
-            self.frame_image_mobil_tutorial .grid_remove()
+            self.frames[0] .grid_remove()
+            self.frames[1] .grid_remove()
             # Description: Posiciona el logo
             self.label_icon1 .grid()
 
+            print('elsee')
 
 
     # Tarea: - Muestra y oculta la imagen del delay general
@@ -761,7 +792,7 @@ class IconsCls(Frame):
     # Tarea: -  Mostrar y ocultar la interface vertical de botones.
     def open_interface_buttons(self, event=None):
 
-        if not self.var:
+        if not self.variable:
             # Description: Coordenada 'x' del mouse.      
             x = self.winfo_pointerx() - self.winfo_rootx()
             
@@ -780,10 +811,10 @@ class IconsCls(Frame):
 
 
     def _press(self, event=None):
-        self.var = True
+        self.variable = True
 
     def _release(self, event=None):
-        self.var = False
+        self.variable = False
         self.open_interface_buttons()
         self.open_interface_buttons()
 
@@ -1437,7 +1468,7 @@ class RootCls(Tk):
         self.mini_lst = self.generate_list (path, 2)
         self.ico1_lst, self.ico2_lst, self.ico3_lst = self.generate_list (path, 3)
 
-        print('eee', len(self.main_lst[22]))
+        #print('eee', len(self.main_lst[22]))
 
         #____Enlaces para Ocultar y Mostrar la Ventana Principal: ( 1 forma )
         self.bind("<Unmap>", self.iconify_on)    # Activacion: Click en el icono de la barra de tareas
