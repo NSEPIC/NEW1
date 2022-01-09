@@ -646,9 +646,11 @@ class IconsCls(Frame):
         #____Variable de Control: (ventana )
         self.variable = False
 
+
         #____Colección de Imágenes:
         self.Images = main_lst
         self.Icons = path_lst
+
 
         #____Metodos Llamados:
         self.create_containers()
@@ -663,7 +665,7 @@ class IconsCls(Frame):
         ttk.Style().configure('TSizegrip', bg='black')
 
 
-
+    # Tarea: - Crea las widgets externos
     def create_containers(self):
         # [ 1 ] self.frame_manager_button  : Interface de botones   : NO POSICIONADO
         # [ 2 ] self.frame_manager_image   : Interface de imagenes  : POSICIONADO
@@ -692,6 +694,7 @@ class IconsCls(Frame):
         self.create_widgets()
         
 
+    # Tarea: - Crea los widgets internos
     def create_widgets(self):
         # Opcion 1:
         _1 = self.Images[self.indice][1]       # Imagen: Guia de tiro
@@ -719,6 +722,8 @@ class IconsCls(Frame):
         self.create_list()
 
 
+
+
     def create_list(self):
 
         images = [self.Images[self.indice][1], self.Images[22][0]]
@@ -733,12 +738,17 @@ class IconsCls(Frame):
 
     # Tarea: - Muestra y oculta las imagenes
     def open_mobil_tutorial(self, number=None):
-        print('___',len(self.frames))
+        #print('___',len(self.frames))
 
+        # Si presionas un boton diferente al anterior
         if self.widget != number and self.widget is not None:
             print('nuevo valor')
             self.widget = number
             self.var1 = False
+
+        else:
+            self.number = number
+            print('guardadi',self.number)
             
         self.widget = number
 
@@ -748,13 +758,17 @@ class IconsCls(Frame):
 
 
             # Description: Oculta el logo
-            self.label_icon1 .grid_remove()
+            #self.label_icon1 .grid_remove()
 
             # Imagen: Miniatura del mobil para ayudar a medir las distancias    
             #self.frames[number]
+            #self.frames[0] .grid_remove()
+            self.frames[self.number] .grid_remove()
+            
             self.frames[number] .grid(column=0, row=0, sticky='nswe')
-
+            print(number)
             print('ifff')
+            self.number = number
 
         else:
             self.var1 = False
@@ -1287,6 +1301,7 @@ class ToplevelCls(Toplevel):
         #____Coleccion de Imagenes:
         self.Icons = path_1_lst               # Imagenes-Iconos: Menu de opciones
         self.Images = path_2_lst
+        #print('esss: ', self.Images)
 
         #____Variable de Control: 
         self.frames = frames
