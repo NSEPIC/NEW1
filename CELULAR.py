@@ -641,7 +641,7 @@ class IconsCls(Frame):
 
         #____Variable de Control: (if-else)
         self.var1 = False
-        self.widget = None
+        self.number = None
 
         #____Variable de Control: (ventana )
         self.variable = False
@@ -738,49 +738,43 @@ class IconsCls(Frame):
 
     # Tarea: - Muestra y oculta las imagenes
     def open_mobil_tutorial(self, number=None):
-        #print('___',len(self.frames))
 
         # Si presionas un boton diferente al anterior
-        if self.widget != number and self.widget is not None:
-            print('nuevo valor')
-            self.widget = number
+        if self.number != number and self.number is not None:
             self.var1 = False
 
+        # Entonces se presiono el mismo boton anterior
         else:
             self.number = number
-            print('guardadi',self.number)
             
-        self.widget = number
 
-        # Dice: Si la variable de control es falsa: 
+
+        # MUESTRA LAS IMAGENES
         if not self.var1:
             self.var1 = True
-
 
             # Description: Oculta el logo
             #self.label_icon1 .grid_remove()
 
-            # Imagen: Miniatura del mobil para ayudar a medir las distancias    
-            #self.frames[number]
-            #self.frames[0] .grid_remove()
-            self.frames[self.number] .grid_remove()
+            # Imagen: Miniatura del mobil "Guia de Tiro" 
+            if self.number is not None:
+                self.frames[self.number] .grid_remove()
             
             self.frames[number] .grid(column=0, row=0, sticky='nswe')
-            print(number)
-            print('ifff')
-            self.number = number
+        
 
+        # MUESTRA EL LOGO
         else:
             self.var1 = False
 
-
             # Description: Oculta la imagen
-            self.frames[0] .grid_remove()
-            self.frames[1] .grid_remove()
+            self.frames[self.number] .grid_remove()
             # Description: Posiciona el logo
             self.label_icon1 .grid()
 
-            print('elsee')
+
+        self.number = number
+
 
 
     # Tarea: - Muestra y oculta la imagen del delay general
@@ -810,7 +804,7 @@ class IconsCls(Frame):
             # Description: Coordenada 'x' del mouse.      
             x = self.winfo_pointerx() - self.winfo_rootx()
             
-            if 0 <= (x) < 37:
+            if 0 <= (x) < 37:         # MUESTRA INTERFACE
                 # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1.
                 self.frame_manager_images .pack_forget()
                 self.frame_manager_images .pack(side='right', fill='both', expand=True)
@@ -818,19 +812,21 @@ class IconsCls(Frame):
                 # Description: Muestra la interface de botones.
                 self.frame_manager_buttons .pack(side='left', fill='y', expand=False)
 
-            else:
+            else:                     # OCULTA INTERFACE
                 # Description: Oculta la interface de botones.
                 self.update_idletasks()
                 self.frame_manager_buttons .pack_forget()
 
 
+    # Tarea: - Evitar que se ejecute el metodo: [ open_interface_buttons ]
     def _press(self, event=None):
         self.variable = True
 
+    # Tarea: - Ejecutar el metodo: [ open_interface_buttons ]
     def _release(self, event=None):
         self.variable = False
-        self.open_interface_buttons()
-        self.open_interface_buttons()
+        #self.open_interface_buttons()
+        #self.open_interface_buttons()
 
     
 
