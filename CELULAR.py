@@ -629,6 +629,24 @@ class ResizeCls(Frame):
         self.photo_image = ImageTk.PhotoImage(self.image)
         self.img .config(image=self.photo_image)
 
+class ResizeCls2(Frame):
+    def __init__(self, master, index, *args, **kwargs):
+        super().__init__(master, bg='black', *args, **kwargs)
+
+        self.image = Image.open(index)
+        self.image_copy = self.image .copy()
+
+        self.photo_image = ImageTk.PhotoImage(self.image)
+
+        self.img = Label(self, image=self.photo_image, bg='black')
+        self.img .pack(fill='both', expand=True)
+        self.img .bind('<Configure>', self.resize)
+
+    def resize(self, event):
+        self.image = self.image_copy .resize((self.master.winfo_width(), self.master.winfo_height()//2 -10))
+        self.photo_image = ImageTk.PhotoImage(self.image)
+        self.img .config(image=self.photo_image)
+
 
 
 
@@ -641,6 +659,7 @@ class IconsCls(Frame):
 
         #____Variable de Control: (if-else)
         self.var1 = False
+        self.var2 = False
         self.number = None
 
         #____Variable de Control: (ventana )
@@ -696,11 +715,6 @@ class IconsCls(Frame):
 
     # Tarea: - Crea los widgets internos
     def create_widgets(self):
-        # Opcion 1:
-        _1 = self.Images[self.indice][1]       # Imagen: Guia de tiro
-        _2 = self.Images[22][0]                # Imagen: 
-        _3 = None
-        _4 = None
 
         #____BOTONES: ( 4 )
         self.button_icon1 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(0), bg='black',  bd=0)
@@ -726,13 +740,55 @@ class IconsCls(Frame):
 
     def create_list(self):
 
-        images = [self.Images[self.indice][1], self.Images[22][0]]
+        """ images = [self.Images[self.indice][1], self.Images[22][0]]
         self.frames = []
 
         for i in (images):
 
                 frame = ResizeCls (self.frame_manager_images, i, bd=0)
-                self.frames .append(frame)    
+                self.frames .append(frame)  """
+
+        # GUIA DE TIRO:
+        self._1 = ResizeCls  (self.frame_manager_images, self.Images[self.indice][1], bd=0)
+        #self._1 .grid(column=0, row=0)
+
+
+        self.a = Frame(self.frame_manager_images)
+
+        self.a .columnconfigure(0, weight=1)
+        self.a .rowconfigure(0, weight=1)
+        self.a .rowconfigure(1, weight=0)
+        self.a .rowconfigure(2, weight=1)
+
+        
+
+        self._2 = ResizeCls2  (self.a, self.Images[22][2], bd=0)
+        self._2 .grid(column=0, row=0, sticky='news')
+
+        self._3 = Frame  (self.a, bg='#1b1d22', bd=0, height=20)
+        self._3 .grid(column=0, row=1, sticky='we')
+
+
+        self.button_right = Button (self._3, image=self.Icons[6], command= self.superponer_image, bg='#1b1d22', activebackground='#1b1d22',  bd=0, cursor="hand2")
+        self.button_right .pack ()
+
+
+        self._5 = ResizeCls2 (self.a, self.Images[22][4], bd=0)
+        self._5 .grid(column=0, row=2, sticky='news')
+
+        self._4 = ResizeCls2  (self.a, self.Images[22][3], bd=0)
+        self._4 .grid(column=0, row=2, sticky='news')
+
+
+    def superponer_image(self):
+        if not self.var2:
+            self.var2 = True
+            self._4 .lower()
+
+        else:
+            self.var2 = False
+            self._4 .lift()
+       
 
 
 
@@ -754,13 +810,28 @@ class IconsCls(Frame):
             self.var1 = True
 
             # Description: Oculta el logo
-            #self.label_icon1 .grid_remove()
+            self.label_icon1 .grid_remove()
 
             # Imagen: Miniatura del mobil "Guia de Tiro" 
             if self.number is not None:
-                self.frames[self.number] .grid_remove()
+                pass
+                #self.frames[self.number] .grid_remove()
+
+            if number == 0:
+                pass
+                self.a .grid_remove()
+                self._1. grid()
             
-            self.frames[number] .grid(column=0, row=0, sticky='nswe')
+            if number == 1:
+                self._1.grid_remove()
+                self.a .grid()
+
+            
+            """ self.frames[number] .grid(column=0, row=0, sticky='nswe')
+
+            self.lbl              = Label (self.frames[1], text='>', font=('Calibri',15,'bold'), fg='green2')
+            self.lbl                .place(x=5, y=5) """
+
         
 
         # MUESTRA EL LOGO
@@ -768,7 +839,8 @@ class IconsCls(Frame):
             self.var1 = False
 
             # Description: Oculta la imagen
-            self.frames[self.number] .grid_remove()
+            #self.frames[self.number] .grid_remove()
+            self._1 .grid_remove()
             # Description: Posiciona el logo
             self.label_icon1 .grid()
 
@@ -809,6 +881,7 @@ class IconsCls(Frame):
                 self.frame_manager_images .pack_forget()
                 self.frame_manager_images .pack(side='right', fill='both', expand=True)
 
+
                 # Description: Muestra la interface de botones.
                 self.frame_manager_buttons .pack(side='left', fill='y', expand=False)
 
@@ -816,6 +889,7 @@ class IconsCls(Frame):
                 # Description: Oculta la interface de botones.
                 self.update_idletasks()
                 self.frame_manager_buttons .pack_forget()
+
 
 
     # Tarea: - Evitar que se ejecute el metodo: [ open_interface_buttons ]
@@ -1147,7 +1221,6 @@ class MoveAllCls():
         self._y = None
 
     def on_move_all(self, event):
-        print(1111)
         # [self.movable]   : Lista que permite mover su ventana
         # [self.immovable] : Lista que no permite mover su ventana
 
