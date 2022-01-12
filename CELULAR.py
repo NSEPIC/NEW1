@@ -664,7 +664,7 @@ class Resize3Cls(Frame):
         self.img .bind('<Configure>', self.resize)
 
     def resize(self, event):
-        self.image = self.image_copy .resize((self.master.winfo_width(), self.master.winfo_height() -40))
+        self.image = self.image_copy .resize((self.master.winfo_width(), self.master.winfo_height() -42))
         self.photo_image = ImageTk.PhotoImage(self.image)
         self.img .config(image=self.photo_image)
 
@@ -1014,13 +1014,13 @@ class TopIzqCls(Frame):
         # [ 3 ] self.image_delay3  : Imagen: Delay General (TP, Vida, Ang-Recto, Ang-Maximo)
 
         #____IMAGENES: ( 3 instancias )
-        #self.image_base1 = Resize3Cls(self.frame_container_bases, self.Images[17][0], bd=0)
-        #self.image_base2 = Resize3Cls(self.frame_container_bases, self.Images[17][1], bd=0)
+        self.image_base1 = Resize3Cls(self.frame_container_bases, self.Images[17][0], bd=0)
+        self.image_base2 = Resize3Cls(self.frame_container_bases, self.Images[17][1], bd=0)
         self.image_base3 = Resize3Cls(self.frame_container_bases, self.Images[17][2], bd=0)
 
         #____Posicionamiento:
-        #self.image_base1 .grid(column=0, row=1, sticky='news')
-        #self.image_base2 .grid(column=0, row=1, sticky='news')
+        self.image_base1 .grid(column=0, row=1, sticky='news')
+        self.image_base2 .grid(column=0, row=1, sticky='news')
         self.image_base3 .grid(column=0, row=1, sticky='news')
 
         #____Posicionamiento en cola:
@@ -1030,14 +1030,13 @@ class TopIzqCls(Frame):
         # [ 1 ] self.frame_manager  : Interface de botones
 
         #____INTEFACE DE CONTROL: ( 1 )
-        self.frame_manager = Frame(self.frame_container_bases, bg='#2b313c', bd=0, height=40)
+        self.frame_manager = Frame(self.frame_container_bases, bg='#2b313c', bd=0, height=42)
         self.frame_manager .grid(column=0, row=0, sticky='news')
         self.frame_manager .grid_propagate(0)
 
         #____BOTONES: ( 1 )
-        """ self.button_siguiente = Button(self.frame_manager, image=self.Icons[6], bg='#2b313c', activebackground='#1b1d22', bd=0, cursor='hand2')
+        self.button_siguiente = Button(self.frame_manager, image=self.Icons[6], bg='#2b313c', activebackground='#1b1d22', bd=0, cursor='hand2')
         self.button_siguiente .pack()
-        self.button_siguiente .pack_propagate(0) """
 
 
 
