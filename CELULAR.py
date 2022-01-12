@@ -629,7 +629,9 @@ class ResizeCls(Frame):
         self.photo_image = ImageTk.PhotoImage(self.image)
         self.img .config(image=self.photo_image)
 
-class ResizeCls2(Frame):
+
+
+class Resize2Cls(Frame):
     def __init__(self, master, index, *args, **kwargs):
         super().__init__(master, bg='black', *args, **kwargs)
 
@@ -643,7 +645,26 @@ class ResizeCls2(Frame):
         self.img .bind('<Configure>', self.resize)
 
     def resize(self, event):
-        self.image = self.image_copy .resize((self.master.winfo_width(), self.master.winfo_height()//2 -10))
+        self.image = self.image_copy .resize((self.master.winfo_width(), self.master.winfo_height()//2 -30))
+        self.photo_image = ImageTk.PhotoImage(self.image)
+        self.img .config(image=self.photo_image)
+
+
+class Resize3Cls(Frame):
+    def __init__(self, master, index, *args, **kwargs):
+        super().__init__(master, bg='black', *args, **kwargs)
+
+        self.image = Image.open(index)
+        self.image_copy = self.image .copy()
+
+        self.photo_image = ImageTk.PhotoImage(self.image)
+
+        self.img = Label(self, image=self.photo_image, bg='black')
+        self.img .pack(fill='both', expand=True)
+        self.img .bind('<Configure>', self.resize)
+
+    def resize(self, event):
+        self.image = self.image_copy .resize((self.master.winfo_width(), self.master.winfo_height() -40))
         self.photo_image = ImageTk.PhotoImage(self.image)
         self.img .config(image=self.photo_image)
 
@@ -660,7 +681,9 @@ class IconsCls(Frame):
         #____Variable de Control: (if-else)
         self.var1 = False
         self.var2 = False
-        self.number = None
+
+        #____Variable de Seguimiento: Boton seleccionado anterior
+        self.option = None
 
         #____Variable de Control: (ventana )
         self.variable = False
@@ -717,10 +740,10 @@ class IconsCls(Frame):
     def create_widgets(self):
 
         #____BOTONES: ( 4 )
-        self.button_icon1 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(0), bg='black',  bd=0)
-        self.button_icon2 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(1), bg='black',  bd=0)
-        self.button_icon3 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(2), bg='black',  bd=0)
-        self.button_icon4 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_mobil_tutorial(3), bg='black',  bd=0)
+        self.button_icon1 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_selected_image(0), bg='black',  bd=0)
+        self.button_icon2 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_selected_image(1), bg='black',  bd=0)
+        self.button_icon3 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_selected_image(2), bg='black',  bd=0)
+        self.button_icon4 = Button(self.frame_manager_buttons, image=self.Icons[4], command= lambda:self.open_selected_image(3), bg='black',  bd=0)
 
         #____Posicionamiento:
         self.button_icon1 .grid(column=0, row=0, padx=5, pady=5)
@@ -733,140 +756,108 @@ class IconsCls(Frame):
         self.label_icon1 .grid(column=0, row=0)
 
         #________Metodos Llamados:
-        self.create_list()
+        self.create_images()
 
 
 
 
-    def create_list(self):
+    def create_images(self):
+        # [ 1 ] self.frame_image_mobil_guia  : Imagen: Mobil guia de tiro  : NO POSICIONADO
 
-        """ images = [self.Images[self.indice][1], self.Images[22][0]]
-        self.frames = []
-
-        for i in (images):
-
-                frame = ResizeCls (self.frame_manager_images, i, bd=0)
-                self.frames .append(frame)  """
-
-        # GUIA DE TIRO:
-        self._1 = ResizeCls  (self.frame_manager_images, self.Images[self.indice][1], bd=0)
-        #self._1 .grid(column=0, row=0)
+        #____IMAGENES: ( 1 instancia )
+        self.frame_image_mobil_guia = ResizeCls(self.frame_manager_images, self.Images[self.indice][1], bd=0)
 
 
-        self.a = Frame(self.frame_manager_images)
+        #________________________________________________________________________________________________________
+        # [ 1 ] self.frame_delay_general  : Interface de imagenes  : NO POSICIONADO
 
-        self.a .columnconfigure(0, weight=1)
-        self.a .rowconfigure(0, weight=1)
-        self.a .rowconfigure(1, weight=0)
-        self.a .rowconfigure(2, weight=1)
+        #____INTEFACE DE CONTROL: ( 1 )
+        self.frame_delay_general = Frame(self.frame_manager_images)
 
-        
+        #____Peso de distribucion:
+        self.frame_delay_general .columnconfigure(0, weight=1)
+        self.frame_delay_general .rowconfigure(0, weight=1)
+        self.frame_delay_general .rowconfigure(1, weight=0)
+        self.frame_delay_general .rowconfigure(2, weight=1)
 
-        self._2 = ResizeCls2  (self.a, self.Images[22][2], bd=0)
-        self._2 .grid(column=0, row=0, sticky='news')
+        #------------------------------------------------------------------------------------------------------
+        # [ 1 ] self.image_delay1  : Imagen: Delay General (F8, S1, S2, DD1, DD2)
+        # [ 2 ] self.image_delay2  : Imagen: Delay General (1+, 2+, SS, Ang-Maximo)
+        # [ 3 ] self.image_delay3  : Imagen: Delay General (TP, Vida, Ang-Recto, Ang-Maximo)
 
-        self._3 = Frame  (self.a, bg='#1b1d22', bd=0, height=20)
-        self._3 .grid(column=0, row=1, sticky='we')
+        #____IMAGENES: ( 3 instancias )
+        self.image_delay1 = Resize2Cls(self.frame_delay_general, self.Images[22][0], bd=0)
+        self.image_delay2 = Resize2Cls(self.frame_delay_general, self.Images[22][1], bd=0)
+        self.image_delay3 = Resize2Cls(self.frame_delay_general, self.Images[22][2], bd=0)
+
+        #____Posicionamiento:
+        self.image_delay1 .grid(column=0, row=0, sticky='news')
+        self.image_delay2 .grid(column=0, row=2, sticky='news')
+        self.image_delay3 .grid(column=0, row=2, sticky='news')
+
+        #____Posicionamiento en cola:
+        self.image_delay3 .lower()
+
+        #-------------------------------------------------------------------------------------------------------
+        # [ 1 ] self.frame_manager  : Interface de botones
+
+        #____INTEFACE DE CONTROL: ( 1 )
+        self.frame_manager = Frame(self.frame_delay_general, bg='#1b1d22', bd=0, height=20)
+        self.frame_manager .grid(column=0, row=1, sticky='ew')
+
+        #____BOTONES: ( 1 )
+        self.button_siguiente = Button(self.frame_manager, image=self.Icons[6], command=self.change_image, bg='#1b1d22', activebackground='#1b1d22', bd=0, cursor='hand2')
+        self.button_siguiente .pack()
+        #________________________________________________________________________________________________________
+
+        self.list_images = [self.frame_image_mobil_guia, self.frame_delay_general]
 
 
-        self.button_right = Button (self._3, image=self.Icons[6], command= self.superponer_image, bg='#1b1d22', activebackground='#1b1d22',  bd=0, cursor="hand2")
-        self.button_right .pack ()
-
-
-        self._5 = ResizeCls2 (self.a, self.Images[22][4], bd=0)
-        self._5 .grid(column=0, row=2, sticky='news')
-
-        self._4 = ResizeCls2  (self.a, self.Images[22][3], bd=0)
-        self._4 .grid(column=0, row=2, sticky='news')
-
-
-    def superponer_image(self):
+    def change_image(self):
         if not self.var2:
             self.var2 = True
-            self._4 .lower()
-
+            self.image_delay2 .lower()
         else:
             self.var2 = False
-            self._4 .lift()
+            self.image_delay2 .lift()
        
 
-
-
     # Tarea: - Muestra y oculta las imagenes
-    def open_mobil_tutorial(self, number=None):
+    def open_selected_image(self, number=None):
 
-        # Si presionas un boton diferente al anterior
-        if self.number != number and self.number is not None:
+        # Si presionas un boton diferente
+        if self.option != number and self.option is not None:
             self.var1 = False
 
-        # Entonces se presiono el mismo boton anterior
+        # Entonces. Si presionas el mismo boton
         else:
-            self.number = number
-            
+            self.option = number
 
 
-        # MUESTRA LAS IMAGENES
+        # Description: Muestra la imagen del boton presionado
         if not self.var1:
             self.var1 = True
 
             # Description: Oculta el logo
             self.label_icon1 .grid_remove()
 
-            # Imagen: Miniatura del mobil "Guia de Tiro" 
-            if self.number is not None:
-                pass
-                #self.frames[self.number] .grid_remove()
+            # Description: Oculta la imagen del boton presionado anteriormente
+            self.list_images[self.option] .grid_remove()
 
-            if number == 0:
-                pass
-                self.a .grid_remove()
-                self._1. grid()
-            
-            if number == 1:
-                self._1.grid_remove()
-                self.a .grid()
+            # Description: Muestra la imagen del boton presionado
+            self.list_images[number]. grid(sticky='news')
 
-            
-            """ self.frames[number] .grid(column=0, row=0, sticky='nswe')
 
-            self.lbl              = Label (self.frames[1], text='>', font=('Calibri',15,'bold'), fg='green2')
-            self.lbl                .place(x=5, y=5) """
-
-        
-
-        # MUESTRA EL LOGO
+        # Description: Muestra el logo
         else:
             self.var1 = False
 
             # Description: Oculta la imagen
-            #self.frames[self.number] .grid_remove()
-            self._1 .grid_remove()
+            self.list_images[number] .grid_remove()
             # Description: Posiciona el logo
             self.label_icon1 .grid()
 
-
-        self.number = number
-
-
-
-    # Tarea: - Muestra y oculta la imagen del delay general
-    def open_delay_general(self):
-        pass
-        
-        """ self.label_icon2 .grid_remove()
-
-        if not self.var2 == True:
-            self.var2 = True
-            # Imagen: Miniatura del mobil para ayudar a medir las distancias    
-            self.frame_image_delay_general = ResizeCls(self.container2, self.Images[self.indice][1], bd=0)
-            self.frame_image_delay_general .grid(column=0, row=0, sticky='nswe')
-        else:
-            self.var2 = False
-            # Description: Oculta la imagen
-            self.frame_image_delay_general .grid_remove()
-            # Description: Posiciona el logo
-            self.label_icon1 .grid() """
-
+        self.option = number
 
 
     # Tarea: -  Mostrar y ocultar la interface vertical de botones.
@@ -880,7 +871,6 @@ class IconsCls(Frame):
                 # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1.
                 self.frame_manager_images .pack_forget()
                 self.frame_manager_images .pack(side='right', fill='both', expand=True)
-
 
                 # Description: Muestra la interface de botones.
                 self.frame_manager_buttons .pack(side='left', fill='y', expand=False)
@@ -901,12 +891,6 @@ class IconsCls(Frame):
         self.variable = False
         #self.open_interface_buttons()
         #self.open_interface_buttons()
-
-    
-
-    def open(self):
-        pass
-
   
   
 
@@ -947,9 +931,9 @@ class TopIzqCls(Frame):
         self._7 = arg_7
 
         #____Metodos Llamados:
+        self.create_container_base()
         self.create_instances()
         #self.create_frame_container()
-
 
 
         #--------------------------------------------------------------------------------------------
@@ -973,7 +957,7 @@ class TopIzqCls(Frame):
 
         # Configuracion de columnas y filas de la clase :
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(0, weight=0)
+        self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
 
         # Configuracion principal :
@@ -987,13 +971,19 @@ class TopIzqCls(Frame):
 
         # Imagen: Delay completo del mobil
         self.frame_image_delay_complete = ResizeCls(self, self.Images[self.indice][self._0], bd=0)
-        self.frame_image_delay_complete       .grid(column=0, row=1, sticky='news')
+        self.frame_image_delay_complete       .grid(column=0, row=0, sticky='news')
 
         # Imagen: Miniatura del mobil para ayudar a medir las distancias
-        self.frame_image_mobil_tutorial = ResizeCls(self, self.Images[self.indice][self._1], bd=0)
+        """ self.frame_image_mobil_tutorial = ResizeCls(self, self.Images[self.indice][self._1], bd=0)
         self.frame_image_mobil_tutorial       .grid(column=0, row=1, sticky='news')
 
-        self.frame_image_mobil_tutorial .grid_remove()
+        self.frame_image_mobil_tutorial .grid_remove() """
+
+        if self.indice == 17:
+            self.frame_image_delay_complete .grid_remove()
+
+            self.frame_container_bases.grid(column=0, row=0, sticky='news')
+
 
 
 
@@ -1004,20 +994,50 @@ class TopIzqCls(Frame):
 
 
 
-    # Tarea: Abrir la minuatura del mobil:  [ B U T T O N - 1 ]
-    def open_image_miniature(self, event): 
 
-        if self.frame_image_mobil_tutorial .grid_info() == {}:   # Metodo que devuelve un    {...} con toda la info de su ubicacion, contrariamente un {}     
-            self.frame_image_mobil_tutorial .grid()
-        else:
-            self.frame_image_mobil_tutorial .grid_remove()
+    # Tarea: 
+    def create_container_base(self):
+        # [ 1 ] self.frame_container_bases  : Interface de imagenes  : NO POSICIONADO
 
+        #____INTEFACE DE CONTROL: ( 1 )
+        self.frame_container_bases = Frame(self)
 
+        #____Peso de distribucion:
+        self.frame_container_bases .columnconfigure(0, weight=1)
+        
+        self.frame_container_bases .rowconfigure(0, weight=0)
+        self.frame_container_bases .rowconfigure(1, weight=1)
 
-    # Tarea: Ocultar y mostrar el frame contenedor de los iconos: [ M O T I O N ]
-    def remove_frame_container_icons(self, event):
-        self.master.master.resize_1 = False
-        self.frame_container_icons .grid_remove()
+        #------------------------------------------------------------------------------------------------------
+        # [ 1 ] self.image_delay1  : Imagen: Delay General (F8, S1, S2, DD1, DD2)
+        # [ 2 ] self.image_delay2  : Imagen: Delay General (1+, 2+, SS, Ang-Maximo)
+        # [ 3 ] self.image_delay3  : Imagen: Delay General (TP, Vida, Ang-Recto, Ang-Maximo)
+
+        #____IMAGENES: ( 3 instancias )
+        #self.image_base1 = Resize3Cls(self.frame_container_bases, self.Images[17][0], bd=0)
+        #self.image_base2 = Resize3Cls(self.frame_container_bases, self.Images[17][1], bd=0)
+        self.image_base3 = Resize3Cls(self.frame_container_bases, self.Images[17][2], bd=0)
+
+        #____Posicionamiento:
+        #self.image_base1 .grid(column=0, row=1, sticky='news')
+        #self.image_base2 .grid(column=0, row=1, sticky='news')
+        self.image_base3 .grid(column=0, row=1, sticky='news')
+
+        #____Posicionamiento en cola:
+        #self.image_base3 .lower()
+
+        #-------------------------------------------------------------------------------------------------------
+        # [ 1 ] self.frame_manager  : Interface de botones
+
+        #____INTEFACE DE CONTROL: ( 1 )
+        self.frame_manager = Frame(self.frame_container_bases, bg='#2b313c', bd=0, height=40)
+        self.frame_manager .grid(column=0, row=0, sticky='news')
+        self.frame_manager .grid_propagate(0)
+
+        #____BOTONES: ( 1 )
+        """ self.button_siguiente = Button(self.frame_manager, image=self.Icons[6], bg='#2b313c', activebackground='#1b1d22', bd=0, cursor='hand2')
+        self.button_siguiente .pack()
+        self.button_siguiente .pack_propagate(0) """
 
 
 
@@ -1696,7 +1716,7 @@ class InterfazCls(Frame, MoveAllCls):
         #____Variable de Seguimiento: Boton Seleccionado en la Interface de Botones:
         self.mobil_selected = None
 
-        #____Variables de Control: Boton  Secundarias:
+        #____Variables de Control: Boton Secundarias:
         self._gear = False
 
         #____Variables de Seguimiento del Frame Contenedor de los Iconos en las Ventanas Secundarias:
