@@ -645,7 +645,7 @@ class Resize2Cls(Frame):
         self.img .bind('<Configure>', self.resize)
 
     def resize(self, event):
-        self.image = self.image_copy .resize((self.master.winfo_width(), self.master.winfo_height()//2 -30))
+        self.image = self.image_copy .resize((self.master.winfo_width(), self.master.winfo_height()//2 -10))
         self.photo_image = ImageTk.PhotoImage(self.image)
         self.img .config(image=self.photo_image)
 
@@ -920,6 +920,8 @@ class TopIzqCls(Frame):
         #____Variables de Control: Indice de la sublista.
         self.indice = indice
 
+        self.var2 = False
+
         #____Lista de imagenes:
         self._0 = arg_0
         self._1 = arg_1
@@ -958,7 +960,6 @@ class TopIzqCls(Frame):
         # Configuracion de columnas y filas de la clase :
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=1)
 
         # Configuracion principal :
         """ self.frame_image_delay_complete .columnconfigure(0, weight=1)
@@ -1014,17 +1015,17 @@ class TopIzqCls(Frame):
         # [ 3 ] self.image_delay3  : Imagen: Delay General (TP, Vida, Ang-Recto, Ang-Maximo)
 
         #____IMAGENES: ( 3 instancias )
-        self.image_base1 = Resize3Cls(self.frame_container_bases, self.Images[17][0], bd=0)
-        self.image_base2 = Resize3Cls(self.frame_container_bases, self.Images[17][1], bd=0)
-        self.image_base3 = Resize3Cls(self.frame_container_bases, self.Images[17][2], bd=0)
+        self.frame_image_delay = Resize3Cls(self.frame_container_bases, self.Images[17][0], bd=0)
+        self.frame_image_base2 = Resize3Cls(self.frame_container_bases, self.Images[17][2], bd=0)
+        self.frame_image_laser = Resize3Cls(self.frame_container_bases, self.Images[17][4], bd=0)
 
         #____Posicionamiento:
-        self.image_base1 .grid(column=0, row=1, sticky='news')
-        self.image_base2 .grid(column=0, row=1, sticky='news')
-        self.image_base3 .grid(column=0, row=1, sticky='news')
+        self.frame_image_delay .grid(column=0, row=1, sticky='news')
+        self.frame_image_base2 .grid(column=0, row=1, sticky='news')
+        self.frame_image_laser .grid(column=0, row=1, sticky='news')
 
         #____Posicionamiento en cola:
-        #self.image_base3 .lower()
+        self.frame_image_laser .lower()
 
         #-------------------------------------------------------------------------------------------------------
         # [ 1 ] self.frame_manager  : Interface de botones
@@ -1032,11 +1033,31 @@ class TopIzqCls(Frame):
         #____INTEFACE DE CONTROL: ( 1 )
         self.frame_manager = Frame(self.frame_container_bases, bg='#2b313c', bd=0, height=42)
         self.frame_manager .grid(column=0, row=0, sticky='news')
-        self.frame_manager .grid_propagate(0)
 
-        #____BOTONES: ( 1 )
-        self.button_siguiente = Button(self.frame_manager, image=self.Icons[6], bg='#2b313c', activebackground='#1b1d22', bd=0, cursor='hand2')
-        self.button_siguiente .pack()
+        self.frame_manager .columnconfigure(0, weight=1)
+        self.frame_manager .columnconfigure(1, weight=1)
+        self.frame_manager .columnconfigure(2, weight=1)
+        self.frame_manager .rowconfigure(0, weight=1)
+        self.frame_manager .rowconfigure(1, weight=1)
+
+        #____BOTONES: ( 4 )
+        self.btn_1 = Button(self.frame_manager, text='Delay', font=('Calibri',8,'bold'), command=self.change_image, bg='#3b424f', fg='white', activebackground='#bdfe04', bd=0,)
+        self.btn_1 .grid(column=0, row=0, pady=(0,1), padx=(2), sticky='news')
+        self.btn_2 = Button(self.frame_manager, text='Base', font=('Calibri',8,'bold'), command=self.change_image, bg='#3b424f', fg='white', activebackground='#bdfe04', bd=0,)
+        self.btn_2 .grid(column=1, row=0, pady=(0,1), sticky='news' )
+        self.btn_3 = Button(self.frame_manager, text='Laser', font=('Calibri',8,'bold'), command=self.change_image, bg='#3b424f', fg='white', activebackground='#bdfe04', bd=0,)
+        self.btn_3 .grid(column=2, row=0, pady=(0,1), padx=(2), sticky='news')
+        self.btn_4 = Button(self.frame_manager, text='Otros', font=('Calibri',8,'bold'), command=self.change_image, bg='#3b424f', fg='white', activebackground='#bdfe04', bd=0,)
+        self.btn_4 .grid(column=1, row=1, pady=(1,2), sticky='news')
+
+
+    def change_image(self):
+        if not self.var2:
+            self.var2 = True
+            self.frame_image_laser .lower()
+        else:
+            self.var2 = False
+            self.frame_image_laser .lift()
 
 
 
