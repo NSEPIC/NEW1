@@ -1034,6 +1034,7 @@ class TopIzqCls(Frame):
         self.frame_manager = Frame(self.frame_container_bases, bg='#2b313c', bd=0, height=42)
         self.frame_manager .grid(column=0, row=0, sticky='news')
 
+        #____Peso de distribucion:
         self.frame_manager .columnconfigure(0, weight=1)
         self.frame_manager .columnconfigure(1, weight=1)
         self.frame_manager .columnconfigure(2, weight=1)
