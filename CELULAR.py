@@ -660,7 +660,7 @@ class IconsCls(Frame):
         self.create_containers()
 
         #____Enlaces: 
-        self.master.bind('<Motion>',self.open_interface_buttons)
+        self.off = self.master.bind('<Motion>',self.open_interface_buttons)
 
 
 
