@@ -23,3 +23,31 @@ a.place(relx=0.1, rely=0.5, relheight=0.4, relwidth=0.8)
  
  
 mainloop()
+
+
+
+def minimize_all(self):    
+        visibility = self.check_visible_windows()
+
+        for i in range(len(self.master._open)):
+            # Dice: Si hay alguna ventana abierta:
+            if self.master._open[i]:
+                # OCULTA LAS VENNTANAS:
+                if not self._minimize == True and visibility:
+                    #self._minimize = True if i == 2 else False    #Funciona mal, innecesario el else
+                    #if i == 2: self._minimize = True
+
+                    # Dice: Si alguna ventana esta abierta:
+                    if self.master._open[i] == True:
+                        self.master._windows[i] .frame_manager .minimize()
+                        #self.master.all_minimize[i] = True
+
+                # MUESTRA LAS VENTANAS:
+                else:
+                    #self._minimize = False if i == 2 else True    #Funciona mal, innecesario el else
+                    #if i == 2: self._minimize = False
+
+                    # Dice: Si alguna ventana esta abierta:
+                    if self.master._open[i] == True:
+                        self.master._windows[i] .frame_manager .window_manager_off()
+                        self.update_position(self.master._windows[i]) 

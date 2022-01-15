@@ -40,9 +40,6 @@ class LogotipoCls(Frame):
         #____Colección de Imágenes:
         self.Icons = path_lst
 
-        #____Variables de Seguimiento de las Ventanas:
-        self._minimize = False
-
         #____Métodos Llamados:
         self.create_buttons()
 
@@ -85,27 +82,21 @@ class LogotipoCls(Frame):
         visibility = self.check_visible_windows()
 
         for i in range(len(self.master._open)):
-
             # Dice: Si hay alguna ventana abierta:
             if self.master._open[i]:
-                
                 # OCULTA LAS VENNTANAS:
-                if not self._minimize == True and visibility:
-                    self._minimize = True if i == 2 else False
-
+                if visibility:
                     # Dice: Si alguna ventana esta abierta:
                     if self.master._open[i] == True:
                         self.master._windows[i] .frame_manager .minimize()
-                        #self.master.all_minimize[i] = True
 
                 # MUESTRA LAS VENTANAS:
                 else:
-                    self._minimize = False if i == 2 else True
-
                     # Dice: Si alguna ventana esta abierta:
                     if self.master._open[i] == True:
                         self.master._windows[i] .frame_manager .window_manager_off()
                         self.update_position(self.master._windows[i])                      # Solucion temporal: Evita que la ventana al minimizar se expanda
+
 
    
     def enter_mouse_settings(self, event):
@@ -636,7 +627,6 @@ class ResizeCls(Frame):
 class IconsCls(Frame):
     def __init__(self, master, main_lst=None, path_lst=None, indice=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
-        
         #____Variables de Control: Indice de la sublista.
         self.indice = indice
 
@@ -668,6 +658,21 @@ class IconsCls(Frame):
         self.grip .place (relx=1.0, rely=1.0, anchor='center')
         ttk.Style().configure('TSizegrip', bg='black')
 
+        self.a = False
+
+    def pintar (self):
+        #self.unbind("", self.off)
+        if not self.a:
+            self.a = True
+            #self.off = self.master.bind('<Motion>')
+            #print('activado')
+
+        else:
+            self.a = False
+            #self.unbind("<Motion>")
+            #print('desactivadio')
+
+
 
     # Tarea: - Crea las widgets externos
     def create_containers(self):
@@ -691,12 +696,28 @@ class IconsCls(Frame):
         self.frame_manager_images .rowconfigure(0, weight=1)
 
         #____Enlaces:
-        self.master.bind("<ButtonPress-1>", self._press)
         self.master.bind("<ButtonRelease-1>", self._release)
+
+
+
+        self.frame_manager_images.bind('<Map>', self.enter)
+        self.frame_manager_images.bind('<Unmap>', self.enterr)
 
         #________Metodos Llamados:
         self.create_widgets()
         
+    def enter(self, event=None):
+        print(555)
+        #self.master.unbind("", self.off)
+        self.off = self.master.bind('<Motion>',self.open_interface_buttons)
+
+    def enterr(self, event=None):
+        print(5556554)
+        #self.master.unbind("", self.off)
+        self.unbind("",self.off)
+
+
+
 
     # Tarea: - Crea los widgets internos
     def create_widgets(self):
@@ -824,7 +845,7 @@ class IconsCls(Frame):
 
     # Tarea: -  Mostrar y ocultar la interface vertical de botones.
     def open_interface_buttons(self, event=None):
-
+        print('__A_A_A_')
         if not self.variable:
             # Description: Coordenada 'x' del mouse.      
             x = self.winfo_pointerx() - self.winfo_rootx()
@@ -839,14 +860,9 @@ class IconsCls(Frame):
 
             else:                     # OCULTA INTERFACE
                 # Description: Oculta la interface de botones.
-                self.update_idletasks()
+                self.update_idletasks()   # ver si hace algo
                 self.frame_manager_buttons .pack_forget()
 
-
-
-    # Tarea: - Evitar que se ejecute el metodo: [ open_interface_buttons ]
-    def _press(self, event=None):
-        self.variable = True
 
     # Tarea: - Ejecutar el metodo: [ open_interface_buttons ]
     def _release(self, event=None):
@@ -1105,6 +1121,7 @@ class TopDerCls(Frame):
         self.lbl_text_mostrar_77 .grid_remove()
         self.lbl_text_flecha     .grid_remove()
 
+        
         # Eventos Enlazados:
             # Enlace: Posiciona/Quita   el Label [texto: "↑"]
         self.master.bind("<Button-1>", self.open_text_flecha)
@@ -1133,16 +1150,25 @@ class TopDerCls(Frame):
 
         self.frame_image_base_77. columnconfigure(0, weight=1)
         self.frame_image_base_77. rowconfigure(0, weight=1)
+
         
+        """ self.frame_image_base_initial.bind('<Map>', self.aa)
+
+    def aa (self, event):
+        print(6565656565656)
+        #self.master.unbind("<Motion>")
+         """
+     
+
     
     #___< B U T T O N - 1 > :
     def open_text_flecha(self, event): 
 
         # Convierte el tamaño total de la ventana en porcentaje:  100 %
-        self.porcentage_total_x = event.x / self.master.winfo_width() * 100              # ---> winfo_width() : Devuelve el ancho actual del widget(Toplevel) en pixeles
-        self.porcentage_total_y = event.y / self.master.winfo_height() * 100             # ---> event.x/y     : Devuelve la posicion del mouse en pixeles (click/movimiento)
+        self._x = event.x / self.master.winfo_width() * 100              # ---> winfo_width() : Devuelve el ancho actual del widget(Toplevel) en pixeles
+        self._y = event.y / self.master.winfo_height() * 100             # ---> event.x/y     : Devuelve la posicion del mouse en pixeles (click/movimiento)
       
-        if self.x1 <(self.porcentage_total_x)< self.x2  and  self.y1 <(self.porcentage_total_y)< self.y2: 
+        if self.x1 <(self._x)< self.x2  and  self.y1 <(self._y)< self.y2: 
 
             if not self._button_1 == True:    # Si es Falso:   ---> Predeterminado: False
                 self._button_1 = True
@@ -1151,7 +1177,6 @@ class TopDerCls(Frame):
                 self.frame_image_base_77 .grid()                     # Posiciona
                 self.lbl_text_mostrar_77 .grid_remove()
                 self.lbl_text_flecha     .grid()                     # VER SI ACEPTA VARIABLES
-
             else:
                 self._button_1 = False
                 self._motion_1 = False
@@ -1163,17 +1188,21 @@ class TopDerCls(Frame):
 
 
     #___< M O T I O N > :
-    def open_text_mostrar_77(self, event):      
+    def open_text_mostrar_77(self, event):    
+        """ if self.frame_image_base_initial .winfo_viewable():
+            print('__',11)
+        else:
+            print('__',22)    """
  
         self.x = event.x / self.master.winfo_width() * 100
         self.y = event.y / self.master.winfo_height() * 100
 
-        print(self.x, '--', self.y)
-        
+        print('fuera del if')
         if not self._motion_1 == True: 
 
             if self.x1 <(self.x)< self.x2  and  self.y1 <(self.y)< self.y2:    
                 self.lbl_text_mostrar_77 .grid()
+                print(799577)
 
             else:
                 self.lbl_text_mostrar_77 .grid_remove()
@@ -1181,7 +1210,7 @@ class TopDerCls(Frame):
         if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
             self.lbl_text_mostrar_77     .grid_remove()
 
-
+   
 
 #************************            ███████    ██████████████        *************************
 #************************        ██████   ██    ██          ██        *************************
@@ -1497,11 +1526,13 @@ class ToplevelCls(Toplevel):
                     self.frames[i]. pack_forget()
 
             self.icons_interface .pack(fill=BOTH, expand=True)
-            #self.container_icons .bind('<Leave>', self.forget_container_icons)
+
+            self.icons_interface .pintar()
             
 
         # OCULTAR INTERFACE:
         else:
+            self.icons_interface .pintar()
             self.cascade = False
             # Description (for): Encuentra el frame hijo de la ventana y lo muestra.
             for i in range(len(self.frames)):
@@ -1527,9 +1558,10 @@ class ToplevelCls(Toplevel):
 
         #Dice: Si el padre de la ventana es una instancia de Tk():
         if isinstance(self.master.winfo_toplevel(), Tk):
-            print('moveee')
+            #print('moveee')
             self.master.geometry(new_position)                    # Mueve la ventana root
-
+        else:
+            self.icons_interface.variable = True
 
     def configure_toplevel(self, title, size):  # Opciones de las Ventanas Secundarias
         self.title (title)
