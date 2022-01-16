@@ -625,7 +625,7 @@ class ResizeCls(Frame):
 
 
 class IconsCls(Frame):
-    def __init__(self, master, main_lst=None, path_lst=None, indice=None, *args, **kwargs):
+    def __init__(self, master, main_lst=None, path_lst=None, indice=None, frames=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         #____Variables de Control: Indice de la sublista.
         self.indice = indice
@@ -641,161 +641,148 @@ class IconsCls(Frame):
         self.variable = False
 
 
+        self.frames = frames
+
         #____Colección de Imágenes:
         self.Images = main_lst
         self.Icons = path_lst
 
 
-        #____Metodos Llamados:
-        self.create_containers()
+        #____Metodos Llamados:_
+        self.create_container_1()
+        self.create_container_2()
 
         #____Enlaces: 
         self.off = self.master.bind('<Motion>',self.open_interface_buttons)
+        self.master.bind("<ButtonRelease-1>", self._release)
 
+        self.frame_container_global_2.bind('<Map>', self.enter)
+        self.frame_container_global_2.bind('<Unmap>', self.enterr)
 
 
         self.grip = ttk.Sizegrip(self, style='TSizegrip')
         self.grip .place (relx=1.0, rely=1.0, anchor='center')
         ttk.Style().configure('TSizegrip', bg='black')
 
-        self.a = False
-
-    def pintar (self):
-        #self.unbind("", self.off)
-        if not self.a:
-            self.a = True
-            #self.off = self.master.bind('<Motion>')
-            #print('activado')
-
-        else:
-            self.a = False
-            #self.unbind("<Motion>")
-            #print('desactivadio')
-
-
-
-    # Tarea: - Crea las widgets externos
-    def create_containers(self):
-        # [ 1 ] self.frame_manager_button  : Interface de botones   : NO POSICIONADO
-        # [ 2 ] self.frame_manager_image   : Interface de imagenes  : POSICIONADO
-
-        #____INTEFACES DE CONTROL: ( 2 )
-        self.frame_manager_buttons = Frame(self, bg="#1b1d22",)     # Color(fondo): Gris oscuro
-        self.frame_manager_images  = Frame(self, bg='#2b313c')      # Color(fondo): Gris claro
-
-        #____Posicionamiento:
-        self.frame_manager_buttons .pack(side='left', fill='y', expand=False)
-        self.frame_manager_images  .pack(side='right', fill='both', expand=True)
-
-        #____No posicionado:
-        self.frame_manager_buttons .pack_forget()
-
-
-        #____Pesos:
-        self.frame_manager_images .columnconfigure(0, weight=1)
-        self.frame_manager_images .rowconfigure(0, weight=1)
-
-        #____Enlaces:
-        self.master.bind("<ButtonRelease-1>", self._release)
-
-
-
-        self.frame_manager_images.bind('<Map>', self.enter)
-        self.frame_manager_images.bind('<Unmap>', self.enterr)
-
-        #________Metodos Llamados:
-        self.create_widgets()
-        
     def enter(self, event=None):
-        print(555)
+        pass
+        #print(555)
         #self.master.unbind("", self.off)
-        self.off = self.master.bind('<Motion>',self.open_interface_buttons)
+        #self.off = self.master.bind('<Motion>',self.open_interface_buttons)
 
     def enterr(self, event=None):
-        print(5556554)
+        pass
+        #print(5556554)
         #self.master.unbind("", self.off)
-        self.unbind("",self.off)
+        #self.unbind("",self.off)
 
 
+    # Tarea: - Crea los widgets Externos Parte 1
+    def create_container_1(self):
+        # [ 1 ] self.frame_container_global_1             : Interface vertical de botones y configuracion          : NO POSICIONADO
 
-
-    # Tarea: - Crea los widgets internos
-    def create_widgets(self):
-
-        #____BOTONES: ( 4 )
-        self.button_icon1 = Button(self.frame_manager_buttons, image=self.Icons[4], command=lambda:self.open_selected_image(0), bg='black',  bd=0)
-        self.button_icon2 = Button(self.frame_manager_buttons, image=self.Icons[4], command=lambda:self.open_selected_image(1), bg='black',  bd=0)
-        self.button_icon3 = Button(self.frame_manager_buttons, image=self.Icons[4], command=lambda:self.open_selected_image(2), bg='black',  bd=0)
-        self.button_icon4 = Button(self.frame_manager_buttons, image=self.Icons[4], command=lambda:self.open_selected_image(3), bg='black',  bd=0)
-
-        #____Posicionamiento:
-        self.button_icon1 .grid(column=0, row=0, padx=5, pady=5)
-        self.button_icon2 .grid(column=0, row=1, padx=5, pady=5)
-        self.button_icon3 .grid(column=0, row=2, padx=5, pady=5)
-        self.button_icon4 .grid(column=0, row=3, padx=5, pady=5)
-
-        #____LOGO: ( 1 )
-        self.label_icon1 = Label(self.frame_manager_images, image=self.Icons[3], bg='black', bd=0)
-        self.label_icon1 .grid(column=0, row=0)
+        #____CONTENEDOR EXTERIOR 1:
+        self.frame_container_global_1 = Frame(self, bg="#1b1d22",)                      # Color(fondo): Gris oscuro
 
         #________Metodos Llamados:
-        self.create_images()
+        self.create_item_1()
+
+
+    # Tarea: - Crea los widgets internos 1
+    def create_item_1(self):
+        #____BOTONES: ( 4 )
+        self.button_1 = Button(self.frame_container_global_1, image=self.Icons[4], command=lambda:self.open_selected_image(0), bg='black',  bd=0)
+        self.button_2 = Button(self.frame_container_global_1, image=self.Icons[4], command=lambda:self.open_selected_image(1), bg='black',  bd=0)
+        self.button_3 = Button(self.frame_container_global_1, image=self.Icons[4], command=lambda:self.open_selected_image(2), bg='black',  bd=0)
+        self.button_4 = Button(self.frame_container_global_1, image=self.Icons[4], command=lambda:self.open_selected_image(3), bg='black',  bd=0)
+
+        #____Posicionamiento:
+        self.button_1 .grid(column=0, row=0, padx=5, pady=5)
+        self.button_2 .grid(column=0, row=1, padx=5, pady=5)
+        self.button_3 .grid(column=0, row=2, padx=5, pady=5)
+        self.button_4 .grid(column=0, row=3, padx=5, pady=5)
 
 
 
 
-    def create_images(self):
-        # [ 1 ] self.frame_image_mobil_guia  : Imagen: Mobil guia de tiro  : NO POSICIONADO
+    # Tarea: - Crea los widgets Externos Parte 2
+    def create_container_2(self):
+        # [ 1 ] self.frame_container_global_2             : Interface derecha de imagenes                          : NO POSICIONADO
+        # [ 2 ] self.frame_container_widgets_2            : Sub-contenedor de imagenes                             : NO POSICIONADO
 
-        #____IMAGENES: ( 1 instancia )
-        self.frame_image_mobil_guia = ResizeCls(self.frame_manager_images, self.Images[self.indice][1], bd=0)
+        #____CONTENEDOR EXTERIOR 2:
+        self.frame_container_global_2  = Frame(self, bg='#2b313c')                      # Color(fondo): Gris claro
 
-
-        #________________________________________________________________________________________________________
-        # [ 1 ] self.frame_delay_general  : Interface de imagenes  : NO POSICIONADO
-
-        #____INTEFACE DE CONTROL: ( 1 )
-        self.frame_delay_general = Frame(self.frame_manager_images)
+        #____CONTENEDOR INTERIOR:
+        self.frame_container_album_2 = Frame(self.frame_container_global_2)
 
         #____Peso de distribucion:
-        self.frame_delay_general .columnconfigure(0, weight=1)
-        self.frame_delay_general .rowconfigure(0, weight=1)
-        self.frame_delay_general .rowconfigure(1, weight=0)
-        self.frame_delay_general .rowconfigure(2, weight=1)
+        self.frame_container_global_2 .columnconfigure(0, weight=1)
+        self.frame_container_global_2 .rowconfigure(0, weight=1)
 
-        #------------------------------------------------------------------------------------------------------
-        # [ 1 ] self.image_delay1  : Imagen: Delay General (F8, S1, S2, DD1, DD2)
-        # [ 2 ] self.image_delay2  : Imagen: Delay General (1+, 2+, SS, Ang-Maximo)
-        # [ 3 ] self.image_delay3  : Imagen: Delay General (TP, Vida, Ang-Recto, Ang-Maximo)
+        #____Peso de distribucion:
+        self.frame_container_album_2 .columnconfigure(0, weight=1)
+        self.frame_container_album_2 .rowconfigure(0, weight=1)
+        self.frame_container_album_2 .rowconfigure(1, weight=0)
+        self.frame_container_album_2 .rowconfigure(2, weight=1)
+
+        #________Metodos Llamados:
+        self.create_album_1()
+        self.create_album_2()
+        self.create_item_2()
+
+
+    # Tarea: - Crea las imagenes que posicionan directamente en la ventana sin contenedor adicional
+    def create_album_1(self):
+        # [ 1 ] self.label_icon1                          : Imagen: Logo "ASH"                                     : POSICIONADO
+        # [ 2 ] self.frame_image_mobil_guia               : Imagen: Ayuda para medir el mobil                      : NO POSICIONADO
+
+        #____IMAGEN: ( 1 widget)
+        self.label_icon1 = Label(self.frame_container_global_2, image=self.Icons[3], bg='black', bd=0)
+        self.label_icon1 .grid(column=0, row=0)
+
+        #____IMAGEN: ( 1 instancia )
+        self.frame_image_guiadetiro = ResizeCls(self.frame_container_global_2, self.Images[self.indice][1], bd=0)
+
+
+    # Tarea: - Crea las imagenes que posicionan en un contenedor adicional
+    def create_album_2(self):
+        # [ 1 ] self.image_delay1  : Imagen: Delay General (F8, S1, S2, DD1, DD2)                                  : POSICIONADO
+        # [ 2 ] self.image_delay2  : Imagen: Delay General (1+, 2+, SS, Ang-Maximo)                                : POSICIONADO 
+        # [ 3 ] self.image_delay3  : Imagen: Delay General (TP, Vida, Ang-Recto, Ang-Maximo)                       : POSICIONADO 
         
         #____IMAGENES: ( 3 instancias )
-        self.image_delay1 = ResizeCls(self.frame_delay_general, self.Images[22][0], 2, 10, bd=0)
-        self.image_delay2 = ResizeCls(self.frame_delay_general, self.Images[22][1], 2, 10, bd=0)
-        self.image_delay3 = ResizeCls(self.frame_delay_general, self.Images[22][2], 2, 10, bd=0)
+        self.image_delay1 = ResizeCls(self.frame_container_album_2, self.Images[22][0], 2, 10, bd=0)
+        self.image_delay2 = ResizeCls(self.frame_container_album_2, self.Images[22][1], 2, 10, bd=0)
+        self.image_delay3 = ResizeCls(self.frame_container_album_2, self.Images[22][2], 2, 10, bd=0)
+
+        #____Posicionamiento en cola:
+        self.image_delay3 .lower()
 
         #____Posicionamiento:
         self.image_delay1 .grid(column=0, row=0, sticky='news')
         self.image_delay2 .grid(column=0, row=2, sticky='news')
         self.image_delay3 .grid(column=0, row=2, sticky='news')
 
-        #____Posicionamiento en cola:
-        self.image_delay3 .lower()
 
-        #-------------------------------------------------------------------------------------------------------
-        # [ 1 ] self.frame_manager  : Interface de botones
+    # Tarea: - Crea la interface para cambiar las imagenes del contenedor adicional
+    def create_item_2(self):
+        # [ 1 ] self.frame_manager_button                 : Interface del boton para cambiar de imagen             : POSICIONADO
+        # [ 2 ] self.button_next                          : Boton para cambiar de imagen                           : POSICIONADO
+        # [ 3 ] self.button_next                          : Boton para cambiar de imagen                           : POSICIONADO
 
         #____INTEFACE DE CONTROL: ( 1 )
-        self.frame_manager = Frame(self.frame_delay_general, bg='#1b1d22', bd=0, height=20)
-        self.frame_manager .grid(column=0, row=1, sticky='ew')
+        self.frame_manager_button = Frame(self.frame_container_album_2, bg='#1b1d22', bd=0, height=20)
+        self.frame_manager_button .grid(column=0, row=1, sticky='ew')
 
         #____BOTONES: ( 1 )
-        self.button_siguiente = Button(self.frame_manager, image=self.Icons[6], command=self.change_image, bg='#1b1d22', activebackground='#1b1d22', bd=0, cursor='hand2')
-        self.button_siguiente .pack()
+        self.button_next = Button(self.frame_manager_button, image=self.Icons[6], command=self.change_image, bg='#1b1d22', activebackground='#1b1d22', bd=0, cursor='hand2')
+        self.button_next .pack()
         #________________________________________________________________________________________________________
+        self.list_of_images = [self.frame_image_guiadetiro, self.frame_container_album_2]
 
-        self.list_images = [self.frame_image_mobil_guia, self.frame_delay_general]
 
-
+    # Tarea: - Cambia el orden de apilamiento de las imagenes del contenedor adicional
     def change_image(self):
         if not self.var2:
             self.var2 = True
@@ -805,13 +792,12 @@ class IconsCls(Frame):
             self.image_delay2 .lift()
        
 
-    # Tarea: - Muestra y oculta las imagenes
+    # Tarea: - Muestra y oculta las imagenes del boton presionado
     def open_selected_image(self, number=None):
 
         # Si presionas un boton diferente
         if self.option != number and self.option is not None:
             self.var1 = False
-
         # Entonces. Si presionas el mismo boton
         else:
             self.option = number
@@ -823,12 +809,10 @@ class IconsCls(Frame):
 
             # Description: Oculta el logo
             self.label_icon1 .grid_remove()
-
             # Description: Oculta la imagen del boton presionado anteriormente
-            self.list_images[self.option] .grid_remove()
-
+            self.list_of_images[self.option] .grid_remove()
             # Description: Muestra la imagen del boton presionado
-            self.list_images[number]. grid(sticky='news')
+            self.list_of_images[number]. grid(sticky='news')
 
 
         # Description: Muestra el logo
@@ -836,39 +820,51 @@ class IconsCls(Frame):
             self.var1 = False
 
             # Description: Oculta la imagen
-            self.list_images[number] .grid_remove()
+            self.list_of_images[number] .grid_remove()
             # Description: Posiciona el logo
             self.label_icon1 .grid()
 
         self.option = number
 
 
-    # Tarea: -  Mostrar y ocultar la interface vertical de botones.
+    # Tarea: -  Muestra y oculta la interface vertical de botones.
     def open_interface_buttons(self, event=None):
-        print('__A_A_A_')
+
+        #print('IconCls--B1-Motion')
         if not self.variable:
             # Description: Coordenada 'x' del mouse.      
             x = self.winfo_pointerx() - self.winfo_rootx()
-            
-            if 0 <= (x) < 37:         # MUESTRA INTERFACE
+
+            # MUESTRA INTERFACE
+            if 0 <= (x) < 37:
                 # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1.
-                self.frame_manager_images .pack_forget()
-                self.frame_manager_images .pack(side='right', fill='both', expand=True)
+                self.frame_container_global_2 .pack_forget()
+                self.frame_container_global_2 .pack(side='right', fill='both', expand=True)
 
                 # Description: Muestra la interface de botones.
-                self.frame_manager_buttons .pack(side='left', fill='y', expand=False)
+                self.frame_container_global_1 .pack(side='left', fill='y', expand=False)
 
-            else:                     # OCULTA INTERFACE
+            # OCULTA INTERFACE
+            else:
                 # Description: Oculta la interface de botones.
                 self.update_idletasks()   # ver si hace algo
-                self.frame_manager_buttons .pack_forget()
+                self.frame_container_global_1 .pack_forget()
+
+        widget_release = event.widget.winfo_containing(event.x_root, event.y_root)
+        #a = self.master.master.winfo_children()
+        if isinstance(self.winfo_toplevel(), TopDerCls):
+            print(555555555)
+        #self.frames[1].pintar()
 
 
-    # Tarea: - Ejecutar el metodo: [ open_interface_buttons ]
+    # Tarea: - Ejecutar el metodo: [ open_interface_buttons ] no se bien
     def _release(self, event=None):
         self.variable = False
         #self.open_interface_buttons()
         #self.open_interface_buttons()
+
+    def pin(self, event=None):
+        print(33333333333333)
   
   
 
@@ -910,11 +906,9 @@ class TopIzqCls(Frame):
         self._7 = arg_7
 
         #____Metodos Llamados:
-        self.create_containers1()
-        self.create_containers2()
-
+        self.create_container_1()
+        self.create_container_2()
         self.open_interface()
-
 
         #____Peso de distribucion principal:
         self.grid_columnconfigure(0, weight=1)
@@ -922,9 +916,16 @@ class TopIzqCls(Frame):
         self.grid_rowconfigure   (1, weight=1)
 
 
+    # Tarea: - Abrir la interface del mobil
+    def open_interface(self):
+        if self.indice == 17:
+            self.frame_container_global_2.grid(column=0, row=0, sticky='news')
+        else:
+            self.button1 .config(state='disabled', cursor='arrow')
 
-    # Tarea: - Crea las imagenes 
-    def create_containers1(self):
+
+    # Tarea: - Crea los contenedores Parte 1  [ INTERFACE: STANDAR ]
+    def create_container_1(self):
         #____CONTENEDOR EXTERIOR 1:                                 Estado: POSISIONADO
         self.frame_container_global_1 = Frame(self)
         self.frame_container_global_1 .grid(sticky='news')
@@ -950,15 +951,19 @@ class TopIzqCls(Frame):
         self.frame_container_widgets_1 .rowconfigure   (0, weight=1) 
 
         #________Metodos Llamados:
-        self.create_items1()
+        self.create_items_1()
 
     
-    def create_items1(self):
+    def create_items_1(self):
+        # [ 1 ] self.button1                              : Boton "Wind\n00"                                       : POSICIONADO
+        # [ 2 ] self.button2                              : Boton "Wind\nChart"                                    : POSICIONADO
+        # [ 3 ] self.label_switch                         : Label "OFF"                                            : POSICIONADO
+        # [ 3 ] self.label_mobil                          : Imagen: Miniatura del mobil                            : POSICIONADO
 
-        self.button1 = Button(self.frame_container_widgets_1, text='Wind\n00', font=('Calibri',8,'bold'), command=lambda:self.change_interfaces(0), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0,)
+        self.button1 = Button(self.frame_container_widgets_1, text='Wind\n00', font=('Calibri',8,'bold'), command=lambda:self.change_interfaces(0), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
         self.button1 .grid(column=0, row=0, sticky='news')
 
-        self.button2 = Button(self.frame_container_widgets_1, text='Wind\nChart', font=('Calibri',8,'bold'), command=lambda:self.change_interfaces(1), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0,)
+        self.button2 = Button(self.frame_container_widgets_1, text='Wind\nChart', font=('Calibri',8,'bold'), command=lambda:self.change_interfaces(1), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
         self.button2 .grid(column=1, row=0, sticky='news')
 
         self.label_switch = Label(self.frame_container_widgets_1, text='O\nF\nF', font=('Arial',7,'bold'), bg='#1b1d22', fg='white')
@@ -975,8 +980,8 @@ class TopIzqCls(Frame):
 
 
 
-    # Tarea: 
-    def create_containers2(self):
+    # Tarea: - Crea los contenedores Parte 2  [ INTERFACE: TRICO]
+    def create_container_2(self):
         #____CONTENEDOR EXTERIOR 2:                                 Estado: NO POSISIONADO
         self.frame_container_global_2 = Frame(self)
 
@@ -997,17 +1002,17 @@ class TopIzqCls(Frame):
         self.frame_container_widgets_2 .rowconfigure   (1, weight=1)
 
         #________Metodos Llamados:
-        self.create_items2()
+        self.create_items_2()
 
 
-    def create_items2(self):
+    def create_items_2(self):
         #____BOTONES: ( 4 )
-        self.button_0 = Button(self.frame_container_widgets_2, text='Delay', font=('Calibri',8,'bold'), command=lambda:self.change_image(0), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0,)
-        self.button_1 = Button(self.frame_container_widgets_2, text='Trico', font=('Calibri',8,'bold'), command=lambda:self.change_image(1), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0,)
-        self.button_2 = Button(self.frame_container_widgets_2, text='Raon', font=('Calibri',8,'bold'), command=lambda:self.change_image(2), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0,)
-        self.button_3 = Button(self.frame_container_widgets_2, text='Más', font=('Calibri',8,'bold'), command=lambda:self.change_image(3), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0,)
-        self.button_4 = Button(self.frame_container_widgets_2, text='Laser', font=('Calibri',8,'bold'), command=lambda:self.change_image(4), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0,)
-        self.button_5 = Button(self.frame_container_widgets_2, text='Otros', font=('Calibri',8,'bold'), command=lambda:self.change_image(5), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0,)
+        self.button_0 = Button(self.frame_container_widgets_2, text='Delay', font=('Calibri',8,'bold'), command=lambda:self.change_image(0), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_1 = Button(self.frame_container_widgets_2, text='Trico', font=('Calibri',8,'bold'), command=lambda:self.change_image(1), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_2 = Button(self.frame_container_widgets_2, text='Raon', font=('Calibri',8,'bold'), command=lambda:self.change_image(2), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_3 = Button(self.frame_container_widgets_2, text='Más', font=('Calibri',8,'bold'), command=lambda:self.change_image(3), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_4 = Button(self.frame_container_widgets_2, text='Laser', font=('Calibri',8,'bold'), command=lambda:self.change_image(4), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_5 = Button(self.frame_container_widgets_2, text='Otros', font=('Calibri',8,'bold'), command=lambda:self.change_image(5), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
 
         #____Posicionamiento:
         self.button_0 .grid(column=0, row=0, pady=(0,1), padx=(2), sticky='news')
@@ -1058,18 +1063,6 @@ class TopIzqCls(Frame):
         
         elif number == 5:
             self.frame_image_delay_trico .lift()
-
-    
-
-    def open_interface(self):
-        if self.indice == 17:
-            self.frame_container_global_1 .grid_remove()
-
-            self.frame_container_global_2.grid(column=0, row=0, sticky='news')
-
-        else:
-            self.button1 .config(state='disabled')
-
 
 
 
@@ -1127,7 +1120,7 @@ class TopDerCls(Frame):
         self.master.bind("<Button-1>", self.open_text_flecha)
         
             # Enlace:      
-        self.bind_motion = self.master.bind('<Motion>',self.open_text_mostrar_77)
+        #self.bind_motion = self.master.bind('<Motion>',self.open_text_mostrar_77)
 
             # Enlace: Quita el Label [texto: "Haga click" para mostrar el angulo 77"]:
         self.bind_leave = self.bind('<Leave>', lambda arg: self.lbl_text_mostrar_77 .grid_remove())   
@@ -1152,14 +1145,6 @@ class TopDerCls(Frame):
         self.frame_image_base_77. rowconfigure(0, weight=1)
 
         
-        """ self.frame_image_base_initial.bind('<Map>', self.aa)
-
-    def aa (self, event):
-        print(6565656565656)
-        #self.master.unbind("<Motion>")
-         """
-     
-
     
     #___< B U T T O N - 1 > :
     def open_text_flecha(self, event): 
@@ -1186,13 +1171,8 @@ class TopDerCls(Frame):
                 self.lbl_text_flecha     .grid_remove()
 
 
-
     #___< M O T I O N > :
     def open_text_mostrar_77(self, event):    
-        """ if self.frame_image_base_initial .winfo_viewable():
-            print('__',11)
-        else:
-            print('__',22)    """
  
         self.x = event.x / self.master.winfo_width() * 100
         self.y = event.y / self.master.winfo_height() * 100
@@ -1208,9 +1188,11 @@ class TopDerCls(Frame):
                 self.lbl_text_mostrar_77 .grid_remove()
 
         if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
+            print('remove mostrar 77')
             self.lbl_text_mostrar_77     .grid_remove()
 
-   
+    def pintar(self):
+        print('__--55555555555555555555555555555555555555555555555555555-__')
 
 #************************            ███████    ██████████████        *************************
 #************************        ██████   ██    ██          ██        *************************
@@ -1307,7 +1289,7 @@ class MoveAllCls():
         #------------------------------------------------------------------------------------------------------------------------------------------
 
         # Dice: [ Si es una instancia de... ] and [ No es una instancia de... ] or [  Esta en la lista (self.movable) ]
-        if isinstance(window.master, Tk)== True and not isinstance(widget, (Button, ttk.Sizegrip, Spinbox)) == True and not self.is_immovable(widget) == True or self.is_movable(widget):               
+        if isinstance(window.master, Tk) == True and not isinstance(widget, (Button, ttk.Sizegrip, Spinbox)) == True and not self.is_immovable(widget) == True or self.is_movable(widget):               
             # Descripción: Mueve root                                        # otro: if _tops.master == RootCls:
             window.master.geometry(new_position)
         #------------------------------------------------------------------------------------------------------------------------------------------
@@ -1469,7 +1451,7 @@ class ToplevelCls(Toplevel):
 
     def create_container_icons(self, indice=None):
         #____GESTOR DE ICONOS: ( 1 instancia )
-        self.icons_interface = IconsCls(self, self.Images, self.Icons, indice)
+        self.icons_interface = IconsCls(self, self.Images, self.Icons, indice, self.frames)
         self.icons_interface .pack(fill=BOTH, expand=True)
         self.icons_interface .pack_forget()
 
@@ -1527,12 +1509,9 @@ class ToplevelCls(Toplevel):
 
             self.icons_interface .pack(fill=BOTH, expand=True)
 
-            self.icons_interface .pintar()
-            
 
         # OCULTAR INTERFACE:
         else:
-            self.icons_interface .pintar()
             self.cascade = False
             # Description (for): Encuentra el frame hijo de la ventana y lo muestra.
             for i in range(len(self.frames)):
@@ -1994,6 +1973,8 @@ class InterfazCls(Frame, MoveAllCls):
                 window .create_container_icons(mobil)
                 window .create_button_menu()
                 window .create_label_title(text=text[i])
+                
+                #window .bind("<Motion>", self.o)
 
                 #____Enlace: Actualiza la lista (self._open):
                 window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
@@ -2009,12 +1990,15 @@ class InterfazCls(Frame, MoveAllCls):
 
             if self._frame[i] is not None:
                 self._frame[i] .destroy()
+                # Description: Recrea la interface al destruirse su contenedor
                 self._windows[i] .create_container_icons(mobil)
             self._frame[i] = container[i]
             self._frame[i] .pack(fill='both', expand=True)
             # Description: Oculta el frame si la interface de iconos es visible.
             if self._windows[i] .icons_interface .winfo_ismapped():
-                self._frame[i] .pack_forget()
+                pass
+                #self._frame[i] .pack_forget()
+            self._windows[i] .bind("<Motion>", self.pint)
 
 
             # Description: Widget para redimensionar el frame.
@@ -2031,7 +2015,10 @@ class InterfazCls(Frame, MoveAllCls):
                 # Descripcion: Almacena el nombre del boton presionado en el modo botones o lista.
                 self.mobil_selected = name
                 break
-        
+    
+    def o (self, event=None):
+        pass
+        #print(5555555555555555551111111111)
 
     # Tarea: - Actualizar las ventanas cerradas
     def update_open(self, number, event=None):
