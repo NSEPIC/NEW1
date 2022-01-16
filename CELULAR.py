@@ -617,11 +617,12 @@ class ResizeCls(Frame):
         self.img .pack(fill='both', expand=True)
         self.img .bind('<Configure>', self.resize)
 
-    def resize(self, event):
+    def resize(self, event=None):
+        print('resisssssssss')
         self.image = self.image_copy .resize((self.master.winfo_width(), self.master.winfo_height() // self.value1 - self.value2))
         self.photo_image = ImageTk.PhotoImage(self.image)
         self.img .config(image=self.photo_image)
-
+    
 
 
 class IconsCls(Frame):
@@ -653,28 +654,20 @@ class IconsCls(Frame):
         self.create_container_2()
 
         #____Enlaces: 
-        self.off = self.master.bind('<Motion>',self.open_interface_buttons)
+        #self.master.bind('<Motion>',self.open_interface_buttons)
         self.master.bind("<ButtonRelease-1>", self._release)
-
-        self.frame_container_global_2.bind('<Map>', self.enter)
-        self.frame_container_global_2.bind('<Unmap>', self.enterr)
+        self.bind('<Map>', self.map_solution)      # Soluciona error: no aparece interface de botones al presionar el boton menu
 
 
         self.grip = ttk.Sizegrip(self, style='TSizegrip')
         self.grip .place (relx=1.0, rely=1.0, anchor='center')
         ttk.Style().configure('TSizegrip', bg='black')
 
-    def enter(self, event=None):
-        pass
-        #print(555)
-        #self.master.unbind("", self.off)
-        #self.off = self.master.bind('<Motion>',self.open_interface_buttons)
 
-    def enterr(self, event=None):
+    def map_solution(self, event=None):
         pass
-        #print(5556554)
-        #self.master.unbind("", self.off)
-        #self.unbind("",self.off)
+        self.open_interface_buttons()
+        self.open_interface_buttons()
 
 
     # Tarea: - Crea los widgets Externos Parte 1
@@ -683,7 +676,7 @@ class IconsCls(Frame):
 
         #____CONTENEDOR EXTERIOR 1:
         self.frame_container_global_1 = Frame(self, bg="#1b1d22",)                      # Color(fondo): Gris oscuro
-
+            
         #________Metodos Llamados:
         self.create_item_1()
 
@@ -715,7 +708,7 @@ class IconsCls(Frame):
 
         #____CONTENEDOR INTERIOR:
         self.frame_container_album_2 = Frame(self.frame_container_global_2)
-
+        
         #____Peso de distribucion:
         self.frame_container_global_2 .columnconfigure(0, weight=1)
         self.frame_container_global_2 .rowconfigure(0, weight=1)
@@ -735,7 +728,7 @@ class IconsCls(Frame):
     # Tarea: - Crea las imagenes que posicionan directamente en la ventana sin contenedor adicional
     def create_album_1(self):
         # [ 1 ] self.label_icon1                          : Imagen: Logo "ASH"                                     : POSICIONADO
-        # [ 2 ] self.frame_image_mobil_guia               : Imagen: Ayuda para medir el mobil                      : NO POSICIONADO
+        # [ 2 ] self.frame_image_guiadetiro               : Imagen: Ayuda para medir el mobil                      : NO POSICIONADO
 
         #____IMAGEN: ( 1 widget)
         self.label_icon1 = Label(self.frame_container_global_2, image=self.Icons[3], bg='black', bd=0)
@@ -830,8 +823,7 @@ class IconsCls(Frame):
     # Tarea: -  Muestra y oculta la interface vertical de botones.
     def open_interface_buttons(self, event=None):
 
-        #print('IconCls--B1-Motion')
-        if not self.variable:
+        if not self.variable and self.winfo_viewable():
             # Description: Coordenada 'x' del mouse.      
             x = self.winfo_pointerx() - self.winfo_rootx()
 
@@ -847,24 +839,13 @@ class IconsCls(Frame):
             # OCULTA INTERFACE
             else:
                 # Description: Oculta la interface de botones.
-                self.update_idletasks()   # ver si hace algo
                 self.frame_container_global_1 .pack_forget()
 
-        widget_release = event.widget.winfo_containing(event.x_root, event.y_root)
-        #a = self.master.master.winfo_children()
-        if isinstance(self.winfo_toplevel(), TopDerCls):
-            print(555555555)
-        #self.frames[1].pintar()
 
 
     # Tarea: - Ejecutar el metodo: [ open_interface_buttons ] no se bien
     def _release(self, event=None):
         self.variable = False
-        #self.open_interface_buttons()
-        #self.open_interface_buttons()
-
-    def pin(self, event=None):
-        print(33333333333333)
   
   
 
@@ -1172,15 +1153,15 @@ class TopDerCls(Frame):
 
 
     #___< M O T I O N > :
-    def open_text_mostrar_77(self, event):    
+    def open_text_mostrar_77(self, x, y, event=None):    
  
-        self.x = event.x / self.master.winfo_width() * 100
-        self.y = event.y / self.master.winfo_height() * 100
+        """ self.x = event.x / self.master.winfo_width() * 100
+        self.y = event.y / self.master.winfo_height() * 100 """
 
         print('fuera del if')
         if not self._motion_1 == True: 
 
-            if self.x1 <(self.x)< self.x2  and  self.y1 <(self.y)< self.y2:    
+            if self.x1 <(x)< self.x2  and  self.y1 <(y)< self.y2:    
                 self.lbl_text_mostrar_77 .grid()
                 print(799577)
 
@@ -1188,11 +1169,9 @@ class TopDerCls(Frame):
                 self.lbl_text_mostrar_77 .grid_remove()
 
         if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
-            print('remove mostrar 77')
             self.lbl_text_mostrar_77     .grid_remove()
 
-    def pintar(self):
-        print('__--55555555555555555555555555555555555555555555555555555-__')
+ 
 
 #************************            ███████    ██████████████        *************************
 #************************        ██████   ██    ██          ██        *************************
@@ -1508,6 +1487,7 @@ class ToplevelCls(Toplevel):
                     self.frames[i]. pack_forget()
 
             self.icons_interface .pack(fill=BOTH, expand=True)
+
 
 
         # OCULTAR INTERFACE:
@@ -1995,16 +1975,17 @@ class InterfazCls(Frame, MoveAllCls):
             self._frame[i] = container[i]
             self._frame[i] .pack(fill='both', expand=True)
             # Description: Oculta el frame si la interface de iconos es visible.
-            if self._windows[i] .icons_interface .winfo_ismapped():
-                pass
-                #self._frame[i] .pack_forget()
-            self._windows[i] .bind("<Motion>", self.pint)
+            if self._windows[i] .icons_interface .winfo_ismapped():pass
+                #self._frame[i] .pack_forget() # sin uso
 
 
             # Description: Widget para redimensionar el frame.
             self.grip = ttk.Sizegrip(self._frame[i], style='TSizegrip')
             self.grip .place (relx=1.0, rely=1.0, anchor='center')
             ttk.Style().configure('TSizegrip', bg='black')
+
+            if i < 2:
+                self._windows[i] .bind("<Motion>", self.a)
 
 
     #-----------------------------------------------------------------------------------------------------------------
@@ -2016,9 +1997,23 @@ class InterfazCls(Frame, MoveAllCls):
                 self.mobil_selected = name
                 break
     
-    def o (self, event=None):
-        pass
-        #print(5555555555555555551111111111)
+
+    def a (self, event=None):
+        # Descripcion: Detecta la ventana debajo del mouse
+        window = event.widget.winfo_toplevel() 
+
+        for i in range(len(self._open)):
+            if window == self._windows[i]:
+                self._windows[i] .icons_interface.open_interface_buttons()
+                if i == 1 and self._frame[i].winfo_ismapped():
+                    x = event.x / self._frame[i].winfo_width() * 100
+                    y = event.y / self._frame[i].winfo_height() * 100
+
+                    self._frame[i].open_text_mostrar_77(x,y)
+                
+        #self._frame[1].open_text_mostrar_77()
+
+
 
     # Tarea: - Actualizar las ventanas cerradas
     def update_open(self, number, event=None):
