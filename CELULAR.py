@@ -618,7 +618,6 @@ class ResizeCls(Frame):
         self.img .bind('<Configure>', self.resize)
 
     def resize(self, event=None):
-        print('resisssssssss')
         self.image = self.image_copy .resize((self.master.winfo_width(), self.master.winfo_height() // self.value1 - self.value2))
         self.photo_image = ImageTk.PhotoImage(self.image)
         self.img .config(image=self.photo_image)
@@ -664,11 +663,6 @@ class IconsCls(Frame):
         ttk.Style().configure('TSizegrip', bg='black')
 
 
-    def map_solution(self, event=None):
-        pass
-        self.open_interface_buttons()
-        self.open_interface_buttons()
-
 
     # Tarea: - Crea los widgets Externos Parte 1
     def create_container_1(self):
@@ -683,6 +677,11 @@ class IconsCls(Frame):
 
     # Tarea: - Crea los widgets internos 1
     def create_item_1(self):
+        # [ 1 ] self.button_1                             : Abre imagen: Ayuda para medir el mobil                 : POSICIONADO
+        # [ 2 ] self.button_2                             : Abre : Sub-contenedor de imagenes del  delay general   : POSICIONADO
+        # [ 1 ] self.button_3                             : Abre : Sin uso                                         : POSICIONADO
+        # [ 2 ] self.button_4                             : Abre : Sin uso                                         : POSICIONADO
+
         #____BOTONES: ( 4 )
         self.button_1 = Button(self.frame_container_global_1, image=self.Icons[4], command=lambda:self.open_selected_image(0), bg='black',  bd=0)
         self.button_2 = Button(self.frame_container_global_1, image=self.Icons[4], command=lambda:self.open_selected_image(1), bg='black',  bd=0)
@@ -697,11 +696,10 @@ class IconsCls(Frame):
 
 
 
-
     # Tarea: - Crea los widgets Externos Parte 2
     def create_container_2(self):
         # [ 1 ] self.frame_container_global_2             : Interface derecha de imagenes                          : NO POSICIONADO
-        # [ 2 ] self.frame_container_widgets_2            : Sub-contenedor de imagenes                             : NO POSICIONADO
+        # [ 2 ] self.frame_container_album_2              : Sub-contenedor de imagenes                             : NO POSICIONADO
 
         #____CONTENEDOR EXTERIOR 2:
         self.frame_container_global_2  = Frame(self, bg='#2b313c')                      # Color(fondo): Gris claro
@@ -749,7 +747,7 @@ class IconsCls(Frame):
         self.image_delay2 = ResizeCls(self.frame_container_album_2, self.Images[22][1], 2, 10, bd=0)
         self.image_delay3 = ResizeCls(self.frame_container_album_2, self.Images[22][2], 2, 10, bd=0)
 
-        #____Posicionamiento en cola:
+        #____Orden de apilamiento de imagenes:
         self.image_delay3 .lower()
 
         #____Posicionamiento:
@@ -820,16 +818,22 @@ class IconsCls(Frame):
         self.option = number
 
 
+    # Tarea: - Posicionar la interface de botones
+    def map_solution(self, event=None):
+        self.open_interface_buttons()
+        self.open_interface_buttons()
+
+
     # Tarea: -  Muestra y oculta la interface vertical de botones.
     def open_interface_buttons(self, event=None):
 
-        if not self.variable and self.winfo_viewable():
+        if not self.variable:
             # Description: Coordenada 'x' del mouse.      
             x = self.winfo_pointerx() - self.winfo_rootx()
 
             # MUESTRA INTERFACE
             if 0 <= (x) < 37:
-                # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1.
+                # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1. [fraccion: para visualizar la interface de botones ]
                 self.frame_container_global_2 .pack_forget()
                 self.frame_container_global_2 .pack(side='right', fill='both', expand=True)
 
@@ -876,7 +880,7 @@ class TopIzqCls(Frame):
         #____Variables de Control: Indice de la sublista.
         self.indice = indice
 
-        #____Lista de imagenes:
+        #____Lista de indices de las imagenes:
         self._0 = arg_0
         self._1 = arg_1
         self._2 = arg_2
@@ -886,28 +890,34 @@ class TopIzqCls(Frame):
         self._6 = arg_6
         self._7 = arg_7
 
-        #____Metodos Llamados:
-        self.create_container_1()
-        self.create_container_2()
-        self.open_interface()
-
         #____Peso de distribucion principal:
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure   (0, weight=1)
         self.grid_rowconfigure   (1, weight=1)
 
+        #____Metodos Llamados:
+        self.open_interface()
+
 
     # Tarea: - Abrir la interface del mobil
     def open_interface(self):
         if self.indice == 17:
-            self.frame_container_global_2.grid(column=0, row=0, sticky='news')
+            #____Metodos Llamados:
+            self.create_container_2()
         else:
+            #____Metodos Llamados:
+            self.create_container_1()
+
             self.button1 .config(state='disabled', cursor='arrow')
 
 
     # Tarea: - Crea los contenedores Parte 1  [ INTERFACE: STANDAR ]
     def create_container_1(self):
-        #____CONTENEDOR EXTERIOR 1:                                 Estado: POSISIONADO
+        # [ 1 ] self.frame_container_global_1       : Interface global N° 1, para mostrar el delay completo del mobil                    : POSICIONADO
+        # [ 2 ] self.frame_container_widgets_1      : Interface subglobal de la interface global N°1, para mostrar la mini interface     : POSICIONADO
+        # [ 3 ] frame_image_delay_complete          : Imagen: Delay completo del mobil                                                   : POSICIONADO
+
+        #____CONTENEDOR EXTERIOR 1:
         self.frame_container_global_1 = Frame(self)
         self.frame_container_global_1 .grid(sticky='news')
 
@@ -963,8 +973,12 @@ class TopIzqCls(Frame):
 
     # Tarea: - Crea los contenedores Parte 2  [ INTERFACE: TRICO]
     def create_container_2(self):
-        #____CONTENEDOR EXTERIOR 2:                                 Estado: NO POSISIONADO
+        # [ 1 ] frame_container_global_2            : Interface global N° 2, muestra la interface del trico                              : POSICIONADO
+        # [ 2 ] self.frame_container_widgets_1      : Interface subglobal de la interface global N°2, para mostrar la mini interface     : POSICIONADO
+
+        #____CONTENEDOR EXTERIOR 2:
         self.frame_container_global_2 = Frame(self)
+        self.frame_container_global_2 .grid(column=0, row=0, sticky='news')
 
         #____CONTENEDOR INTERIOR:
         self.frame_container_widgets_2 = Frame(self.frame_container_global_2, bg='#2b313c', bd=0, height=42)
@@ -988,11 +1002,11 @@ class TopIzqCls(Frame):
 
     def create_items_2(self):
         #____BOTONES: ( 4 )
-        self.button_0 = Button(self.frame_container_widgets_2, text='Delay', font=('Calibri',8,'bold'), command=lambda:self.change_image(0), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_1 = Button(self.frame_container_widgets_2, text='Trico', font=('Calibri',8,'bold'), command=lambda:self.change_image(1), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_0 = Button(self.frame_container_widgets_2, text='Atrás', font=('Calibri',8,'bold'), command=lambda:self.change_image(0), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_1 = Button(self.frame_container_widgets_2, text='Laser', font=('Calibri',8,'bold'), command=lambda:self.change_image(1), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
         self.button_2 = Button(self.frame_container_widgets_2, text='Raon', font=('Calibri',8,'bold'), command=lambda:self.change_image(2), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_3 = Button(self.frame_container_widgets_2, text='Más', font=('Calibri',8,'bold'), command=lambda:self.change_image(3), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_4 = Button(self.frame_container_widgets_2, text='Laser', font=('Calibri',8,'bold'), command=lambda:self.change_image(4), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_3 = Button(self.frame_container_widgets_2, text='Reset', font=('Calibri',8,'bold'), command=lambda:self.change_image(3), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_4 = Button(self.frame_container_widgets_2, text='Más', font=('Calibri',8,'bold'), command=lambda:self.change_image(4), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
         self.button_5 = Button(self.frame_container_widgets_2, text='Otros', font=('Calibri',8,'bold'), command=lambda:self.change_image(5), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
 
         #____Posicionamiento:
@@ -1015,35 +1029,48 @@ class TopIzqCls(Frame):
         self.frame_image_1forma = ResizeCls(self.frame_container_global_2, self.Images[17][4], value2=42, bd=0)
         self.frame_image_laser = ResizeCls(self.frame_container_global_2, self.Images[17][5], value2=42, bd=0)
 
+        #____Orden de apilamiento de imagenes:
+        self.frame_image_delay_trico .lift()
+
         #____Posicionamiento:
         self.frame_image_delay_trico .grid(column=0, row=1, sticky='news')
         self.frame_image_delay_raon .grid(column=0, row=1, sticky='news')
         self.frame_image_1forma .grid(column=0, row=1, sticky='news')
         self.frame_image_laser .grid(column=0, row=1, sticky='news')
 
-        #____Orden de apilamiento de imagenes:
-        self.frame_image_delay_trico .lift()
-
 
     def change_image(self, number):
         if number == 0:
+            # Description: Quita la interface del trico
             self.frame_container_global_2 .grid_remove()
-            self.frame_container_global_1 .grid()
-        
+            # Description: Crea la interface standar del mobil
+            self.create_container_1()
+
         elif number == 1:
-            self.frame_image_delay_trico .lift()
+            self.frame_image_laser .lift()
+            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
+            self.master.frames[1].change_image(number)
 
         elif number == 2:
             self.frame_image_delay_raon .lift()
-        
+            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
+            self.master.frames[1].change_image(number)
+
         elif number == 3:
-            self.frame_image_1forma .lift()
+            self.frame_image_delay_trico .lift()
+            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
+            self.master.frames[1].change_image(number)
 
         elif number == 4:
-            self.frame_image_laser .lift()
+            self.frame_image_1forma .lift()
+            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
+            self.master.frames[1].change_image(number)
         
         elif number == 5:
-            self.frame_image_delay_trico .lift()
+            pass
+            """ self.frame_image_delay_trico .lift()
+            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
+            self.master.frames[1].change_image(number) """
 
 
 
@@ -1064,112 +1091,219 @@ class TopDerCls(Frame):
     def __init__(self, master, indice, arg_0=None, arg_1=None, arg_2=None, arg_3=None, arg_4=None, arg_5=None, arg_6=None, arg_7=None, main_lst=None, path_mine=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
 
+        #____Indice del boton:
+        self.indice = indice
+
         #____Colección de Imágenes:
         self.Images = main_lst
 
-        # Variables de Control para mostrar la imagen del angulo 77:
+        #____Lista de indices de las imagenes:
+        self._0 = arg_0
+        self._1 = arg_1
+        self._2 = arg_2
+        self._3 = arg_3
+        self._4 = arg_4
+        self._5 = arg_5
+        self._6 = arg_6
+        self._7 = arg_7
+
+        # Variables de Control:
         self.x1 = 0
         self.x2 = 100
         self.y1 = 67
         self.y2 = 100
 
-        # Imagen: Base inicial del mobil:
-        self.frame_image_base_initial = ResizeCls (self, self.Images [indice][arg_2], bd=0)
-        self.frame_image_base_initial       .grid (column=0, row=0, sticky='news')
-        self.frame_image_base_initial       .grid_propagate(0)
-
-        # Imagen: Base 77 del mobil:
-        self.frame_image_base_77      = ResizeCls (self, self.Images [indice][arg_3], bd=0)
-        self.frame_image_base_77            .grid(column=0, row=0, sticky='news')                  # [ NO POSICIONADO ]
-
-        # Texto: "Haga click" para mostrar el angulo 77" :  -->  Cambia la imagen a la base 77 del mobil:
-        self.lbl_text_mostrar_77          = Label (self, text="Haga ' Click ' para mostrar:\nAngulo ' 77 '", font=('Bickham Script Pro',8,'bold'), bg='#2f3337', fg='white', width=50, height=2)
-        self.lbl_text_mostrar_77            .grid (column=0, row=0, ipadx=5, ipady=5, sticky='n',)   # [ NO POSICIONADO ]
-
-        # Texto: "↑":  -->  Se dibuja si aparece la imagen [base 77] del mobil:
-        self.lbl_text_flecha              = Label (self, text='↑', font=('Calibri',30,'bold'), bg='#2f3337', fg='green2', width=1, height=1)
-        self.lbl_text_flecha                .grid (column=0, row=0, ipadx=5, sticky=SE)            # [ NO POSICIONADO ]
-
-        # Widget No Posicionados:
-        self.frame_image_base_77 .grid_remove() 
-        self.lbl_text_mostrar_77 .grid_remove()
-        self.lbl_text_flecha     .grid_remove()
-
-        
-        # Eventos Enlazados:
-            # Enlace: Posiciona/Quita   el Label [texto: "↑"]
-        self.master.bind("<Button-1>", self.open_text_flecha)
-        
-            # Enlace:      
-        #self.bind_motion = self.master.bind('<Motion>',self.open_text_mostrar_77)
-
-            # Enlace: Quita el Label [texto: "Haga click" para mostrar el angulo 77"]:
-        self.bind_leave = self.bind('<Leave>', lambda arg: self.lbl_text_mostrar_77 .grid_remove())   
-
-
-        #____Variables de Control para los Eventos Enlazados:
+        #____Variables de Control para los Eventos:
         self._button_1 = False  # Creado para el evento: Button-1
         self._motion_1 = False  # Creado para el evento: Motion
+
+        #____Peso de distribucion:
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure   (0, weight=1)
+
+        # Eventos:
+        # [ 1 ]  :  Activa todas las opciones de imagenes que se pueden mostrar
+        # [ 2 ]  :  Posiciona/Quita   el Label [texto: "↑"]
+        # [ 3 ]  :  Quita el Label [texto: "Haga click" para mostrar el angulo 77"]
         
+        self.master.bind("ash", lambda _: self.active_version())
+        self.off_button = self.master.bind("<Button-1>", self.open_text_flecha)
+        self.off_leave = self.bind('<Leave>', lambda arg: self.label_text_mostrar_77 .grid_remove())
 
-        # Configuración de la ventana:    
-        #self.columnconfigure (0,weight=1)
-        #self.rowconfigure    (0,weight=1)
+        #____Metodos Llamados:
+        self.open_interface()
 
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(0, weight=1)
 
-        self.frame_image_base_initial. columnconfigure(0, weight=1)
-        self.frame_image_base_initial. rowconfigure(0, weight=1)
 
-        self.frame_image_base_77. columnconfigure(0, weight=1)
-        self.frame_image_base_77. rowconfigure(0, weight=1)
+    # Tarea: - Abrir la interface del mobil
+    def open_interface(self):
 
-        
+        if self.indice == 17:
+            # Description: Desactiva los eventos
+            self.master.unbind("", self.off_button)
+            self.unbind("", self.off_leave)
+
+            #____Metodos Llamados:
+            self.create_container_2()
+
+        else:
+            #____Metodos Llamados:
+            self.create_container_1()
+
+
+
+
+    # Tarea: - Crea el primer contenedor global  [ INTERFACE: STANDAR]
+    def create_container_1(self):
+        # [ 1 ] self.frame_container_global_1       : Contenedor global N° 1, muestra la imagen base standar del mobil           : POSICIONADO
+
+        #____CONTENEDOR EXTERIOR 1:
+        self.frame_container_global_1 = Frame(self)
+        self.frame_container_global_1 .grid(sticky='news')
+
+        #____Peso de distribucion:
+        self.frame_container_global_1 .columnconfigure(0, weight=1)
+        self.frame_container_global_1 .rowconfigure   (0, weight=1)
+
+        #________Metodos Llamados:
+        self.create_items_1()
+
+
+    def create_items_1(self):
+        # [ 1 ] self.frame_image_base_initial        : Imagen: Base inicial del mobil                                        : POSICIONADO
+        # [ 1 ] self.frame_image_base_77             : Imagen: Base 77 del mobil                                             : NO POSICIONADO
+        # [ 1 ] self.label_text_mostrar_77           : Label-Texto: "Haga click" para mostrar el angulo 77"                  : NO POSICIONADO
+        # [ 1 ] self.label_text_flecha               : Label-Texto: "↑"                                                      : NO POSICIONADO
+
+        #____IMAGENES:  ( 2 instancias )
+        self.frame_image_base_initial = ResizeCls (self.frame_container_global_1, self.Images[self.indice][self._2], bd=0)
+        self.frame_image_base_77      = ResizeCls (self.frame_container_global_1, self.Images [self.indice][self._3], bd=0)
+
+        #____WIDGETS:  ( 2 widgets )
+        self.label_text_mostrar_77        = Label (self.frame_container_global_1, text="Haga ' Click ' para mostrar:\nAngulo ' 77 '", font=('Bickham Script Pro',8,'bold'), bg='#2f3337', fg='white', width=50, height=2)
+        self.label_text_flecha            = Label (self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2f3337', fg='green2', width=1, height=1)
+
+        #____Posicionamiento:
+        self.frame_image_base_initial .grid(column=0, row=0, sticky='news')
+        self.frame_image_base_77      .grid(column=0, row=0, sticky='news')
+        self.label_text_mostrar_77    .grid(column=0, row=0, ipadx=5, ipady=5, sticky='n',)
+        self.label_text_flecha        .grid(column=0, row=0, ipadx=5, sticky=SE)
+
+        #____Desposicionados: o #____Orden de apilamiento de imagenes:
+        self.frame_image_base_77   .grid_remove()
+        self.label_text_mostrar_77 .grid_remove()
+        self.label_text_flecha     .grid_remove()
+
+
+
+
+    # Tarea: - Crea el segundo contenedor global  [ INTERFACE: TRICO]
+    def create_container_2(self):
+        # [ 1 ] frame_container_global_2            : Contenedor global N° 2, muestra las imagenes base del trico                : POSICIONADO
+
+        #____CONTENEDOR EXTERIOR 2:
+        self.frame_container_global_2 = Frame(self)
+        self.frame_container_global_2 .grid(column=0, row=0, sticky='news')
+
+        #____Peso de distribucion:
+        self.frame_container_global_2 .columnconfigure(0, weight=1)
+        self.frame_container_global_2 .rowconfigure   (0, weight=1)
+
+
+        #________Metodos Llamados:
+        self.create_items_2()
+
+
+    def create_items_2(self):
+        # [ 1 ] self.frame_image_delay_trico  : Imagen -->  Base por defecto + delay trico
+        # [ 2 ] self.frame_image_delay_raon   : Imagen -->  Base por defecto + delay raon
+        # [ 3 ] self.frame_image_1forma       : Imagen -->  Base por defecto + 1 Forma
+
+        #____IMAGENES: ( 4 )
+        self.frame_image_delay_trico = ResizeCls(self.frame_container_global_2, self.Images[17][6], bd=0)
+        self.frame_image_laser       = ResizeCls(self.frame_container_global_2, self.Images[17][7], bd=0)
+        self.frame_image_raon      = ResizeCls(self.frame_container_global_2, self.Images[17][8], bd=0)
+
+        #____Orden de apilamiento de imagenes:
+        self.frame_image_delay_trico .lift()
+
+        #____Posicionamiento:
+        self.frame_image_delay_trico .grid(column=0, row=0, sticky='news')
+        self.frame_image_laser       .grid(column=0, row=0, sticky='news')
+        self.frame_image_raon      .grid(column=0, row=0, sticky='news')
+
     
+    def change_image(self, number=None):
+
+        if number == 1:
+            self.frame_image_laser .lift()
+
+        elif number == 2:
+            self.frame_image_delay_trico .lift()
+
+            if self.master.version is not None:
+                self.frame_image_raon .lift()
+
+        elif number == 3:
+            self.frame_image_delay_trico .lift()
+
+        elif number == 4:
+            self.frame_image_delay_trico .lift()
+        
+        elif number == 5:
+            pass
+
+
+
+    def active_version(self, event=None):
+        if not self.master.check_version:
+            self.master.check_version = True
+            self.master.version = 'activar'
+        else:
+            self.master.check_version = False
+            self.master.version = None
+
+
     #___< B U T T O N - 1 > :
-    def open_text_flecha(self, event): 
+    def open_text_flecha(self, event):
 
-        # Convierte el tamaño total de la ventana en porcentaje:  100 %
-        self._x = event.x / self.master.winfo_width() * 100              # ---> winfo_width() : Devuelve el ancho actual del widget(Toplevel) en pixeles
-        self._y = event.y / self.master.winfo_height() * 100             # ---> event.x/y     : Devuelve la posicion del mouse en pixeles (click/movimiento)
+        # Description: Convierte el tamaño total de la ventana en porcentaje:  100 %
+        x = event.x / self.master.winfo_width() * 100
+        y = event.y / self.master.winfo_height() * 100
       
-        if self.x1 <(self._x)< self.x2  and  self.y1 <(self._y)< self.y2: 
+        if self.x1 <(x)< self.x2  and  self.y1 <(y)< self.y2: 
 
-            if not self._button_1 == True:    # Si es Falso:   ---> Predeterminado: False
+            if not self._button_1:       # Predeterminado: False
                 self._button_1 = True
                 self._motion_1 = True
-
-                self.frame_image_base_77 .grid()                     # Posiciona
-                self.lbl_text_mostrar_77 .grid_remove()
-                self.lbl_text_flecha     .grid()                     # VER SI ACEPTA VARIABLES
+                
+                # Description: Posiciona
+                self.frame_image_base_77   .grid()
+                self.label_text_mostrar_77 .grid_remove()
+                self.label_text_flecha     .grid()
             else:
                 self._button_1 = False
                 self._motion_1 = False
 
-                self.frame_image_base_77 .grid_remove()
-                self.lbl_text_mostrar_77 .grid()
-                self.lbl_text_flecha     .grid_remove()
+                # Description: Oculta
+                self.frame_image_base_77   .grid_remove()
+                self.label_text_mostrar_77 .grid()
+                self.label_text_flecha     .grid_remove()
 
 
     #___< M O T I O N > :
     def open_text_mostrar_77(self, x, y, event=None):    
- 
-        """ self.x = event.x / self.master.winfo_width() * 100
-        self.y = event.y / self.master.winfo_height() * 100 """
+        if self.indice != 17:
+            if not self._motion_1:          # Predeterminado: False
 
-        print('fuera del if')
-        if not self._motion_1 == True: 
+                if self.x1 <(x)< self.x2  and  self.y1 <(y)< self.y2:    
+                    self.label_text_mostrar_77 .grid()
 
-            if self.x1 <(x)< self.x2  and  self.y1 <(y)< self.y2:    
-                self.lbl_text_mostrar_77 .grid()
-                print(799577)
+                else:
+                    self.label_text_mostrar_77 .grid_remove()
 
-            else:
-                self.lbl_text_mostrar_77 .grid_remove()
-
-        if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
-            self.lbl_text_mostrar_77     .grid_remove()
+            if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
+                self.label_text_mostrar_77     .grid_remove()
 
  
 
@@ -1403,6 +1537,10 @@ class ToplevelCls(Toplevel):
         #____Variable de Control: 
         self.frames = frames
         self.cascade = False
+
+        #____Variable de Control: Controla las opciones de imagenes que se pueden mostrar
+        self.check_version = False
+        self.version = None
 
         #____Variables de Reposo: Coordenadas de la Ventana.
         self._x = 0
@@ -2004,10 +2142,13 @@ class InterfazCls(Frame, MoveAllCls):
 
         for i in range(len(self._open)):
             if window == self._windows[i]:
-                self._windows[i] .icons_interface.open_interface_buttons()
-                if i == 1 and self._frame[i].winfo_ismapped():
-                    x = event.x / self._frame[i].winfo_width() * 100
-                    y = event.y / self._frame[i].winfo_height() * 100
+                # Si la interface de iconos es visible:
+                if self._windows[i] .icons_interface .winfo_ismapped():
+                    self._windows[i] .icons_interface .open_interface_buttons()
+
+                if i == 1:
+                    x = event.x / self._frame[i] .winfo_width() * 100
+                    y = event.y / self._frame[i] .winfo_height() * 100
 
                     self._frame[i].open_text_mostrar_77(x,y)
                 
