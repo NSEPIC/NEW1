@@ -625,8 +625,9 @@ class ResizeCls(Frame):
 
 
 class IconsCls(Frame):
-    def __init__(self, master, main_lst=None, path_lst=None, indice=None, frames=None, *args, **kwargs):
+    def __init__(self, master, path_lst1=None, path_lst2=None, indice=None, frames=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+        self.master = master
         #____Variables de Control: Indice de la sublista.
         self.indice = indice
 
@@ -644,8 +645,8 @@ class IconsCls(Frame):
         self.frames = frames
 
         #____Colección de Imágenes:
-        self.Images = main_lst
-        self.Icons = path_lst
+        self.Images  = path_lst1        # Coleccion: Imagenes principales para las ventanas
+        self.Icons_1 = path_lst2        # Coleccion: N°2 Iconos ==> [ Destino: Class.IconsCls ]
 
 
         #____Metodos Llamados:_
@@ -655,8 +656,8 @@ class IconsCls(Frame):
         #____Enlaces: 
         #self.master.bind('<Motion>',self.open_interface_buttons)
         self.master.bind("<ButtonRelease-1>", self._release)
-        self.bind('<Map>', self.map_solution)      # Soluciona error: no aparece interface de botones al presionar el boton menu
-
+        self.bind('<Map>', self.activate_motion)
+        self.bind('<Unmap>', self.deactivate_motion)
 
         self.grip = ttk.Sizegrip(self, style='TSizegrip')
         self.grip .place (relx=1.0, rely=1.0, anchor='center')
@@ -670,6 +671,14 @@ class IconsCls(Frame):
 
         #____CONTENEDOR EXTERIOR 1:
         self.frame_container_global_1 = Frame(self, bg="#1b1d22",)                      # Color(fondo): Gris oscuro
+
+        #____Peso de distribucion:
+        self.frame_container_global_1 .columnconfigure(0, weight=1)
+        self.frame_container_global_1 .rowconfigure(0, weight=0)
+        self.frame_container_global_1 .rowconfigure(1, weight=0)
+        self.frame_container_global_1 .rowconfigure(2, weight=0)
+        self.frame_container_global_1 .rowconfigure(3, weight=0)
+        self.frame_container_global_1 .rowconfigure(4, weight=1)
             
         #________Metodos Llamados:
         self.create_item_1()
@@ -683,26 +692,29 @@ class IconsCls(Frame):
         # [ 2 ] self.button_4                             : Abre : Sin uso                                         : POSICIONADO
 
         #____BOTONES: ( 4 )
-        self.button_1 = Button(self.frame_container_global_1, image=self.Icons[4], command=lambda:self.open_selected_image(0), bg='black',  bd=0)
-        self.button_2 = Button(self.frame_container_global_1, image=self.Icons[4], command=lambda:self.open_selected_image(1), bg='black',  bd=0)
-        self.button_3 = Button(self.frame_container_global_1, image=self.Icons[4], command=lambda:self.open_selected_image(2), bg='black',  bd=0)
-        self.button_4 = Button(self.frame_container_global_1, image=self.Icons[4], command=lambda:self.open_selected_image(3), bg='black',  bd=0)
+        self.button_1 = Button(self.frame_container_global_1, image=self.Icons_1[4], command=lambda:self.open_selected_image(0), bg='black',  bd=0)
+        self.button_2 = Button(self.frame_container_global_1, image=self.Icons_1[4], command=lambda:self.open_selected_image(1), bg='black',  bd=0)
+        self.button_3 = Button(self.frame_container_global_1, image=self.Icons_1[4], command=lambda:self.open_selected_image(2), bg='black',  bd=0)
+        self.button_4 = Button(self.frame_container_global_1, image=self.Icons_1[4], command=lambda:self.open_selected_image(3), bg='black',  bd=0)
+        self.button_5 = Button(self.frame_container_global_1, image=self.Icons_1[5], command=lambda:self.open_selected_image(4), bg='black',  bd=0)
 
         #____Posicionamiento:
         self.button_1 .grid(column=0, row=0, padx=5, pady=5)
         self.button_2 .grid(column=0, row=1, padx=5, pady=5)
         self.button_3 .grid(column=0, row=2, padx=5, pady=5)
         self.button_4 .grid(column=0, row=3, padx=5, pady=5)
+        self.button_5 .grid(column=0, row=4, padx=5, pady=30, sticky='s')
 
 
 
     # Tarea: - Crea los widgets Externos Parte 2
     def create_container_2(self):
-        # [ 1 ] self.frame_container_global_2             : Interface derecha de imagenes                          : NO POSICIONADO
+        # [ 1 ] self.frame_container_global_2             : Interface derecha de imagenes                          : POSICIONADO
         # [ 2 ] self.frame_container_album_2              : Sub-contenedor de imagenes                             : NO POSICIONADO
 
         #____CONTENEDOR EXTERIOR 2:
         self.frame_container_global_2  = Frame(self, bg='#2b313c')                      # Color(fondo): Gris claro
+        self.frame_container_global_2 .pack(side='right', fill='both', expand=True)
 
         #____CONTENEDOR INTERIOR:
         self.frame_container_album_2 = Frame(self.frame_container_global_2)
@@ -725,12 +737,12 @@ class IconsCls(Frame):
 
     # Tarea: - Crea las imagenes que posicionan directamente en la ventana sin contenedor adicional
     def create_album_1(self):
-        # [ 1 ] self.label_icon1                          : Imagen: Logo "ASH"                                     : POSICIONADO
+        # [ 1 ] self.label_logo                          : Imagen: Logo "ASH"                                     : POSICIONADO
         # [ 2 ] self.frame_image_guiadetiro               : Imagen: Ayuda para medir el mobil                      : NO POSICIONADO
 
         #____IMAGEN: ( 1 widget)
-        self.label_icon1 = Label(self.frame_container_global_2, image=self.Icons[3], bg='black', bd=0)
-        self.label_icon1 .grid(column=0, row=0)
+        self.label_logo = Label(self.frame_container_global_2, image=self.Icons_1[3], bg='black', bd=0)
+        self.label_logo .grid(column=0, row=0)
 
         #____IMAGEN: ( 1 instancia )
         self.frame_image_guiadetiro = ResizeCls(self.frame_container_global_2, self.Images[self.indice][1], bd=0)
@@ -767,7 +779,7 @@ class IconsCls(Frame):
         self.frame_manager_button .grid(column=0, row=1, sticky='ew')
 
         #____BOTONES: ( 1 )
-        self.button_next = Button(self.frame_manager_button, image=self.Icons[6], command=self.change_image, bg='#1b1d22', activebackground='#1b1d22', bd=0, cursor='hand2')
+        self.button_next = Button(self.frame_manager_button, image=self.Icons_1[6], command=self.change_image, bg='#1b1d22', activebackground='#1b1d22', bd=0, cursor='hand2')
         self.button_next .pack()
         #________________________________________________________________________________________________________
         self.list_of_images = [self.frame_image_guiadetiro, self.frame_container_album_2]
@@ -799,7 +811,7 @@ class IconsCls(Frame):
             self.var1 = True
 
             # Description: Oculta el logo
-            self.label_icon1 .grid_remove()
+            self.label_logo .grid_remove()
             # Description: Oculta la imagen del boton presionado anteriormente
             self.list_of_images[self.option] .grid_remove()
             # Description: Muestra la imagen del boton presionado
@@ -813,15 +825,9 @@ class IconsCls(Frame):
             # Description: Oculta la imagen
             self.list_of_images[number] .grid_remove()
             # Description: Posiciona el logo
-            self.label_icon1 .grid()
+            self.label_logo .grid()
 
         self.option = number
-
-
-    # Tarea: - Posicionar la interface de botones
-    def map_solution(self, event=None):
-        self.open_interface_buttons()
-        self.open_interface_buttons()
 
 
     # Tarea: -  Muestra y oculta la interface vertical de botones.
@@ -850,7 +856,21 @@ class IconsCls(Frame):
     # Tarea: - Ejecutar el metodo: [ open_interface_buttons ] no se bien
     def _release(self, event=None):
         self.variable = False
-  
+
+
+    # Tarea: - Activar el evento motion
+    def activate_motion(self, event=None):
+        self.off_motion = self.master.bind("<Motion>", self.open_interface_buttons)
+
+        # Description: Ejecuta la funcion enlazada al evento movimiento de raton que no se ejecuto despues de mapearse su contenedor
+        self.open_interface_buttons()
+        # Description: (Solucion temporal): Abre la interface vertical de botones que no se visualiza al segundo intento de abrir la interface total
+        self.open_interface_buttons()
+
+    # Tarea: - Desactivar el evento motion
+    def deactivate_motion(self, event=None):
+        self.master.unbind("<Motion>", self.off_motion)
+
   
 
 #********************************        ██████████████        *********************************
@@ -1068,9 +1088,6 @@ class TopIzqCls(Frame):
         
         elif number == 5:
             pass
-            """ self.frame_image_delay_trico .lift()
-            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
-            self.master.frames[1].change_image(number) """
 
 
 
@@ -1123,12 +1140,16 @@ class TopDerCls(Frame):
 
         # Eventos:
         # [ 1 ]  :  Activa todas las opciones de imagenes que se pueden mostrar
-        # [ 2 ]  :  Posiciona/Quita   el Label [texto: "↑"]
-        # [ 3 ]  :  Quita el Label [texto: "Haga click" para mostrar el angulo 77"]
+        # [ 2 ]  :  Quita el Label-texto: "Haga click" para mostrar el angulo 77"
+        # [ 3 ]  :  Posiciona y Quita los widgets:   [ Label-texto"Haga click" para mostrar el angulo 77" ], [ Label-texto: "↑" ]
+        # [ 4 ]  :  Posiciona y Quita el widget:     [ Label-texto"Haga click" para mostrar el angulo 77" ]
+        # [ 5 ]  :  Soluciona error: Reactiva el evento motion que se desactiva por algun motivo cuando se desactiva el evento motion de la interface de iconos
         
-        self.master.bind("ash", lambda _: self.active_version())
-        self.off_button = self.master.bind("<Button-1>", self.open_text_flecha)
-        self.off_leave = self.bind('<Leave>', lambda arg: self.label_text_mostrar_77 .grid_remove())
+        self.master.bind("ash", lambda _: self.active_version())                                            # SIN CONFLICTO
+        self.off_leave  = self.bind ('<Leave>', lambda arg:self.label_text_mostrar_77 .grid_remove())   
+        self.off_button = self.master.bind("<Button-1>",   self.open_text_flecha)
+        self.off_motion = self.master.bind("<Motion>",     self.open_text_mostrar_77)
+        self.bind("<Map>", self.reactivate_motion)                                                          # DESACT
 
         #____Metodos Llamados:
         self.open_interface()
@@ -1139,9 +1160,11 @@ class TopDerCls(Frame):
     def open_interface(self):
 
         if self.indice == 17:
-            # Description: Desactiva los eventos
-            self.master.unbind("", self.off_button)
-            self.unbind("", self.off_leave)
+
+            # Description: [ DESACTIVA LOS EVENTOS ]
+            self.unbind("", self.off_leave)  # Puede crear errores, falta poner <Leave>
+            self.master.unbind("<Button-1>", self.off_button)
+            self.master.unbind("<Motion>", self.off_motion)
 
             #____Metodos Llamados:
             self.create_container_2()
@@ -1176,12 +1199,12 @@ class TopDerCls(Frame):
         # [ 1 ] self.label_text_flecha               : Label-Texto: "↑"                                                      : NO POSICIONADO
 
         #____IMAGENES:  ( 2 instancias )
-        self.frame_image_base_initial = ResizeCls (self.frame_container_global_1, self.Images[self.indice][self._2], bd=0)
-        self.frame_image_base_77      = ResizeCls (self.frame_container_global_1, self.Images [self.indice][self._3], bd=0)
+        self.frame_image_base_initial = ResizeCls(self.frame_container_global_1, self.Images[self.indice][self._2], bd=0)
+        self.frame_image_base_77      = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._3], bd=0)
 
         #____WIDGETS:  ( 2 widgets )
-        self.label_text_mostrar_77        = Label (self.frame_container_global_1, text="Haga ' Click ' para mostrar:\nAngulo ' 77 '", font=('Bickham Script Pro',8,'bold'), bg='#2f3337', fg='white', width=50, height=2)
-        self.label_text_flecha            = Label (self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2f3337', fg='green2', width=1, height=1)
+        self.label_text_mostrar_77        = Label(self.frame_container_global_1, text="Haga ' Click ' para mostrar:\nAngulo ' 77 '", font=('Bickham Script Pro',8,'bold'), bg='#2f3337', fg='white', width=50, height=2)
+        self.label_text_flecha            = Label(self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2f3337', fg='green2', width=1, height=1)
 
         #____Posicionamiento:
         self.frame_image_base_initial .grid(column=0, row=0, sticky='news')
@@ -1193,6 +1216,7 @@ class TopDerCls(Frame):
         self.frame_image_base_77   .grid_remove()
         self.label_text_mostrar_77 .grid_remove()
         self.label_text_flecha     .grid_remove()
+
 
 
 
@@ -1222,7 +1246,7 @@ class TopDerCls(Frame):
         #____IMAGENES: ( 4 )
         self.frame_image_delay_trico = ResizeCls(self.frame_container_global_2, self.Images[17][6], bd=0)
         self.frame_image_laser       = ResizeCls(self.frame_container_global_2, self.Images[17][7], bd=0)
-        self.frame_image_raon      = ResizeCls(self.frame_container_global_2, self.Images[17][8], bd=0)
+        self.frame_image_raon        = ResizeCls(self.frame_container_global_2, self.Images[17][8], bd=0)
 
         #____Orden de apilamiento de imagenes:
         self.frame_image_delay_trico .lift()
@@ -1230,9 +1254,10 @@ class TopDerCls(Frame):
         #____Posicionamiento:
         self.frame_image_delay_trico .grid(column=0, row=0, sticky='news')
         self.frame_image_laser       .grid(column=0, row=0, sticky='news')
-        self.frame_image_raon      .grid(column=0, row=0, sticky='news')
+        self.frame_image_raon        .grid(column=0, row=0, sticky='news')
 
     
+    # Tarea: - Cambia el orden de apilamiento de las imagenes en la interface del trico
     def change_image(self, number=None):
 
         if number == 1:
@@ -1254,7 +1279,7 @@ class TopDerCls(Frame):
             pass
 
 
-
+    # Tarea: - Activar todas las opciones de imagenes que se pueden mostrar       
     def active_version(self, event=None):
         if not self.master.check_version:
             self.master.check_version = True
@@ -1262,6 +1287,11 @@ class TopDerCls(Frame):
         else:
             self.master.check_version = False
             self.master.version = None
+
+    # Tarea: - [ Soluciona error ] Reactiva el evento motion
+    def reactivate_motion(self, event=None):
+        if self.indice != 17:
+            self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
 
 
     #___< B U T T O N - 1 > :
@@ -1292,9 +1322,12 @@ class TopDerCls(Frame):
 
 
     #___< M O T I O N > :
-    def open_text_mostrar_77(self, x, y, event=None):    
+    def open_text_mostrar_77(self, event=None):
+        x  = event.x / self.master.winfo_width() * 100
+        y = event.y / self.master.winfo_height() * 100
+
         if self.indice != 17:
-            if not self._motion_1:          # Predeterminado: False
+            if not self._motion_1:    # Predeterminado: False
 
                 if self.x1 <(x)< self.x2  and  self.y1 <(y)< self.y2:    
                     self.label_text_mostrar_77 .grid()
@@ -1523,16 +1556,15 @@ class FrameManagerCls(Frame):
 #************************            ███████    ██████████████
 
 class ToplevelCls(Toplevel):
-    def __init__(self, master=None, path_1_lst=None, path_2_lst=None, frames=None, *args, **kwargs):
+    def __init__(self, master=None, path_lst1=None, path_lst2=None, frames=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.overrideredirect(True)
 
         self.indice = None
 
         #____Coleccion de Imagenes:
-        self.Icons = path_1_lst               # Imagenes-Iconos: Menu de opciones
-        self.Images = path_2_lst
-        #print('esss: ', self.Images)
+        self.Images  = path_lst1               # Imagenes-Iconos: Menu de opciones
+        self.Icons_1 = path_lst2
 
         #____Variable de Control: 
         self.frames = frames
@@ -1568,7 +1600,7 @@ class ToplevelCls(Toplevel):
 
     def create_container_icons(self, indice=None):
         #____GESTOR DE ICONOS: ( 1 instancia )
-        self.icons_interface = IconsCls(self, self.Images, self.Icons, indice, self.frames)
+        self.icons_interface = IconsCls(self, self.Images, self.Icons_1, indice, self.frames)
         self.icons_interface .pack(fill=BOTH, expand=True)
         self.icons_interface .pack_forget()
 
@@ -1586,7 +1618,7 @@ class ToplevelCls(Toplevel):
 
     def create_button_menu(self):
         #____BOTONES: ( 1 )
-        self.button_menu = Button(self.frame_manager, image=self.Icons[0], command=self.open_container_icons, bg="#1b1d22", activebackground='#4ca6ff', bd=0)   
+        self.button_menu = Button(self.frame_manager, image=self.Icons_1[0], command=self.open_container_icons, bg="#1b1d22", activebackground='#4ca6ff', bd=0)   
         self.button_menu .pack(side=LEFT)
 
         #____Enlaces: Cambian la imagen del boton menu
@@ -1598,19 +1630,19 @@ class ToplevelCls(Toplevel):
 
     def enter_mouse_menu(self, event):
         # Evento: Entrada del mouse sobre el boton (Imagen: change)
-        event.widget .config(image=self.Icons[1], bg='#252b34')
+        event.widget .config(image=self.Icons_1[1], bg='#252b34')
 
     def leave_mouse_menu(self, event):
         # Evento: Salida del mouse sobre el boton (Imagen: default)
-        event.widget .config(image=self.Icons[0], bg='#1b1d22')
+        event.widget .config(image=self.Icons_1[0], bg='#1b1d22')
 
     def press_mouse_menu(self, event):
         # Evento: Botón presionado (Imagen: change)
-        event.widget .config(image=self.Icons[2])
+        event.widget .config(image=self.Icons_1[2])
 
     def release_mouse_menu(self, event):
         # Evento: Botón soltado (Imagen: default)
-        event.widget .config(image=self.Icons[1], bg='#252b34')
+        event.widget .config(image=self.Icons_1[1], bg='#252b34')
 
 
     def open_container_icons(self, event=None):
@@ -1625,8 +1657,6 @@ class ToplevelCls(Toplevel):
                     self.frames[i]. pack_forget()
 
             self.icons_interface .pack(fill=BOTH, expand=True)
-
-
 
         # OCULTAR INTERFACE:
         else:
@@ -1740,7 +1770,7 @@ class RootCls(Tk):
         # [ 2 ] self.frame_interface     : Frame: Interface de control
 
         #____VENTANA PRINCIPAL: ( 2 instancias )
-        self.toplevel_principal = ToplevelCls(self, self.ico2_lst)
+        self.toplevel_principal = ToplevelCls(self, path_lst1=self.ico2_lst)
         self.frame_interface    = InterfazCls(self.toplevel_principal, self.main_lst, self.mini_lst, self.ico1_lst, self.ico2_lst, self.ico3_lst, self.ico4_lst)
 
         #____SubMétodos Llamados: ( 1 )
@@ -2084,7 +2114,7 @@ class InterfazCls(Frame, MoveAllCls):
             if not self._open[i] == True:
 
                 #____VENTANAS:  ( 3 instancias )         
-                window = ToplevelCls (self.master, self.ico2_lst, self.main_lst, self._frame)
+                window = ToplevelCls (self.master, self.main_lst, self.ico2_lst, self._frame)
                 #____Métodos Llamados:
                 window .configure_toplevel(title[i], size[i])
                 window .create_frame_manager(self.ico1_lst, side=TOP, fill=BOTH)
@@ -2123,7 +2153,8 @@ class InterfazCls(Frame, MoveAllCls):
             ttk.Style().configure('TSizegrip', bg='black')
 
             if i < 2:
-                self._windows[i] .bind("<Motion>", self.a)
+                pass
+                #self._windows[i] .bind("<Motion>", self.a)
 
 
     #-----------------------------------------------------------------------------------------------------------------
