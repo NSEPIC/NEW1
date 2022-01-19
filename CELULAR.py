@@ -692,11 +692,11 @@ class IconsCls(Frame):
         # [ 2 ] self.button_4                             : Abre : Sin uso                                         : POSICIONADO
 
         #____BOTONES: ( 4 )
-        self.button_1 = Button(self.frame_container_global_1, image=self.Icons_1[4], command=lambda:self.open_selected_image(0), bg='black',  bd=0)
-        self.button_2 = Button(self.frame_container_global_1, image=self.Icons_1[4], command=lambda:self.open_selected_image(1), bg='black',  bd=0)
-        self.button_3 = Button(self.frame_container_global_1, image=self.Icons_1[4], command=lambda:self.open_selected_image(2), bg='black',  bd=0)
-        self.button_4 = Button(self.frame_container_global_1, image=self.Icons_1[4], command=lambda:self.open_selected_image(3), bg='black',  bd=0)
-        self.button_5 = Button(self.frame_container_global_1, image=self.Icons_1[5], command=lambda:self.open_selected_image(4), bg='black',  bd=0)
+        self.button_1 = Button(self.frame_container_global_1, image=self.Icons_1[8], command=lambda:self.open_selected_image(0), bg='black',  bd=0)
+        self.button_2 = Button(self.frame_container_global_1, image=self.Icons_1[8], command=lambda:self.open_selected_image(1), bg='black',  bd=0)
+        self.button_3 = Button(self.frame_container_global_1, image=self.Icons_1[8], command=lambda:self.open_selected_image(2), bg='black',  bd=0)
+        self.button_4 = Button(self.frame_container_global_1, image=self.Icons_1[8], command=lambda:self.open_selected_image(3), bg='black',  bd=0)
+        self.button_5 = Button(self.frame_container_global_1, image=self.Icons_1[4], command=lambda:self.open_selected_image(4), bg='#1b1d22', activebackground='#1b1d22', bd=0)
 
         #____Posicionamiento:
         self.button_1 .grid(column=0, row=0, padx=5, pady=5)
@@ -704,6 +704,10 @@ class IconsCls(Frame):
         self.button_3 .grid(column=0, row=2, padx=5, pady=5)
         self.button_4 .grid(column=0, row=3, padx=5, pady=5)
         self.button_5 .grid(column=0, row=4, padx=5, pady=30, sticky='s')
+
+        #____Eventos:
+        self.button_5 .bind("<Enter>", self.enter_mouse_setting)
+        self.button_5 .bind("<Leave>", self.leave_mouse_setting)
 
 
 
@@ -781,6 +785,11 @@ class IconsCls(Frame):
         #____BOTONES: ( 1 )
         self.button_next = Button(self.frame_manager_button, image=self.Icons_1[6], command=self.change_image, bg='#1b1d22', activebackground='#1b1d22', bd=0, cursor='hand2')
         self.button_next .pack()
+
+        #____Eventos:
+        self.button_next .bind("<Enter>", self.enter_mouse_next)
+        self.button_next .bind("<Leave>", self.leave_mouse_next)
+
         #________________________________________________________________________________________________________
         self.list_of_images = [self.frame_image_guiadetiro, self.frame_container_album_2]
 
@@ -871,7 +880,22 @@ class IconsCls(Frame):
     def deactivate_motion(self, event=None):
         self.master.unbind("<Motion>", self.off_motion)
 
-  
+    
+
+    def enter_mouse_next(self, event=None):
+        event.widget.config(image=self.Icons_1[7])
+
+    def leave_mouse_next(self, event=None):
+        event.widget.config(image=self.Icons_1[6])
+
+
+    def enter_mouse_setting(self, event=None):
+        event.widget.config(image=self.Icons_1[5])
+
+    def leave_mouse_setting(self, event=None):
+        event.widget.config(image=self.Icons_1[4])
+
+
 
 #********************************        ██████████████        *********************************
 #********************************        ██          ██        *********************************
@@ -927,8 +951,7 @@ class TopIzqCls(Frame):
         else:
             #____Metodos Llamados:
             self.create_container_1()
-
-            self.button1 .config(state='disabled', cursor='arrow')
+            #self.button1 .config(state='disabled', cursor='arrow')
 
 
     # Tarea: - Crea los contenedores Parte 1  [ INTERFACE: STANDAR ]
@@ -942,7 +965,7 @@ class TopIzqCls(Frame):
         self.frame_container_global_1 .grid(sticky='news')
 
         #____CONTENEDOR INTERIOR:
-        self.frame_container_widgets_1 = Frame(self.frame_container_global_1, bg='#2b313c', bd=0, height=42)
+        self.frame_container_widgets_1 = Frame(self.frame_container_global_1, bg='#1b1d22', bd=0, height=42)
         self.frame_container_widgets_1 .grid(column=0, row=0, sticky='news')
 
         #____IMAGEN: Delay completo del mobil
@@ -955,7 +978,8 @@ class TopIzqCls(Frame):
         self.frame_container_global_1 .rowconfigure   (1, weight=1)
 
         #____Peso de distribucion:
-        self.frame_container_widgets_1 .columnconfigure(0, weight=1)  
+        variable = 0 if self.indice != 17 else 1 
+        self.frame_container_widgets_1 .columnconfigure(0, weight=variable)
         self.frame_container_widgets_1 .columnconfigure(1, weight=1) 
         self.frame_container_widgets_1 .columnconfigure(2, weight=0)
         self.frame_container_widgets_1 .columnconfigure(3, weight=0) 
@@ -966,22 +990,29 @@ class TopIzqCls(Frame):
 
     
     def create_items_1(self):
-        # [ 1 ] self.button1                              : Boton "Wind\n00"                                       : POSICIONADO
+        # [ 1 ] self.button1                              : Boton "Wind\n00"                                       : NO POSICIONADO
         # [ 2 ] self.button2                              : Boton "Wind\nChart"                                    : POSICIONADO
         # [ 3 ] self.label_switch                         : Label "OFF"                                            : POSICIONADO
         # [ 3 ] self.label_mobil                          : Imagen: Miniatura del mobil                            : POSICIONADO
 
-        self.button1 = Button(self.frame_container_widgets_1, text='Wind\n00', font=('Calibri',8,'bold'), command=lambda:self.change_interfaces(0), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button1 .grid(column=0, row=0, sticky='news')
-
+        self.button1 = Button(self.frame_container_widgets_1, text='Base\nTrico', font=('Calibri',8,'bold'), command=lambda:self.change_interfaces(0), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
         self.button2 = Button(self.frame_container_widgets_1, text='Wind\nChart', font=('Calibri',8,'bold'), command=lambda:self.change_interfaces(1), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button2 .grid(column=1, row=0, sticky='news')
-
         self.label_switch = Label(self.frame_container_widgets_1, text='O\nF\nF', font=('Arial',7,'bold'), bg='#1b1d22', fg='white')
-        self.label_switch .grid(column=2, row=0, sticky='nes')
-
         self.label_mobil = Label(self.frame_container_widgets_1, image=self.Mobiles[self.indice], bg='green', bd=0)
+
+        #____Posicionamiento:
+        if self.indice == 17:
+            self.button1 .grid(column=0, row=0, padx=(0,1), sticky='news')
+        self.button2 .grid(column=1, row=0, padx=(1,0), sticky='news')
+        self.label_switch .grid(column=2, row=0, sticky='nes')
         self.label_mobil .grid(column=3, row=0, sticky='nes')
+
+        #____Eventos:
+        self.button1 .bind("<Enter>", self.enter_mouse)
+        self.button1 .bind("<Leave>", self.leave_mouse)
+
+        self.button2 .bind("<Enter>", self.enter_mouse)
+        self.button2 .bind("<Leave>", self.leave_mouse)
 
     
     def change_interfaces(self, number):
@@ -1001,7 +1032,7 @@ class TopIzqCls(Frame):
         self.frame_container_global_2 .grid(column=0, row=0, sticky='news')
 
         #____CONTENEDOR INTERIOR:
-        self.frame_container_widgets_2 = Frame(self.frame_container_global_2, bg='#2b313c', bd=0, height=42)
+        self.frame_container_widgets_2 = Frame(self.frame_container_global_2, bg='#1b1d22', bd=0, height=42)
         self.frame_container_widgets_2 .grid(column=0, row=0, sticky='news')
 
         #____Peso de distribucion:
@@ -1022,12 +1053,12 @@ class TopIzqCls(Frame):
 
     def create_items_2(self):
         #____BOTONES: ( 4 )
-        self.button_0 = Button(self.frame_container_widgets_2, text='Atrás', font=('Calibri',8,'bold'), command=lambda:self.change_image(0), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_1 = Button(self.frame_container_widgets_2, text='Laser', font=('Calibri',8,'bold'), command=lambda:self.change_image(1), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_2 = Button(self.frame_container_widgets_2, text='Raon', font=('Calibri',8,'bold'), command=lambda:self.change_image(2), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_3 = Button(self.frame_container_widgets_2, text='Reset', font=('Calibri',8,'bold'), command=lambda:self.change_image(3), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_4 = Button(self.frame_container_widgets_2, text='Más', font=('Calibri',8,'bold'), command=lambda:self.change_image(4), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_5 = Button(self.frame_container_widgets_2, text='Otros', font=('Calibri',8,'bold'), command=lambda:self.change_image(5), bg='#3b424f', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_0 = Button(self.frame_container_widgets_2, text='Atrás', font=('Calibri',8,'bold'), command=lambda:self.change_image(0), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_1 = Button(self.frame_container_widgets_2, text='Laser', font=('Calibri',8,'bold'), command=lambda:self.change_image(1), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_2 = Button(self.frame_container_widgets_2, text='Raon', font=('Calibri',8,'bold'), command=lambda:self.change_image(2), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_3 = Button(self.frame_container_widgets_2, text='Reset', font=('Calibri',8,'bold'), command=lambda:self.change_image(3), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_4 = Button(self.frame_container_widgets_2, text='Más', font=('Calibri',8,'bold'), command=lambda:self.change_image(4), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_5 = Button(self.frame_container_widgets_2, text='Otros', font=('Calibri',8,'bold'), command=lambda:self.change_image(5), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
 
         #____Posicionamiento:
         self.button_0 .grid(column=0, row=0, pady=(0,1), padx=(2), sticky='news')
@@ -1036,6 +1067,25 @@ class TopIzqCls(Frame):
         self.button_3 .grid(column=0, row=1, pady=(1,2), padx=(2), sticky='news')
         self.button_4 .grid(column=1, row=1, pady=(1,2), sticky='news')
         self.button_5 .grid(column=2, row=1, pady=(1,2), padx=(2), sticky='news')
+
+        #____Enlaces:
+        self.button_0 .bind("<Enter>", self.enter_mouse)
+        self.button_0 .bind("<Leave>", self.leave_mouse)
+
+        self.button_1 .bind("<Enter>", self.enter_mouse)
+        self.button_1 .bind("<Leave>", self.leave_mouse)
+
+        self.button_2 .bind("<Enter>", self.enter_mouse)
+        self.button_2 .bind("<Leave>", self.leave_mouse)
+        
+        self.button_3 .bind("<Enter>", self.enter_mouse)
+        self.button_3 .bind("<Leave>", self.leave_mouse)
+
+        self.button_4 .bind("<Enter>", self.enter_mouse)
+        self.button_4 .bind("<Leave>", self.leave_mouse)
+
+        self.button_5 .bind("<Enter>", self.enter_mouse)
+        self.button_5 .bind("<Leave>", self.leave_mouse)
 
         #------------------------------------------------------------------------------------------------------
         # [ 1 ] self.frame_image_delay_trico  : Imagen -->  Base por defecto + delay trico
@@ -1090,6 +1140,13 @@ class TopIzqCls(Frame):
             pass
 
 
+    def enter_mouse(self, event):
+        # Entrada del mouse sobre el boton (Imagen: change)
+        event.widget.config(bg='#4ca6ff')
+
+    def leave_mouse(self, event):
+        # Salida del mouse sobre el boton (Imagen: default)
+        event.widget.config(bg='#2b313c')
 
 #********************************        ██████████████        *********************************
 #********************************        ██          ██        *********************************
@@ -1467,7 +1524,7 @@ class FrameManagerCls(Frame):
         #____Posicion de los botones: ( PRINCIPAL )
         close1, minimize1 = {'side':TOP}, {'side':BOTTOM}                 
         #____Posicion de los botones: ( SECUNDARIA )
-        close2, minimize2 = {'side':RIGHT}, {'side':RIGHT, 'padx':(0,10)}
+        close2, minimize2 = {'side':RIGHT}, {'side':RIGHT, 'padx':(0,3)}
 
         #____Actualiza la geometria de la ventana:
         self.update_idletasks()
@@ -1503,7 +1560,7 @@ class FrameManagerCls(Frame):
 
     def enter_mouse_minimize(self, event):
         # Entrada del mouse sobre el boton (Imagen: change)
-        event.widget.config(image=self.Icons[3], bg='#4ca6ff')
+        event.widget.config(image=self.Icons[3], bg='#2b313c')
 
     def leave_mouse_minimize(self, event):
         # Salida del mouse sobre el boton (Imagen: default)
@@ -1622,7 +1679,7 @@ class ToplevelCls(Toplevel):
         self.button_menu .pack(side=LEFT)
 
         #____Enlaces: Cambian la imagen del boton menu
-        self.button_menu .bind("<Enter>", self.enter_mouse_menu)
+        #self.button_menu .bind("<Enter>", self.enter_mouse_menu)
         self.button_menu .bind("<Leave>", self.leave_mouse_menu)
         self.button_menu .bind("<ButtonPress-1>", self.press_mouse_menu)
         self.button_menu .bind("<ButtonRelease-1>", self.release_mouse_menu)
@@ -1630,7 +1687,7 @@ class ToplevelCls(Toplevel):
 
     def enter_mouse_menu(self, event):
         # Evento: Entrada del mouse sobre el boton (Imagen: change)
-        event.widget .config(image=self.Icons_1[1], bg='#252b34')
+        event.widget .config(image=self.Icons_1[1], bg='#2b313c')
 
     def leave_mouse_menu(self, event):
         # Evento: Salida del mouse sobre el boton (Imagen: default)
@@ -1642,7 +1699,7 @@ class ToplevelCls(Toplevel):
 
     def release_mouse_menu(self, event):
         # Evento: Botón soltado (Imagen: default)
-        event.widget .config(image=self.Icons_1[1], bg='#252b34')
+        event.widget .config(image=self.Icons_1[0], bg='#1b1d22')
 
 
     def open_container_icons(self, event=None):
@@ -1994,8 +2051,8 @@ class InterfazCls(Frame, MoveAllCls):
 
         #____INTERFACES DE CONTROL: ( 4 instancias )
         self.frame_static     = LogotipoCls(self, self.ico3_lst, bg='#11161d', width=60, height=67)    # Posicionado     # Color: Azul
-        self.frame_botones    = ModeButtonsCls(self, bg='#31343a', width=756, height=67)               # Posicionado     # Color: Plomo
-        self.frame_configurer = ModeConfigurerCls(self, bg='#31343a', width=756, height=67)            # No posicionado  # Color: Plomo
+        self.frame_botones    = ModeButtonsCls(self, bg='#2b313c', width=756, height=67)               # Posicionado     # Color: Plomo
+        self.frame_configurer = ModeConfigurerCls(self, bg='#2b313c', width=756, height=67)            # No posicionado  # Color: Plomo
         self.frame_listmode   = ModeListCls(self, self.mobiles, self.mini_lst)                                       # No posicionado  # Color: Azul y Plomo
          
         #____Posicionamiento:
