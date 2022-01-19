@@ -688,8 +688,9 @@ class IconsCls(Frame):
     def create_item_1(self):
         # [ 1 ] self.button_1                             : Abre imagen: Ayuda para medir el mobil                 : POSICIONADO
         # [ 2 ] self.button_2                             : Abre : Sub-contenedor de imagenes del  delay general   : POSICIONADO
-        # [ 1 ] self.button_3                             : Abre : Sin uso                                         : POSICIONADO
-        # [ 2 ] self.button_4                             : Abre : Sin uso                                         : POSICIONADO
+        # [ 3 ] self.button_3                             : Abre : Sin uso                                         : POSICIONADO
+        # [ 4 ] self.button_4                             : Abre : Sin uso                                         : POSICIONADO
+        # [ 5 ] self.button_5                             : Abre : La interfaces de ajustes                        : POSICIONADO
 
         #____BOTONES: ( 4 )
         self.button_1 = Button(self.frame_container_global_1, image=self.Icons_1[8], command=lambda:self.open_selected_image(0), bg='black',  bd=0)
@@ -706,8 +707,8 @@ class IconsCls(Frame):
         self.button_5 .grid(column=0, row=4, padx=5, pady=30, sticky='s')
 
         #____Eventos:
-        self.button_5 .bind("<Enter>", self.enter_mouse_setting)
-        self.button_5 .bind("<Leave>", self.leave_mouse_setting)
+        self.button_5 .bind("<Enter>", self.enter_mouse_settings)
+        self.button_5 .bind("<Leave>", self.leave_mouse_settings)
 
 
 
@@ -889,10 +890,10 @@ class IconsCls(Frame):
         event.widget.config(image=self.Icons_1[6])
 
 
-    def enter_mouse_setting(self, event=None):
+    def enter_mouse_settings(self, event=None):
         event.widget.config(image=self.Icons_1[5])
 
-    def leave_mouse_setting(self, event=None):
+    def leave_mouse_settings(self, event=None):
         event.widget.config(image=self.Icons_1[4])
 
 
