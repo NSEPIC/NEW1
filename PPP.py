@@ -1,4 +1,3 @@
-#from email.mime import image
 from Importaciones import *
 
 # INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
@@ -41,9 +40,6 @@ class LogotipoCls(Frame):
         #____Colección de Imágenes:
         self.Icons = path_lst
 
-        #____Variables de seguimiento: [ self.btn_logotipo ]
-        self.logotipo = 'default'
-
         #____Métodos Llamados:
         self.create_buttons()
 
@@ -53,9 +49,9 @@ class LogotipoCls(Frame):
         # [self.btn_settings] : Engranaje
 
         #____BOTONES: 2 ( Logotipo - Settings )
-        self.btn_logotipo = Button(self, image=self.Icons[0], bg='#11161d', activebackground='#11161d', bd=0,
+        self.btn_logotipo = Button(self, image=self.Icons[0], bg='#11161d', bd=0, activebackground='#11161d',
                                    command=self.minimize_all)
-        self.btn_settings = Button(self, image=self.Icons[3], bg='#11161d', activebackground='#11161d', bd=0,
+        self.btn_settings = Button(self, image=self.Icons[1], bg='#11161d', bd=0, activebackground='#11161d',
                                    command=self.master.configure_app)
                          
         #____Posicionamiento:
@@ -63,9 +59,7 @@ class LogotipoCls(Frame):
         self.btn_settings .grid(column=0, row=1)
 
         #____Eventos:
-        # [ 1 ] : Cierra todas las ventanas secundarias abiertas y devuelve la imagen por defecto del boton logotipo
-
-        self.btn_logotipo .bind('<Double-Button-3>', self.close_all)
+        self.btn_logotipo .bind('<Double-Button-3>', self.close_all)  # Cierra Toplevel Secundarias
         self.btn_settings .bind('<Enter>', self.enter_mouse_settings)
         self.btn_settings .bind('<Leave>', self.leave_mouse_settings)
 
@@ -76,16 +70,11 @@ class LogotipoCls(Frame):
 
         for indice in range(len(self.master._open)):
             # Dice: Si hay alguna ventana abierta.
-            if self.master._open[indice]:
+            if self.master._open[indice] == True:
                 self.master._windows[indice] .destroy()
 
                 # Description: Actualiza la lista de ventanas cerradas 
                 #self.master._open[indice] = False                         # Desactivado:(razón) El metodo update_window(InterfazCls) lo hace
-
-        #--------------------------------------------------------------------------------------------------
-        # Description: Actualiza la variable de seguimiento y devuelve la imagen por defecto del boton
-        self.logotipo = 'default'
-        self.btn_logotipo .config(image=self.Icons[0])
 
             
     # Tarea: - Oculta y muestra todas las ventanas secundarias:
@@ -100,11 +89,6 @@ class LogotipoCls(Frame):
                     # Dice: Si alguna ventana esta abierta:
                     if self.master._open[i] == True:
                         self.master._windows[i] .frame_manager .minimize()
-                        
-                        #--------------------------------------------------------------------------------------------------
-                        # Description: Cambia la imagen del boton a celeste apagado
-                        self.btn_logotipo .config(image=self.Icons[2],)
-                       
 
                 # MUESTRA LAS VENTANAS:
                 else:
@@ -113,28 +97,22 @@ class LogotipoCls(Frame):
                         self.master._windows[i] .frame_manager .window_manager_off()
                         self.update_position(self.master._windows[i])                      # Solucion temporal: Evita que la ventana al minimizar se expanda
 
-                        #--------------------------------------------------------------------------------------------------
-                        # Description: Cambia la imagen del boton a celeste encendido
-                        self.btn_logotipo .config(image=self.Icons[1],)
 
    
     def enter_mouse_settings(self, event):
         # Evento: Entrada del mouse sobre el boton (Imagen: change)
-        event.widget.config(image=self.Icons[4])
+        event.widget.config(image=self.Icons[2])
 
     def leave_mouse_settings(self, event):
         # Evento: Salida del mouse sobre el boton (Imagen: default)
-        event.widget.config(image=self.Icons[3])
+        event.widget.config(image=self.Icons[1])
 
 
     # Tarea: - Devuelve verdadero si hay alguna ventana visible.
-    def check_visible_windows(self, release=None):
+    def check_visible_windows(self):
         for i in range(len(self.master._open)):
             # Dice: Si hay alguna ventana abierta:
             if self.master._open[i]:
-                # Description: Detiene el bucle y devuelve True si se le pasa un argumento y hay alguna ventana abierta
-                if release is not None:
-                    return True
                 # Dice: Si hay alguna ventana visible:  
                 if self.master._windows[i].winfo_ismapped():
                     return True                                         # Devuelve True y detiene el bucle
@@ -143,41 +121,6 @@ class LogotipoCls(Frame):
     def update_position(self, window):
         x, y = window.winfo_x(), window.winfo_y()                       # Solucion temporal: Evita que la ventana al minimizar se expanda
         window.geometry('+{}+{}'.format(x,y))
-
-    
-
-    # Tarea - Cambiar la imagen del boton a celeste encendido
-    def logotipo_off(self):
-        # Dice: Si hay alguna ventana visible:
-        if self.logotipo != 'off':
-            self.btn_logotipo .config(image=self.Icons[1])
-
-    # Tarea - Devolver la imagen del boton a default
-    def logotipo_default(self):
-        self.btn_logotipo .config(image=self.Icons[0])
-
-
-
-    # Tarea - Cambiar la imagen del boton a celeste encendido
-    def map_widget(self, event=None):
-        n1 = 0
-        n2 = self.master._open .count(True)
-
-        for i in range(len(self.master._open)):
-            # Dice: Si hay alguna ventana abierta:
-            if self.master._open[i]:
-                # Dice: Si hay alguna ventana visible: 
-                if self.master._windows[i].winfo_ismapped():
-                    n1 += 1
-                    # Description: Si la cantidad de ventanas visibles es la misma cantidad de ventanas abiertas
-                    if n1 == n2:
-                        self.btn_logotipo .config(image=self.Icons[1],)
-
-    # Tarea - Cambiar la imagen del boton a celeste apagado
-    def unmap_widget(self, event=None):
-        self.logotipo = 'off'
-        self.btn_logotipo .config(image=self.Icons[2],)
-
 
 
 #********************************        ██████████████
@@ -745,9 +688,8 @@ class IconsCls(Frame):
     def create_item_1(self):
         # [ 1 ] self.button_1                             : Abre imagen: Ayuda para medir el mobil                 : POSICIONADO
         # [ 2 ] self.button_2                             : Abre : Sub-contenedor de imagenes del  delay general   : POSICIONADO
-        # [ 3 ] self.button_3                             : Abre : Sin uso                                         : POSICIONADO
-        # [ 4 ] self.button_4                             : Abre : Sin uso                                         : POSICIONADO
-        # [ 5 ] self.button_5                             : Abre : La interfaces de ajustes                        : POSICIONADO
+        # [ 1 ] self.button_3                             : Abre : Sin uso                                         : POSICIONADO
+        # [ 2 ] self.button_4                             : Abre : Sin uso                                         : POSICIONADO
 
         #____BOTONES: ( 4 )
         self.button_1 = Button(self.frame_container_global_1, image=self.Icons_1[8], command=lambda:self.open_selected_image(0), bg='black',  bd=0)
@@ -764,14 +706,14 @@ class IconsCls(Frame):
         self.button_5 .grid(column=0, row=4, padx=5, pady=30, sticky='s')
 
         #____Eventos:
-        self.button_5 .bind("<Enter>", self.enter_mouse_settings)
-        self.button_5 .bind("<Leave>", self.leave_mouse_settings)
+        self.button_5 .bind("<Enter>", self.enter_mouse_setting)
+        self.button_5 .bind("<Leave>", self.leave_mouse_setting)
 
 
 
     # Tarea: - Crea los widgets Externos Parte 2
     def create_container_2(self):
-        # [ 1 ] self.frame_container_global_2             : Interface derecha de imagenes                          : POSICIONADO 898989
+        # [ 1 ] self.frame_container_global_2             : Interface derecha de imagenes                          : POSICIONADO
         # [ 2 ] self.frame_container_album_2              : Sub-contenedor de imagenes                             : NO POSICIONADO
 
         #____CONTENEDOR EXTERIOR 2:
@@ -947,10 +889,10 @@ class IconsCls(Frame):
         event.widget.config(image=self.Icons_1[6])
 
 
-    def enter_mouse_settings(self, event=None):
+    def enter_mouse_setting(self, event=None):
         event.widget.config(image=self.Icons_1[5])
 
-    def leave_mouse_settings(self, event=None):
+    def leave_mouse_setting(self, event=None):
         event.widget.config(image=self.Icons_1[4])
 
 
@@ -1239,7 +1181,7 @@ class TopDerCls(Frame):
         self._6 = arg_6
         self._7 = arg_7
 
-        #____Variables de Control:
+        # Variables de Control:
         self.x1 = 0
         self.x2 = 100
         self.y1 = 67
@@ -1253,7 +1195,7 @@ class TopDerCls(Frame):
         self.columnconfigure(0, weight=1)
         self.rowconfigure   (0, weight=1)
 
-        #____Eventos:
+        # Eventos:
         # [ 1 ]  :  Activa todas las opciones de imagenes que se pueden mostrar
         # [ 2 ]  :  Quita el Label-texto: "Haga click" para mostrar el angulo 77"
         # [ 3 ]  :  Posiciona y Quita los widgets:   [ Label-texto"Haga click" para mostrar el angulo 77" ], [ Label-texto: "↑" ]
@@ -1577,25 +1519,17 @@ class FrameManagerCls(Frame):
         #____Métodos Llamados:
         self.create_buttons()
 
-        #____Eventos:
-        # 
-        #self.frame_manager .bind("<Map>", self.frame_manager .window_manager_off)
-
 
     def create_buttons(self):
-        #----------------------------------------------ARGUMENTOS---------------------------------------------------------
-
-        # Description: Posicion de los botones: ( PRINCIPAL )
+        #____Posicion de los botones: ( PRINCIPAL )
         close1, minimize1 = {'side':TOP}, {'side':BOTTOM}                 
-        # Description: Posicion de los botones: ( SECUNDARIA )
+        #____Posicion de los botones: ( SECUNDARIA )
         close2, minimize2 = {'side':RIGHT}, {'side':RIGHT, 'padx':(0,3)}
 
-        #-----------------------------------------------------------------------------------------------------------------
-
-        # Description: Actualiza la geometria de la ventana:
+        #____Actualiza la geometria de la ventana:
         self.update_idletasks()
 
-        # Description: Solicita el ancho y alto de la ventana:
+        #____Solicita el ancho y alto de la ventana:
         x = self.winfo_toplevel().winfo_width()
         y = self.winfo_toplevel().winfo_height()
         
@@ -1635,22 +1569,22 @@ class FrameManagerCls(Frame):
 
     # Tarea: - Destruye la ventana:
     def close(self):
-        self.master.destroy()                                   # Destruye la ventana a excepcion de root
+        self.master.destroy()                        # Destruye la ventana a excepcion de root
 
         if isinstance(self.master.master.winfo_toplevel(), Tk):
-            self.master.master.destroy()                        # Destruye root
-            self.master.quit()                                  # SIGO INVESTIGANDO...
+            self.master.master.destroy()             # Destruye root
+            self.master.quit()                       # SIGO INVESTIGANDO...
         
 
     # Tarea: - Oculta la ventana:
     def minimize(self):
         if isinstance(self.master.master.winfo_toplevel(), Tk):
-            self.master.withdraw()                              # Oculta la Ventana Principal( Desaparece )
-            self.master.master.iconify()                        # Oculta la Ventana Root
+            self.master.withdraw()                   # Oculta la Ventana Principal( Desaparece )
+            self.master.master.iconify()             # Oculta la Ventana Root
         else:
-            self.master.update_idletasks()                      # Termina Tareas Pendientes y Actualiza la Aplicacion
+            self.master.update_idletasks()               # Termina Tareas Pendientes y Actualiza la Aplicacion
             self.master.wm_attributes("-alpha", 0.0 )
-            self.master.overrideredirect(False)                 # Muestra el Gestor de Ventanas
+            self.master.overrideredirect(False)          # Muestra el Gestor de Ventanas
             self.master.state('iconic')
             self.master.wm_attributes("-alpha", 1.0 )
 
@@ -1661,8 +1595,8 @@ class FrameManagerCls(Frame):
 
         if not isinstance(self.master.master.winfo_toplevel(), Tk):
             self.master.update_idletasks()
-            self.master.overrideredirect(True)                  # Oculta el Gestor de Ventanas
-            self.master.state('normal')                         # SIGO INVESTIGANDO SI ES NECESARIO...
+            self.master.overrideredirect(True)       # Oculta el Gestor de Ventanas
+            self.master.state('normal')              # SIGO INVESTIGANDO SI ES NECESARIO...
 
 
 
@@ -1718,7 +1652,7 @@ class ToplevelCls(Toplevel):
         self.frame_manager .bind("<ButtonRelease-1>", self.stop_move)
         self.frame_manager .bind("<B1-Motion>", self.on_move)
         #____Enlaces: Oculta el gestor de ventanas
-        self.frame_manager .bind("<Map>", self.frame_manager .window_manager_off)
+        self.frame_manager .bind("<Map>",self.frame_manager .window_manager_off)
 
 
     def create_container_icons(self, indice=None):
@@ -1745,7 +1679,7 @@ class ToplevelCls(Toplevel):
         self.button_menu .pack(side=LEFT)
 
         #____Enlaces: Cambian la imagen del boton menu
-        self.button_menu .bind("<Enter>", self.enter_mouse_menu)
+        #self.button_menu .bind("<Enter>", self.enter_mouse_menu)
         self.button_menu .bind("<Leave>", self.leave_mouse_menu)
         self.button_menu .bind("<ButtonPress-1>", self.press_mouse_menu)
         self.button_menu .bind("<ButtonRelease-1>", self.release_mouse_menu)
@@ -1753,7 +1687,7 @@ class ToplevelCls(Toplevel):
 
     def enter_mouse_menu(self, event):
         # Evento: Entrada del mouse sobre el boton (Imagen: change)
-        event.widget .config(image=self.Icons_1[1], bg='#202429')
+        event.widget .config(image=self.Icons_1[1], bg='#2b313c')
 
     def leave_mouse_menu(self, event):
         # Evento: Salida del mouse sobre el boton (Imagen: default)
@@ -1765,7 +1699,7 @@ class ToplevelCls(Toplevel):
 
     def release_mouse_menu(self, event):
         # Evento: Botón soltado (Imagen: default)
-        event.widget .config(image=self.Icons_1[1], bg='#202429')
+        event.widget .config(image=self.Icons_1[0], bg='#1b1d22')
 
 
     def open_container_icons(self, event=None):
@@ -1779,7 +1713,6 @@ class ToplevelCls(Toplevel):
                 if self.frames[i] in relation:
                     self.frames[i]. pack_forget()
 
-            # Description: Muestra la interface del menu
             self.icons_interface .pack(fill=BOTH, expand=True)
 
         # OCULTAR INTERFACE:
@@ -1790,7 +1723,6 @@ class ToplevelCls(Toplevel):
                 if self.frames[i] in relation:
                     self.frames[i] .pack(fill=BOTH, expand=True)
 
-            # Description: Oculta la interface del menu
             self.icons_interface .pack_forget()
 
 
@@ -1827,24 +1759,19 @@ class ToplevelCls(Toplevel):
     """ def visibility_on(self, event=None):
         print(44)
         # Visibilidad del widget:
-
         #for i in self.master._window
         #print(self.master._windows)
-
         self.update()
         for i in (self._windows):
             if i is None:
                 print(11111)
-
         widget = event.widget
         if isinstance(widget, Toplevel) and widget.winfo_viewable():
             if not isinstance(self.master.winfo_toplevel(), Tk):
                 print('visible')
             
-
     def visibility_off(self, event=None):
         # Sin visibilidad del widget:
-
         widget = event.widget
         if isinstance(widget, Toplevel) and not widget.winfo_viewable():
             print('not visible') """
@@ -2218,9 +2145,9 @@ class InterfazCls(Frame, MoveAllCls):
 
     def create_windows(self, var_1, var_2, var_3, mobil=None):
 
-        #---------------------------------------------ARGUMENTOS------------------------------------------------------------
+    #---------------------------------------------ARGUMENTOS------------------------------------------------------------
 
-        #____Lista de argumentos de la funcion: ( 3 instancias(Frames) )
+        #____Lista de argumentos de la funcion: ( 3 instancias(Frame) )
         args = [var_1, var_2, var_3]
 
         #____Lista de contenedores de los frames:
@@ -2232,7 +2159,7 @@ class InterfazCls(Frame, MoveAllCls):
         size  = [self.geo_izq.get(), self.geo_der.get(), self.geo_stuf.get()]
         
 
-        #----------------------------------------APERTURA DE VENTANAS------------------------------------------------------- 
+    #----------------------------------------APERTURA DE VENTANAS------------------------------------------------------- 
 
         for i in range(len(self._open)):
             # Dice: Si la ventana esta cerrada:
@@ -2246,12 +2173,11 @@ class InterfazCls(Frame, MoveAllCls):
                 window .create_container_icons(mobil)
                 window .create_button_menu()
                 window .create_label_title(text=text[i])
-
-                #____Eventos:
-                # [ 1 ]  :  Actualiza las ventanas cerradas para volver a abrirlas
-                # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default
                 
-                self.off_destroy = window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
+                #window .bind("<Motion>", self.o)
+
+                #____Enlace: Actualiza la lista (self._open):
+                window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
                 window .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
 
                 # Description: Actualiza la lista de ventanas y booleanos
@@ -2259,44 +2185,32 @@ class InterfazCls(Frame, MoveAllCls):
                 self._open[i] = True
 
 
-            # Description: Reemplaza los elementos[None] de la lista *container*
+            # Description: Reemplaza los elementos de la lista (container)
             container[i] = args[i] (self._windows[i])
 
-            # Description: Destruye las instancias(frames) de las ventanas abiertas
             if self._frame[i] is not None:
                 self._frame[i] .destroy()
                 # Description: Recrea la interface al destruirse su contenedor
                 self._windows[i] .create_container_icons(mobil)
-
             self._frame[i] = container[i]
-            # Description: Posiciona las instancias(frames) de las ventanas abiertas
             self._frame[i] .pack(fill='both', expand=True)
-
-            """ # Description: Oculta el frame si la interface de iconos es visible.
+            # Description: Oculta el frame si la interface de iconos es visible.
             if self._windows[i] .icons_interface .winfo_ismapped():pass
-                #self._frame[i] .pack_forget() # sin uso """
+                #self._frame[i] .pack_forget() # sin uso
+
 
             # Description: Widget para redimensionar el frame.
             self.grip = ttk.Sizegrip(self._frame[i], style='TSizegrip')
             self.grip .place (relx=1.0, rely=1.0, anchor='center')
             ttk.Style().configure('TSizegrip', bg='black')
 
-
-            #--------------------------------CONFIGURACION DEL LOGOTIPO-------------------------------------------
-
-            #____Eventos:
-            # [ 1 ]  :  Actualiza las ventanas cerradas para volver a abrirlas
-            # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default
-            self._frame[i].bind("<Map>", self.frame_static .map_widget)
-            self._windows[i].frame_manager.bind("<Unmap>", self.frame_static .unmap_widget)
-
-            # Description: Cambia la imagen del boton a celeste encendido
-            self.frame_static .logotipo_off()
-            
+            if i < 2:
+                pass
+                #self._windows[i] .bind("<Motion>", self.a)
 
 
-        #------------------------------------NOMBRE DEL BOTON PRESIONADO-----------------------------------------------------
-
+    #-----------------------------------------------------------------------------------------------------------------
+        
         # Descripcion: Reemplaza el indice que recibe la funcion por el nombre del boton presionado en el modo botones o lista.
         for index, name in enumerate(self.mobiles):
             if mobil == index:
@@ -2305,20 +2219,34 @@ class InterfazCls(Frame, MoveAllCls):
                 break
     
 
+    def a (self, event=None):
+        # Descripcion: Detecta la ventana debajo del mouse
+        window = event.widget.winfo_toplevel() 
 
-    # Tarea: - Actualizar las ventanas cerradas para volver a abrirlas
+        for i in range(len(self._open)):
+            if window == self._windows[i]:
+                # Si la interface de iconos es visible:
+                if self._windows[i] .icons_interface .winfo_ismapped():
+                    self._windows[i] .icons_interface .open_interface_buttons()
+
+                if i == 1:
+                    x = event.x / self._frame[i] .winfo_width() * 100
+                    y = event.y / self._frame[i] .winfo_height() * 100
+
+                    self._frame[i].open_text_mostrar_77(x,y)
+                
+        #self._frame[1].open_text_mostrar_77()
+
+
+
+    # Tarea: - Actualizar las ventanas cerradas
     def update_open(self, number, event=None):
+
         if isinstance(event.widget, Toplevel):
             # Descripcion: Actualiza la lista de booleanos para volver abrir la ventana.
             self._open[number] = False
             #self._windows[number] .destroy()
 
-            #-----------------------------------------------------------------------------------
-            try:
-                self.frame_static .map_widget()
-            except: pass
-
-            #-----------------------------------------------------------------------------------
             # Dice: Si todas las ventanas secundarias están cerradas:
             if self._open == [False] * 3:
                 try:
@@ -2326,14 +2254,10 @@ class InterfazCls(Frame, MoveAllCls):
                     self.frame_botones .uncheck_selection()
                     # Descripcion: Actualiza el mobil seleccionado
                     self.mobil_selected = None
-
-                    #---------------------------------------------------------------------------
-                    # Description: Devuelve la imagen del boton a default 
-                    self.frame_static .logotipo_default()
                 except: pass
 
 
-    # Tarea: - Ocultar la interface de menu y volver a mostrar la interface por default.
+    # Tarea: - Ocultar la interface de iconos y mostrar la interface visual.
     def forget_container_icons(self, number, event=None):
         # Dice: Si el widget que desencadeno el evento es la ventana:
         if event.widget == self._windows[number]:

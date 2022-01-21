@@ -1,4 +1,4 @@
-#from email.mime import image
+from email.mime import image
 from Importaciones import *
 
 # INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
@@ -41,9 +41,7 @@ class LogotipoCls(Frame):
         #____Colección de Imágenes:
         self.Icons = path_lst
 
-        #____Variables de seguimiento: [ self.btn_logotipo ]
-        self.logotipo = 'default'
-
+        self.mode_logotipo = 'ligh'
         #____Métodos Llamados:
         self.create_buttons()
 
@@ -63,9 +61,10 @@ class LogotipoCls(Frame):
         self.btn_settings .grid(column=0, row=1)
 
         #____Eventos:
-        # [ 1 ] : Cierra todas las ventanas secundarias abiertas y devuelve la imagen por defecto del boton logotipo
-
-        self.btn_logotipo .bind('<Double-Button-3>', self.close_all)
+        self.btn_logotipo .bind('<Double-Button-3>', self.close_all)  # Cierra Toplevel Secundarias
+        #self.btn_logotipo .bind('<ButtonPress-1>', self.enter_mouse_logotipo)
+        #self.btn_logotipo .bind('<ButtonRelease-1>', self.leave_mouse_logotipo)
+        
         self.btn_settings .bind('<Enter>', self.enter_mouse_settings)
         self.btn_settings .bind('<Leave>', self.leave_mouse_settings)
 
@@ -84,7 +83,7 @@ class LogotipoCls(Frame):
 
         #--------------------------------------------------------------------------------------------------
         # Description: Actualiza la variable de seguimiento y devuelve la imagen por defecto del boton
-        self.logotipo = 'default'
+        self.mode_logotipo = None
         self.btn_logotipo .config(image=self.Icons[0])
 
             
@@ -100,11 +99,9 @@ class LogotipoCls(Frame):
                     # Dice: Si alguna ventana esta abierta:
                     if self.master._open[i] == True:
                         self.master._windows[i] .frame_manager .minimize()
-                        
-                        #--------------------------------------------------------------------------------------------------
-                        # Description: Cambia la imagen del boton a celeste apagado
+
                         self.btn_logotipo .config(image=self.Icons[2],)
-                       
+                        self.mode_logotipo = 'dark'
 
                 # MUESTRA LAS VENTANAS:
                 else:
@@ -113,9 +110,8 @@ class LogotipoCls(Frame):
                         self.master._windows[i] .frame_manager .window_manager_off()
                         self.update_position(self.master._windows[i])                      # Solucion temporal: Evita que la ventana al minimizar se expanda
 
-                        #--------------------------------------------------------------------------------------------------
-                        # Description: Cambia la imagen del boton a celeste encendido
                         self.btn_logotipo .config(image=self.Icons[1],)
+                        self.mode_logotipo = None
 
    
     def enter_mouse_settings(self, event):
@@ -146,38 +142,29 @@ class LogotipoCls(Frame):
 
     
 
-    # Tarea - Cambiar la imagen del boton a celeste encendido
-    def logotipo_off(self):
+    # Tarea - Cambia la imagen del boton a modo encendido
+    def button_logotipo_light(self):
         # Dice: Si hay alguna ventana visible:
-        if self.logotipo != 'off':
+        if not self.mode_logotipo == 'dark':
+            #print(222222222222222222222222222)
             self.btn_logotipo .config(image=self.Icons[1])
 
-    # Tarea - Devolver la imagen del boton a default
-    def logotipo_default(self):
+    # Tarea - Devuelve la imagen del boton por default
+    def button_logotipo_dark(self):
         self.btn_logotipo .config(image=self.Icons[0])
 
 
-
-    # Tarea - Cambiar la imagen del boton a celeste encendido
     def map_widget(self, event=None):
-        n1 = 0
-        n2 = self.master._open .count(True)
+        a = event.widget.winfo_exists()
+        print('MAP',a)
+        if a == 1:
+            self.btn_logotipo .config(image=self.Icons[2],)
 
-        for i in range(len(self.master._open)):
-            # Dice: Si hay alguna ventana abierta:
-            if self.master._open[i]:
-                # Dice: Si hay alguna ventana visible: 
-                if self.master._windows[i].winfo_ismapped():
-                    n1 += 1
-                    # Description: Si la cantidad de ventanas visibles es la misma cantidad de ventanas abiertas
-                    if n1 == n2:
-                        self.btn_logotipo .config(image=self.Icons[1],)
-
-    # Tarea - Cambiar la imagen del boton a celeste apagado
     def unmap_widget(self, event=None):
-        self.logotipo = 'off'
-        self.btn_logotipo .config(image=self.Icons[2],)
-
+        a = event.widget.winfo_exists()
+        print('UNMAP',a)
+        if a == 1:
+            self.btn_logotipo .config(image=self.Icons[2],)
 
 
 #********************************        ██████████████
@@ -1647,6 +1634,7 @@ class FrameManagerCls(Frame):
         if isinstance(self.master.master.winfo_toplevel(), Tk):
             self.master.withdraw()                              # Oculta la Ventana Principal( Desaparece )
             self.master.master.iconify()                        # Oculta la Ventana Root
+            self.master.master.update_open()
         else:
             self.master.update_idletasks()                      # Termina Tareas Pendientes y Actualiza la Aplicacion
             self.master.wm_attributes("-alpha", 0.0 )
@@ -1660,6 +1648,7 @@ class FrameManagerCls(Frame):
         # Evento: Widget visible
 
         if not isinstance(self.master.master.winfo_toplevel(), Tk):
+            print(22222222)
             self.master.update_idletasks()
             self.master.overrideredirect(True)                  # Oculta el Gestor de Ventanas
             self.master.state('normal')                         # SIGO INVESTIGANDO SI ES NECESARIO...
@@ -2251,7 +2240,7 @@ class InterfazCls(Frame, MoveAllCls):
                 # [ 1 ]  :  Actualiza las ventanas cerradas para volver a abrirlas
                 # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default
                 
-                self.off_destroy = window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
+                window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
                 window .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
 
                 # Description: Actualiza la lista de ventanas y booleanos
@@ -2287,11 +2276,12 @@ class InterfazCls(Frame, MoveAllCls):
             #____Eventos:
             # [ 1 ]  :  Actualiza las ventanas cerradas para volver a abrirlas
             # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default
+
             self._frame[i].bind("<Map>", self.frame_static .map_widget)
             self._windows[i].frame_manager.bind("<Unmap>", self.frame_static .unmap_widget)
 
-            # Description: Cambia la imagen del boton a celeste encendido
-            self.frame_static .logotipo_off()
+            # Description: Cambia la imagen del boton
+            self.frame_static .button_logotipo_light()
             
 
 
@@ -2313,12 +2303,6 @@ class InterfazCls(Frame, MoveAllCls):
             self._open[number] = False
             #self._windows[number] .destroy()
 
-            #-----------------------------------------------------------------------------------
-            try:
-                self.frame_static .map_widget()
-            except: pass
-
-            #-----------------------------------------------------------------------------------
             # Dice: Si todas las ventanas secundarias están cerradas:
             if self._open == [False] * 3:
                 try:
@@ -2326,10 +2310,8 @@ class InterfazCls(Frame, MoveAllCls):
                     self.frame_botones .uncheck_selection()
                     # Descripcion: Actualiza el mobil seleccionado
                     self.mobil_selected = None
-
-                    #---------------------------------------------------------------------------
                     # Description: Devuelve la imagen del boton a default 
-                    self.frame_static .logotipo_default()
+                    self.frame_static .button_logotipo_dark()
                 except: pass
 
 
