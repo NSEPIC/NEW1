@@ -1563,7 +1563,7 @@ class TopStufCls(Frame):
 # TAREAS:
 #_______1- Mover todas las ventanas a excepcion de root, sin importar donde se de clic, existen algunas excepciones
 class MoveAllCls():
-    def __init__(self, window=None, windows=None, booleans=None):
+    def __init__(self, window=None, windows=None, boolean=None, booleans=None):
         self._x = 0
         self._y = 0
         self.movable = []
@@ -1574,11 +1574,10 @@ class MoveAllCls():
         # [ 2 ] : Ventanas secundarias
         # [ 3 ] : Boleano de estado de la ventana principal        : Predeterminado: True(Permitir)
         # [ 4 ] : Boleanos de estado de las ventanas secundarias   : Predeterminado: Trues(Permitir)
-            # [ 4 ] : Indices:
-            # Índice 0 : Controla la ventana principal
-            # Índice 1 : Controla la ventana secundaria izquierda
-            # Índice 2 : Controla la ventana secundaria derecha 
-            # [ 0 ] : Controla la ventana secundaria central
+            # [ 4 ] : Indices de estado:
+            # Índice 0 : Controla la ventana secundaria izquierda
+            # Índice 1 : Controla la ventana secundaria derecha
+            # Índice 2 : Controla la ventana secundaria central
 
         self.principal =  window
         self.secundarias = windows      
@@ -1623,11 +1622,11 @@ class MoveAllCls():
         #----------------------------------CONTROLADOR DE MOVIMIENTO----------------------------------------------------
 
         # Description: Mueve la ventana principal
-        if self.window == self.principal and self.booleans[0]:
+        if self.window == self.principal and self.boolean:
             self.on_move_all()
 
         # Description: Mueve la ventana secundaria
-        for i in range(1,4):
+        for i in range(3):
             if self.window == self.secundarias[i] and self.booleans[i]:
                 self.on_move_all()
         
@@ -2104,11 +2103,14 @@ class InterfazCls(Frame, MoveAllCls):
         self._windows = [None] * 3
         self._frame = [None] * 3
 
-        #____Variable de Control: Permite mover todas las ventanas 
-        self.variables = [True] * 4
+        #____Variable de Control: Permite mover la ventana principal 
+        self.boleano = True
+
+        #____Variable de Control: Permite mover las ventanas secundarias
+        self.boleanos = [True] * 3
 
         #____Inicializando las variables de control
-        MoveAllCls.__init__(self, self.master, self._windows, self.variables)
+        MoveAllCls.__init__(self, self.master, self._windows,  self.boleano, self.boleanos)
 
 
         #____Variable de Seguimiento: Boton Seleccionado en la Interface de Botones:
