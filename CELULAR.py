@@ -418,13 +418,13 @@ class ModeConfigurerCls(Frame):
             if self.checkbutton3 .variable.get():
                 for i in range(3):
                     # Dice: Si no está marcada la casilla de bloquear ventana:
-                    if not self.master._prebooleans[i]:
+                    #if not self.master._prebooleans[i]:
                         # Description: Permite mover las ventanas
                         self.master._booleans[i] = True
             else:
                 for i in range(3):
                     # Dice: Si está marcada la casilla de bloquear ventana:
-                    if self.master._prebooleans[i]:
+                    #if self.master._prebooleans[i]:
                         # Description: No permite mover las ventanas
                         self.master._booleans[i] = False
 
@@ -1568,7 +1568,7 @@ class TopStufCls(Frame):
 # TAREAS:
 #_______1- Mover todas las ventanas a excepcion de root, sin importar donde se de clic, existen algunas excepciones
 class MoveAllCls():
-    def __init__(self, window=None, windows=None, boolean=None, booleans=None):
+    def __init__(self, window=None, windows=None, boolean=None, booleans=None, disabled=None):
         self._x = 0
         self._y = 0
         self.movable = []
@@ -1583,11 +1583,13 @@ class MoveAllCls():
             # Índice 0 : Controla la ventana secundaria izquierda
             # Índice 1 : Controla la ventana secundaria derecha
             # Índice 2 : Controla la ventana secundaria central
+        # [ 5 ] : Bloquear ventanas secundarias                    : Predeterminado; Falses(Desactivado)
 
         self.principal   = window
         self.secundarias = windows      
         self._boolean    = boolean
         self._booleans   = booleans
+        self._disabled   = disableb
 
           
     def make_movable(self, *widgets):
@@ -1628,12 +1630,13 @@ class MoveAllCls():
 
         # Description: Mueve la ventana principal
         if self.window == self.principal and self._boolean:
-            self.on_move_all()
+                self.on_move_all()
 
         # Description: Mueve la ventana secundaria
         for i in range(3):
             if self.window == self.secundarias[i] and self._booleans[i]:
-                self.on_move_all()
+                if not self.disabled[i]:
+                    self.on_move_all()
         
         
 
