@@ -1570,14 +1570,19 @@ class MoveAllCls():
         self.immovable = []
 
         #---------------------------ARGUMENTOS RECIBIDOS-------------------------------------------------
-        self.principal = window
-        self.secundarias = windows
+        # [ 1 ] : Ventana principal
+        # [ 2 ] : Ventanas secundarias
+        # [ 3 ] : Boleano de estado de la ventana principal        : Predeterminado: True(Permitir)
+        # [ 4 ] : Boleanos de estado de las ventanas secundarias   : Predeterminado: Trues(Permitir)
+            # [ 4 ] : Indices:
+            # Índice 0 : Controla la ventana principal
+            # Índice 1 : Controla la ventana secundaria izquierda
+            # Índice 2 : Controla la ventana secundaria derecha 
+            # [ 0 ] : Controla la ventana secundaria central
 
-        # Indices:
-        # [ 0 ] : Controla la ventana principal
-        # [ 0 ] : Controla la ventana secundaria izquierda
-        # [ 0 ] : Controla la ventana secundaria derecha 
-        # [ 0 ] : Controla la ventana secundaria central
+        self.principal =  window
+        self.secundarias = windows      
+        self.boolean = boolean
         self.booleans = booleans
 
           
