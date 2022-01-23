@@ -1,5 +1,3 @@
-#from email.mime import image
-from numpy import var
 from Importaciones import *
 
 # INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
@@ -418,11 +416,12 @@ class ModeConfigurerCls(Frame):
 
         if number == 3:
             if self.checkbutton3 .variable.get():
-                for i in range(3):
-                    self.master.variables[i + 1] = True
+                for i in range(1,4):
+                    if self.master.
+                    self.master.variables[i] = True
             else:
-                for i in range(3):
-                    self.master.variables[i + 1] = False
+                for i in range(1,4):
+                    self.master.variables[i] = False
 
 
 #********************************        ██████████████
@@ -1623,8 +1622,8 @@ class MoveAllCls():
             self.on_move_all()
 
         # Description: Mueve la ventana secundaria
-        for i in range(3):
-            if self.window == self.secundarias[i] and self.booleans[i+1]:
+        for i in range(1,4):
+            if self.window == self.secundarias[i] and self.booleans[i]:
                 self.on_move_all()
         
         
