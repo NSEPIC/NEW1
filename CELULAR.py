@@ -410,18 +410,23 @@ class ModeConfigurerCls(Frame):
     def seleccionar(self, number=None):
         if number == 1:
             if self.checkbutton1 .variable.get():
-                self.master.variables[0] = True
+                self.master._boolean = True
             else:
                 self.master.variables[0] = False
 
         if number == 3:
             if self.checkbutton3 .variable.get():
-                for i in range(1,4):
-                    if self.master.
-                    self.master.variables[i] = True
+                for i in range(3):
+                    # Dice: Si no está marcada la casilla de bloquear ventana:
+                    if not self.master._prebooleans[i]:
+                        # Description: Permite mover las ventanas
+                        self.master._booleans[i] = True
             else:
-                for i in range(1,4):
-                    self.master.variables[i] = False
+                for i in range(3):
+                    # Dice: Si está marcada la casilla de bloquear ventana:
+                    if self.master._prebooleans[i]:
+                        # Description: No permite mover las ventanas
+                        self.master._booleans[i] = False
 
 
 #********************************        ██████████████
@@ -1579,10 +1584,10 @@ class MoveAllCls():
             # Índice 1 : Controla la ventana secundaria derecha
             # Índice 2 : Controla la ventana secundaria central
 
-        self.principal =  window
+        self.principal   = window
         self.secundarias = windows      
-        self.boolean = boolean
-        self.booleans = booleans
+        self._boolean    = boolean
+        self._booleans   = booleans
 
           
     def make_movable(self, *widgets):
@@ -1622,12 +1627,12 @@ class MoveAllCls():
         #----------------------------------CONTROLADOR DE MOVIMIENTO----------------------------------------------------
 
         # Description: Mueve la ventana principal
-        if self.window == self.principal and self.boolean:
+        if self.window == self.principal and self._boolean:
             self.on_move_all()
 
         # Description: Mueve la ventana secundaria
         for i in range(3):
-            if self.window == self.secundarias[i] and self.booleans[i]:
+            if self.window == self.secundarias[i] and self._booleans[i]:
                 self.on_move_all()
         
         
@@ -2104,13 +2109,13 @@ class InterfazCls(Frame, MoveAllCls):
         self._frame = [None] * 3
 
         #____Variable de Control: Permite mover la ventana principal 
-        self.boleano = True
+        self._boolean = True
 
         #____Variable de Control: Permite mover las ventanas secundarias
-        self.boleanos = [True] * 3
+        self._booleans = [True] * 3
 
         #____Inicializando las variables de control
-        MoveAllCls.__init__(self, self.master, self._windows,  self.boleano, self.boleanos)
+        MoveAllCls.__init__(self, self.master, self._windows,  self._boolean, self._booleans)
 
 
         #____Variable de Seguimiento: Boton Seleccionado en la Interface de Botones:
