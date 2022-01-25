@@ -407,20 +407,20 @@ class ModeConfigurerCls(Frame):
         self.checkbutton1 .check()
         self.checkbutton3 .check()
 
+
     def seleccionar(self, number=None):
+
         if number == 1:
             if self.checkbutton1 .variable.get():
                 self.master._boolean = True
             else:
-                self.master.variables[0] = False
+                self.master._boolean = False
+
 
         if number == 3:
             if self.checkbutton3 .variable.get():
                 for i in range(3):
-                    # Dice: Si no está marcada la casilla de bloquear ventana:
-                    #if not self.master._prebooleans[i]:
-                        # Description: Permite mover las ventanas
-                        self.master._booleans[i] = True
+                    self.master._booleans[i] = True
             else:
                 for i in range(3):
                     # Dice: Si está marcada la casilla de bloquear ventana:
@@ -709,11 +709,11 @@ class ResizeCls(Frame):
 
 
 class IconsCls(Frame):
-    def __init__(self, master, path_lst1=None, path_lst2=None, indice=None, frames=None, *args, **kwargs):
+    def __init__(self, master, path_lst1=None, path_lst2=None, indice1=None, indice2=None, frames=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.master = master
         #____Variables de Control: Indice de la sublista.
-        self.indice = indice
+        self.indice1 = indice1
 
         #____Variable de Control: (if-else)
         self.var1 = False
@@ -725,7 +725,7 @@ class IconsCls(Frame):
         #____Variable de Control: (ventana )
         self.variable = False
 
-
+        self.indice2 = indice2
         self.frames = frames
 
         #____Colección de Imágenes:
@@ -859,7 +859,7 @@ class IconsCls(Frame):
         self.label_logo .grid(column=0, row=0)
 
         #____IMAGEN: ( 1 instancia )
-        self.frame_image_guiadetiro = ResizeCls(self.frame_container_global_2, self.Images[self.indice][1], bd=0)
+        self.frame_image_guiadetiro = ResizeCls(self.frame_container_global_2, self.Images[self.indice1][1], bd=0)
 
 
     # Tarea: - Crea las imagenes que posicionan en un contenedor adicional
@@ -902,13 +902,21 @@ class IconsCls(Frame):
 
 
     def create_item_B(self):
-        pass
-        label_1 = Label (self.frame_container_settings, text= 'Bloquear ventana :' , font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)   
-        label_1 .grid(column=0, row=0, padx=(10,5), pady=(10,0), )
 
-        self.checkbutton1 = CheckbuttonCls(self.frame_container_settings, bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
-        self.checkbutton1 .grid(column=1, row=0, padx=(0,0), pady=(10,0), )
+        label_1 = Label (self.frame_container_settings, text= 'Bloquear ventana :' , font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
+        label_2 = Label (self.frame_container_settings, text= 'Bloquear ventana :' , font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
 
+        #____Posicionamiento:
+        label_1 .grid(column=0, row=0, padx=(20,5), pady=(10,0), )
+        label_2 .grid(column=0, row=1, padx=(20,5), pady=(0,0), )
+
+
+        self.checkbutton1 = CheckbuttonCls(self.frame_container_settings, command=lambda *arg:self.seleccionar(1, self.indice2), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
+        self.checkbutton2 = CheckbuttonCls(self.frame_container_settings, command=lambda *arg:self.seleccionar(1, self.indice2), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
+
+        #____Posicionamiento:
+        self.checkbutton1 .grid(column=1, row=0, padx=(0,0), pady=(10,0))
+        self.checkbutton2 .grid(column=1, row=1, padx=(0,0), pady=(0,0))
 
 
     # Tarea: - Cambia el orden de apilamiento de las imagenes del contenedor adicional
@@ -1018,6 +1026,17 @@ class IconsCls(Frame):
         # [ 1 ] : self.frame_image_guiadetiro            : Imagen: Ayuda para medir el mobil                        active: [Boton 1]
         # [ 2 ] : self.frame_container_album_2           : Contenedor: Imagenes para mostrar el delay general       active: [Boton 2]
         self.list_interfaces = [self.frame_image_guiadetiro, self.frame_container_album_2, self.frame_container_settings]
+
+    def checked(self):
+        self.checkbutton1 .check()
+
+    
+    def seleccionar(self, indice_button=None, indice_ventana=None):
+        if indice_button == 1:
+            if self.checkbutton1 .variable.get():
+                self.master.master._disabled[indice_ventana] = True
+            else:
+                self.master.master._disabled[indice_ventana] = False
 
 
 #********************************        ██████████████        *********************************
@@ -1568,28 +1587,35 @@ class TopStufCls(Frame):
 # TAREAS:
 #_______1- Mover todas las ventanas a excepcion de root, sin importar donde se de clic, existen algunas excepciones
 class MoveAllCls():
-    def __init__(self, window=None, windows=None, boolean=None, booleans=None, disabled=None):
+    def __init__(self, window=None, windows=None, disabled=None):
         self._x = 0
         self._y = 0
+        #---------------------------DESCRIPCION DE TAREAS------------------------------------------------
+
+        # [ 1 ] : Lista de widgets que permiten mover su ventana o sus ventanas
+        # [ 2 ] : Lista de widgets que no se les permite mover su ventana o sus ventanas
+        # [ 3 ] : Boleano de estado de la ventana principal                                 : Predeterminado: True(Permitir)
+        # [ 4 ] : Boleanos de estado de las ventanas secundarias                            : Predeterminado: Trues(Permitir)
+            # Indice:
+                # Índice 0 : Controla la ventana secundaria izquierda
+                # Índice 1 : Controla la ventana secundaria derecha
+                # Índice 2 : Controla la ventana secundaria central
+        # [ 5 ] : Bloquea el movimiento de su ventana secundaria                            : Predeterminado; Falses(Desactivado)
+
         self.movable = []
         self.immovable = []
+        self._boolean = True
+        self._booleans = [True] * 3
+        #self._disabled = [False] * 3
 
         #---------------------------ARGUMENTOS RECIBIDOS-------------------------------------------------
+
         # [ 1 ] : Ventana principal
         # [ 2 ] : Ventanas secundarias
-        # [ 3 ] : Boleano de estado de la ventana principal        : Predeterminado: True(Permitir)
-        # [ 4 ] : Boleanos de estado de las ventanas secundarias   : Predeterminado: Trues(Permitir)
-            # [ 4 ] : Indices de estado:
-            # Índice 0 : Controla la ventana secundaria izquierda
-            # Índice 1 : Controla la ventana secundaria derecha
-            # Índice 2 : Controla la ventana secundaria central
-        # [ 5 ] : Bloquear ventanas secundarias                    : Predeterminado; Falses(Desactivado)
 
         self.principal   = window
         self.secundarias = windows      
-        self._boolean    = boolean
-        self._booleans   = booleans
-        self._disabled   = disableb
+        self._disabled   = disabled
 
           
     def make_movable(self, *widgets):
@@ -1635,7 +1661,8 @@ class MoveAllCls():
         # Description: Mueve la ventana secundaria
         for i in range(3):
             if self.window == self.secundarias[i] and self._booleans[i]:
-                if not self.disabled[i]:
+                if not self._disabled[i]:
+                    print('______',self._disabled[i])
                     self.on_move_all()
         
         
@@ -1776,9 +1803,12 @@ class FrameManagerCls(Frame):
 #************************            ██   ██    ██          ██
 #************************            ███████    ██████████████
 
-class ToplevelCls(Toplevel):
+class ToplevelCls(Toplevel, MoveAllCls):
     def __init__(self, master=None, path_lst1=None, path_lst2=None, frames=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+        #____Inicializando las variables de control
+        MoveAllCls.__init__(self)
+
         self.overrideredirect(True)
 
         self.indice = None
@@ -1819,11 +1849,14 @@ class ToplevelCls(Toplevel):
         self.frame_manager .bind("<Map>", self.frame_manager .window_manager_off)
 
 
-    def create_container_icons(self, indice=None):
+    def create_container_icons(self, indice1=None, indice2=None, boolean=None):
         #____GESTOR DE ICONOS: ( 1 instancia )
-        self.icons_interface = IconsCls(self, self.Images, self.Icons_1, indice, self.frames)
+        self.icons_interface = IconsCls(self, self.Images, self.Icons_1, indice1, indice2, self.frames)
         self.icons_interface .pack(fill=BOTH, expand=True)
         self.icons_interface .pack_forget()
+
+        if boolean:
+            self.icons_interface.checked()
 
 
     def create_label_title(self, **kwargs):
@@ -2103,22 +2136,21 @@ class InterfazCls(Frame, MoveAllCls):
         self.geo_stuf = StringVar()
         
         #____Variables de Control: ( Ventanas Secundarias )
-        # [ 1 ] : self._open     : Número de ventanas abiertas o cerradas
-        # [ 2 ] : self._windows  : Número de ventanas creadas
-        # [ 3 ] : self._frame    : Número de contenedores de los frames
+        # [ 1 ] : self._open      : Número de ventanas abiertas o cerradas
+        # [ 2 ] : self._windows   : Número de ventanas creadas
+        # [ 3 ] : self._frame     : Número de contenedores de los frames
 
         self._open = [False] * 3
         self._windows = [None] * 3
         self._frame = [None] * 3
 
-        #____Variable de Control: Permite mover la ventana principal 
-        self._boolean = True
+        #____Variables de Control: ( Ventanas Secundarias )
+        # [ 1 ] : self._disabled  : Número de ventanas bloqueadas              : predeterminado: Falses(Desactivado)
 
-        #____Variable de Control: Permite mover las ventanas secundarias
-        self._booleans = [True] * 3
+        self._disabled = [False] * 3
 
         #____Inicializando las variables de control
-        MoveAllCls.__init__(self, self.master, self._windows,  self._boolean, self._booleans)
+        MoveAllCls.__init__(self, self.master, self._windows, self._disabled)
 
 
         #____Variable de Seguimiento: Boton Seleccionado en la Interface de Botones:
@@ -2133,8 +2165,6 @@ class InterfazCls(Frame, MoveAllCls):
         self.mobiles = ['Frog', 'Fox', 'Boomer', 'Ice', 'J.d', 'Grub', 'Lightning', 'Aduka', 'Knight', 'Kalsiddon', 'Mage',
                         'Randomizer', 'Jolteon', 'Turtle', 'Armor','A.sate', 'Raon', 'Trico', 'Nak', 'Bigfoot', 'Barney', 'Dragon']
 
-
-        self.moveglobal = False
 
         #____Enlaces: Mueven las Ventanas Globalmente:
         self.bind_all("<ButtonPress-1>", self.start_move_all)             # Punto inicial    
@@ -2293,7 +2323,7 @@ class InterfazCls(Frame, MoveAllCls):
                     self.off_move = self.bind_all("<B1-Motion>", self.on_move_all)  # Activa
                 """
     
-    def move_windows_global(self):
+    """ def move_windows_global(self):
         pass
         print(2222)
         if not self.move == True:
@@ -2303,7 +2333,7 @@ class InterfazCls(Frame, MoveAllCls):
         else:
             self.moveglobal = False
             self.unbind("", self.off_move)       
-        
+         """
 
 
     # Tarea: 1- [Busca y Marca] el boton que inició las ventanas secundarias:
@@ -2361,11 +2391,11 @@ class InterfazCls(Frame, MoveAllCls):
             if not self._open[i] == True:
 
                 #____VENTANAS:  ( 3 instancias )         
-                window = ToplevelCls (self.master, self.main_lst, self.ico2_lst, self._frame)
+                window = ToplevelCls (self, self.main_lst, self.ico2_lst, self._frame)
                 #____Métodos Llamados:
                 window .configure_toplevel(title[i], size[i])
                 window .create_frame_manager(self.ico1_lst, side=TOP, fill=BOTH)
-                window .create_container_icons(mobil)
+                window .create_container_icons(mobil, i)
                 window .create_button_menu()
                 window .create_label_title(text=text[i])
 
@@ -2388,7 +2418,7 @@ class InterfazCls(Frame, MoveAllCls):
             if self._frame[i] is not None:
                 self._frame[i] .destroy()
                 # Description: Recrea la interface al destruirse su contenedor
-                self._windows[i] .create_container_icons(mobil)
+                self._windows[i] .create_container_icons(mobil, i, self._disabled[i])
 
             self._frame[i] = container[i]
             # Description: Posiciona las instancias(frames) de las ventanas abiertas
