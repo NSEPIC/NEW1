@@ -65,8 +65,8 @@ class LogotipoCls(Frame):
         # [ 1 ] : Cierra todas las ventanas secundarias abiertas y devuelve la imagen por defecto del boton logotipo
 
         self.btn_logotipo .bind('<Double-Button-3>', self.close_all)
-        self.btn_settings .bind('<Enter>', self.enter_mouse_settings)
-        self.btn_settings .bind('<Leave>', self.leave_mouse_settings)
+        self.off_enter = self.btn_settings .bind('<Enter>', self.enter_mouse_settings)
+        self.off_leave = self.btn_settings .bind('<Leave>', self.leave_mouse_settings)
 
 
     # Tarea: - Destruye todas las ventanas secundarias:
@@ -116,7 +116,18 @@ class LogotipoCls(Frame):
                         # Description: Cambia la imagen del boton a celeste encendido
                         self.btn_logotipo .config(image=self.Icons[1],)
 
-   
+
+    # Tarea: - Desactiva el evento y cambia la imagen a dark
+    def settings_enter_deactivate(self, event=None):
+        self.btn_settings.unbind('<Enter>', self.off_enter)
+        self.btn_settings.config(image=self.Icons[3])
+    
+    # Tarea: - Activa el evento y cambia la imagen a light
+    def settings_enter_activate(self, event=None):
+        self.off_enter = self.btn_settings .bind('<Enter>', self.enter_mouse_settings)
+        self.btn_settings.config(image=self.Icons[4])
+
+    
     def enter_mouse_settings(self, event):
         # Evento: Entrada del mouse sobre el boton (Imagen: change)
         event.widget.config(image=self.Icons[4])
@@ -423,10 +434,14 @@ class ModeConfigurerCls(Frame):
                     self.master._booleans[i] = True
             else:
                 for i in range(3):
-                    # Dice: Si está marcada la casilla de bloquear ventana:
-                    #if self.master._prebooleans[i]:
-                        # Description: No permite mover las ventanas
-                        self.master._booleans[i] = False
+                    self.master._booleans[i] = False
+        
+
+        if number == 4:
+            if self.checkbutton4 .variable.get():
+                self.master.deactivate_forget_icons()
+            else:
+                self.master.activate_forget_icons()
 
 
 #********************************        ██████████████
@@ -764,6 +779,10 @@ class IconsCls(Frame):
         self.frame_container_global_1 .rowconfigure(2, weight=0)
         self.frame_container_global_1 .rowconfigure(3, weight=0)
         self.frame_container_global_1 .rowconfigure(4, weight=1)
+
+        #self.master.bind('<Leave>', lambda arg:self.frame_container_global_1 .pack_forget())
+
+        #self.off_leave  = self.bind ('<Leave>', lambda arg:self.label_text_mostrar_77 ..pack_forget()) 
             
         #________Metodos Llamados:
         self.create_item_1()
@@ -792,7 +811,7 @@ class IconsCls(Frame):
         self.button_5 .grid(column=0, row=4, padx=5, pady=30, sticky='s')
 
         #____Eventos:
-        self.button_5 .bind("<Enter>", self.enter_mouse_settings)
+        self.off_enter = self.button_5 .bind("<Enter>", self.enter_mouse_settings)
         self.button_5 .bind("<Leave>", self.leave_mouse_settings)
 
 
@@ -903,7 +922,7 @@ class IconsCls(Frame):
 
     def create_item_B(self):
 
-        label_1 = Label (self.frame_container_settings, text= 'Bloquear ventana :' , font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
+        label_1 = Label (self.frame_container_settings, text= 'Deshabilitar desplazamiento\nde ventana :' , font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
         label_2 = Label (self.frame_container_settings, text= 'Bloquear ventana :' , font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
 
         #____Posicionamiento:
@@ -912,7 +931,7 @@ class IconsCls(Frame):
 
 
         self.checkbutton1 = CheckbuttonCls(self.frame_container_settings, command=lambda *arg:self.seleccionar(1, self.indice2), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
-        self.checkbutton2 = CheckbuttonCls(self.frame_container_settings, command=lambda *arg:self.seleccionar(1, self.indice2), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
+        self.checkbutton2 = CheckbuttonCls(self.frame_container_settings, command=lambda *arg:self.seleccionar(2, self.indice2), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
 
         #____Posicionamiento:
         self.checkbutton1 .grid(column=1, row=0, padx=(0,0), pady=(10,0))
@@ -927,7 +946,7 @@ class IconsCls(Frame):
         else:
             self.var2 = False
             self.image_delay2 .lift()
-       
+
 
     # Tarea: - Muestra y oculta las imagenes del boton presionado
     def open_selected_image(self, number=None):
@@ -951,10 +970,21 @@ class IconsCls(Frame):
             # Description: Muestra la imagen del boton presionado
             self.list_interfaces[number]. grid(sticky='news')
 
+            #----------------------------------DESACTIVA Y ACTIVA EL EVENTO------------------------------------------
+            if number == 2:
+                self.settings_enter_deactivate()
+            else:
+                self.settings_enter_activate(1)
+            
+
 
         # Description: Muestra el logo
         else:
             self.var1 = False
+
+            #----------------------------------------ACTIVA EL EVENTO------------------------------------------------
+            self.settings_enter_activate()
+            #--------------------------------------------------------------------------------------------------------
 
             # Description: Oculta la imagen
             self.list_interfaces[number] .grid_remove()
@@ -1005,7 +1035,19 @@ class IconsCls(Frame):
     def deactivate_motion(self, event=None):
         self.master.unbind("<Motion>", self.off_motion)
 
+
+    # Tarea: - Desactiva el evento y cambia la imagen a dark
+    def settings_enter_deactivate(self, event=None):
+        self.button_5 .unbind('<Enter>', self.off_enter)
+        self.button_5 .config(image=self.Icons_1[4])
     
+    # Tarea: - Activa el evento y cambia la imagen a light
+    def settings_enter_activate(self, var=None, event=None):
+        self.off_enter = self.button_5 .bind('<Enter>', self.enter_mouse_settings)
+        if var is None:
+            self.button_5 .config(image=self.Icons_1[5])
+       
+
 
     def enter_mouse_next(self, event=None):
         event.widget.config(image=self.Icons_1[7])
@@ -1662,7 +1704,6 @@ class MoveAllCls():
         for i in range(3):
             if self.window == self.secundarias[i] and self._booleans[i]:
                 if not self._disabled[i]:
-                    print('______',self._disabled[i])
                     self.on_move_all()
         
         
@@ -2276,19 +2317,21 @@ class InterfazCls(Frame, MoveAllCls):
             self._gear = True
             self.master.geometry('834x67')
 
+            # Description: Desactiva en evento y cambia la imagen a default
+            self.frame_static .settings_enter_deactivate()
+
             self.frame_botones .pack_forget()
             self.frame_listmode .pack_forget()
 
             self.frame_configurer .pack(side=LEFT, fill=BOTH, expand=True)
             self.frame_configurer .focus_set()
 
-            """ # Descripcion: Activa el método para mover las ventanas globalmente
-            #self.off_move = self.bind_all("<B1-Motion>", self.on_move_all) """
-
-
         else:
             self._gear = False
             self.frame_configurer .pack_forget()
+
+            # Description: Desactiva en evento y cambia la imagen a light
+            self.frame_static .settings_enter_activate()
 
             # Dice: Si la casilla N°5 está marcada:
             if self.frame_configurer .checkbutton2 .variable.get():
@@ -2302,10 +2345,6 @@ class InterfazCls(Frame, MoveAllCls):
                 if self.mobil_selected is not None:
                     self.frame_listmode .spinboxx .insert(0, self.mobil_selected)
 
-                """ if not self.frame_listmode. _toggle_switch == True:
-                    self.off_move = self.bind_all("<B1-Motion>", self.on_move_all)
-                else:
-                    self.unbind("", self.off_move) """
 
             # Dice: Si la casilla N°5 no está marcada:
             else:
@@ -2314,28 +2353,7 @@ class InterfazCls(Frame, MoveAllCls):
                 self.frame_botones .pack (side=LEFT, fill=BOTH)
                 self.frame_botones .focus_set()
 
-                # Dice: Si la casilla N°7 está marcada:
-                """ if self.frame_configurer .checkbutton7 .variable.get() == True:
-                    self.unbind("", self.off_move)  # Desactiva
-
-                # Dice: Si la casilla N°7 no está marcada:
-                else:
-                    self.off_move = self.bind_all("<B1-Motion>", self.on_move_all)  # Activa
-                """
     
-    """ def move_windows_global(self):
-        pass
-        print(2222)
-        if not self.move == True:
-            self.moveglobal = True
-            self.off_move = self.bind_all("<B1-Motion>", self.access_move_all)
-
-        else:
-            self.moveglobal = False
-            self.unbind("", self.off_move)       
-         """
-
-
     # Tarea: 1- [Busca y Marca] el boton que inició las ventanas secundarias:
     def focus_in(self, event):
         # Entrada del foco a la ventana principal:
@@ -2403,13 +2421,14 @@ class InterfazCls(Frame, MoveAllCls):
                 # [ 1 ]  :  Actualiza las ventanas cerradas para volver a abrirlas
                 # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default
                 
-                self.off_destroy = window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
-                window .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
+                window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
+                #self.off_leave   = window .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
 
                 # Description: Actualiza la lista de ventanas y booleanos
                 self._windows[i] = window
                 self._open[i] = True
 
+                #self.off_leave   = self._windows[i] .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
 
             # Description: Reemplaza los elementos[None] de la lista *container*
             container[i] = args[i] (self._windows[i])
@@ -2433,7 +2452,7 @@ class InterfazCls(Frame, MoveAllCls):
             self.grip .place (relx=1.0, rely=1.0, anchor='center')
             ttk.Style().configure('TSizegrip', bg='black')
 
-
+        
             #--------------------------------CONFIGURACION DEL LOGOTIPO-------------------------------------------
 
             #____Eventos:
@@ -2456,7 +2475,7 @@ class InterfazCls(Frame, MoveAllCls):
                 self.mobil_selected = name
                 break
     
-
+        self.off_leave   = self._windows[0] .bind('<Leave>', lambda event, number=0: self.forget_container_icons(number, event))            
 
     # Tarea: - Actualizar las ventanas cerradas para volver a abrirlas
     def update_open(self, number, event=None):
@@ -2492,6 +2511,18 @@ class InterfazCls(Frame, MoveAllCls):
             self._windows[number] .cascade = False
             self._windows[number] .icons_interface .pack_forget()
             self._frame[number] .pack(fill='both', expand=True)
+
+    
+    # Tarea: - Desactiva el evento y cambia la imagen a dark
+    def deactivate_forget_icons(self, event=None):
+        self._windows[0] .unbind('<Leave>', self.off_leave)
+
+        #self.master.unbind("<Button-1>", self.off_button)
+    
+    # Tarea: - Activa el evento y cambia la imagen a light
+    def activate_forget_icons(self, event=None):
+        pass
+        #self.off_leave   = self._windows[0] .bind('<Leave>', lambda event, number=0: self.forget_container_icons(number, event))
 
 
 
