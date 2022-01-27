@@ -2422,13 +2422,12 @@ class InterfazCls(Frame, MoveAllCls):
                 # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default
                 
                 window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
-                self.off_leave   = window .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
+                self.off_leave1 = window .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
 
                 # Description: Actualiza la lista de ventanas y booleanos
                 self._windows[i] = window
                 self._open[i] = True
 
-                #self.off_leave   = self._windows[i] .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
 
             # Description: Reemplaza los elementos[None] de la lista *container*
             container[i] = args[i] (self._windows[i])
@@ -2475,7 +2474,6 @@ class InterfazCls(Frame, MoveAllCls):
                 self.mobil_selected = name
                 break
     
-        self.off_leave   = self._windows[0] .bind('<Leave>', lambda event, number=0: self.forget_container_icons(number, event))            
 
     # Tarea: - Actualizar las ventanas cerradas para volver a abrirlas
     def update_open(self, number, event=None):
@@ -2513,23 +2511,26 @@ class InterfazCls(Frame, MoveAllCls):
             self._frame[number] .pack(fill='both', expand=True)
 
     
-    # Tarea: - Desactiva el evento y cambia la imagen a dark
+    # Tarea: - Desactiva el evento
     def deactivate_forget_icons(self, event=None):
-        self._windows[0] .unbind('<Leave>', self.off_leave)
 
-
+        # Description: Desactiva el evento que quita la interface vertical de botones
+        for i in range(len(self._open)):
+            self._windows[i] .unbind('<Leave>', self.off_leave1)
+        
+        # Description: Activa el evento que quita la interface vertical de botones
         self.off_leave2 = self._windows[0] .bind('<Leave>', lambda arg:self._windows[0].icons_interface.frame_container_global_1 .pack_forget())
 
-        #self.master.unbind("<Button-1>", self.off_button)
-    
+        
     # Tarea: - Activa el evento y cambia la imagen a light
     def activate_forget_icons(self, event=None):
+        
+        # Description: Desactiva el evento que quita la inte
+        for i in range(len(self._open)):
+            self._windows[0] .unbind('<Leave>', self.off_leave2)
+
+        # Description: Activa el evento que quita la interface vertical de botones
         self.off_leave   = self._windows[0] .bind('<Leave>', lambda event, number=0: self.forget_container_icons(number, event))
-
-
-        self._windows[0] .unbind('<Leave>', self.off_leave2)
-
-
 
 
 
