@@ -921,6 +921,7 @@ class IconsCls(Frame):
 
 
     def create_item_B(self):
+        pass
 
         label_1 = Label (self.frame_container_settings, text= 'Deshabilitar desplazamiento\nde ventana :' , font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
         label_2 = Label (self.frame_container_settings, text= 'Bloquear ventana :' , font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
@@ -932,7 +933,7 @@ class IconsCls(Frame):
 
         self.checkbutton1 = CheckbuttonCls(self.frame_container_settings, command=lambda *arg:self.seleccionar(1, self.indice2), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
         self.checkbutton2 = CheckbuttonCls(self.frame_container_settings, command=lambda *arg:self.seleccionar(2, self.indice2), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
-
+       
         #____Posicionamiento:
         self.checkbutton1 .grid(column=1, row=0, padx=(0,0), pady=(10,0))
         self.checkbutton2 .grid(column=1, row=1, padx=(0,0), pady=(0,0))
@@ -1014,7 +1015,6 @@ class IconsCls(Frame):
             else:
                 # Description: Oculta la interface de botones.
                 self.frame_container_global_1 .pack_forget()
-
 
 
     # Tarea: - Ejecutar el metodo: [ open_interface_buttons ] no se bien
@@ -2422,7 +2422,7 @@ class InterfazCls(Frame, MoveAllCls):
                 # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default
                 
                 window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
-                #self.off_leave   = window .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
+                self.off_leave   = window .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
 
                 # Description: Actualiza la lista de ventanas y booleanos
                 self._windows[i] = window
@@ -2517,13 +2517,17 @@ class InterfazCls(Frame, MoveAllCls):
     def deactivate_forget_icons(self, event=None):
         self._windows[0] .unbind('<Leave>', self.off_leave)
 
+
+        self.off_leave2 = self._windows[0] .bind('<Leave>', lambda arg:self._windows[0].icons_interface.frame_container_global_1 .pack_forget())
+
         #self.master.unbind("<Button-1>", self.off_button)
     
     # Tarea: - Activa el evento y cambia la imagen a light
     def activate_forget_icons(self, event=None):
-        pass
-        #self.off_leave   = self._windows[0] .bind('<Leave>', lambda event, number=0: self.forget_container_icons(number, event))
+        self.off_leave   = self._windows[0] .bind('<Leave>', lambda event, number=0: self.forget_container_icons(number, event))
 
+
+        self._windows[0] .unbind('<Leave>', self.off_leave2)
 
 
 
