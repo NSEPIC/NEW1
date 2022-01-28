@@ -1,3 +1,4 @@
+from tkinter.tix import Tree
 from Importaciones import *
 
 # INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
@@ -771,6 +772,7 @@ class IconsCls(Frame):
 
         #____CONTENEDOR EXTERIOR 1:
         self.frame_container_global_1 = Frame(self, bg="#1b1d22",)                      # Color(fondo): Gris oscuro
+        self.frame_container_global_1 .pack(side='left', fill='y', expand=False)
 
         #____Peso de distribucion:
         self.frame_container_global_1 .columnconfigure(0, weight=1)
@@ -780,12 +782,16 @@ class IconsCls(Frame):
         self.frame_container_global_1 .rowconfigure(3, weight=0)
         self.frame_container_global_1 .rowconfigure(4, weight=1)
 
-        #self.master.bind('<Leave>', lambda arg:self.frame_container_global_1 .pack_forget())
+        #self.frame_container_global_1 .bind('<Leave>', lambda arg:self.frame_container_global_1 .pack_forget())
 
         #self.off_leave  = self.bind ('<Leave>', lambda arg:self.label_text_mostrar_77 ..pack_forget()) 
             
         #________Metodos Llamados:
         self.create_item_1()
+    
+    def remove_container_global_1(self):
+        print(22222222233333333333333)
+        self.frame_container_global_1 .pack_forget()
 
 
     # Tarea: - Crea los widgets internos de la interface vertical de botones
@@ -1001,16 +1007,18 @@ class IconsCls(Frame):
         if not self.variable:
             # Description: Coordenada 'x' del mouse.      
             x = self.winfo_pointerx() - self.winfo_rootx()
+            print(x)
 
             # MUESTRA INTERFACE
-            if 0 <= (x) < 37:
+            if 0 <= (x) < 38:
                 # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1. [fraccion: para visualizar la interface de botones ]
                 self.frame_container_global_2 .pack_forget()
                 self.frame_container_global_2 .pack(side='right', fill='both', expand=True)
 
                 # Description: Muestra la interface de botones.
+                print('__________')
                 self.frame_container_global_1 .pack(side='left', fill='y', expand=False)
-
+                
             # OCULTA INTERFACE
             else:
                 # Description: Oculta la interface de botones.
@@ -2206,6 +2214,8 @@ class InterfazCls(Frame, MoveAllCls):
         self.mobiles = ['Frog', 'Fox', 'Boomer', 'Ice', 'J.d', 'Grub', 'Lightning', 'Aduka', 'Knight', 'Kalsiddon', 'Mage',
                         'Randomizer', 'Jolteon', 'Turtle', 'Armor','A.sate', 'Raon', 'Trico', 'Nak', 'Bigfoot', 'Barney', 'Dragon']
 
+        self._deactivate = False
+
 
         #____Enlaces: Mueven las Ventanas Globalmente:
         self.bind_all("<ButtonPress-1>", self.start_move_all)             # Punto inicial    
@@ -2424,9 +2434,15 @@ class InterfazCls(Frame, MoveAllCls):
                 window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
                 self.off_leave1 = window .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
 
+                # Description: Desactiva el evento que quita la interface vertical de botones
+
                 # Description: Actualiza la lista de ventanas y booleanos
                 self._windows[i] = window
                 self._open[i] = True
+
+                # Description: Desactiva el evento que quita la interface vertical de botones
+                if self._deactivate:
+                    self._windows[i] .unbind('<Leave>', self.off_leave1)
 
 
             # Description: Reemplaza los elementos[None] de la lista *container*
@@ -2436,6 +2452,7 @@ class InterfazCls(Frame, MoveAllCls):
             if self._frame[i] is not None:
                 self._frame[i] .destroy()
                 # Description: Recrea la interface al destruirse su contenedor
+                self._windows[i] .icons_interface .destroy()
                 self._windows[i] .create_container_icons(mobil, i, self._disabled[i])
 
             self._frame[i] = container[i]
@@ -2504,34 +2521,51 @@ class InterfazCls(Frame, MoveAllCls):
 
     # Tarea: - Ocultar la interface de menu y volver a mostrar la interface por default.
     def forget_container_icons(self, number, event=None):
+        print(111111111)
         # Dice: Si el widget que desencadeno el evento es la ventana:
-        if event.widget == self._windows[number]:
-            self._windows[number] .cascade = False
-            self._windows[number] .icons_interface .pack_forget()
-            self._frame[number] .pack(fill='both', expand=True)
+        if isinstance(event.widget, Toplevel):
+            if not self._deactivate:
+                if event.widget == self._windows[number]:
+                    self._windows[number] .cascade = False
+                    self._windows[number] .icons_interface .pack_forget()
+                    self._frame[number] .pack(fill='both', expand=True)
+            print(11)
+        
+            self._windows[number] .icons_interface .remove_container_global_1()
 
     
     # Tarea: - Desactiva el evento
     def deactivate_forget_icons(self, event=None):
-
+        pass
+        self._deactivate = True
+        #--------------------------------------------------- DESACTIVAR EVENTO " A " -------------------------------------------------------------------
         # Description: Desactiva el evento que quita la interface vertical de botones
-        for i in range(len(self._open)):
-            self._windows[i] .unbind('<Leave>', self.off_leave1)
-        
+        """ for i in range(len(self._open)):
+            if self._windows[i] is not None:
+                self._windows[i] .unbind('<Leave>', self.off_leave1)
+
+            else:
+                self._deactivate = True """
+
+        #----------------------------------------------------- ACTIVAR EVENTO " B " --------------------------------------------------------------------
         # Description: Activa el evento que quita la interface vertical de botones
-        self.off_leave2 = self._windows[0] .bind('<Leave>', lambda arg:self._windows[0].icons_interface.frame_container_global_1 .pack_forget())
+        #self.off_leave2 = self._windows[0] .bind('<Leave>', lambda arg:self._windows[0].icons_interface.frame_container_global_1 .pack_forget())
 
         
     # Tarea: - Activa el evento y cambia la imagen a light
     def activate_forget_icons(self, event=None):
-        
+        pass
+        self._deactivate = False
+        #--------------------------------------------------- DESACTIVAR EVENTO " B " -------------------------------------------------------------------
         # Description: Desactiva el evento que quita la inte
-        for i in range(len(self._open)):
-            self._windows[0] .unbind('<Leave>', self.off_leave2)
+        """ for i in range(len(self._open)):
+            self._windows[0] .unbind('<Leave>', self.off_leave2) """
 
+        #----------------------------------------------------- ACTIVAR EVENTO " A " --------------------------------------------------------------------
         # Description: Activa el evento que quita la interface vertical de botones
-        self.off_leave   = self._windows[0] .bind('<Leave>', lambda event, number=0: self.forget_container_icons(number, event))
-
+        """ for i in range(len(self._open)):
+            self.off_leave1 = self._windows[i] .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
+        """
 
 
 def main (): #-----------------------------------------------
