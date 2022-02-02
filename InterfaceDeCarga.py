@@ -57,7 +57,7 @@ def bar():
     new_win()
         
     
-progress.place(x=-10,y=235)
+progress.place(x=-10,y=233)
 
 
 
