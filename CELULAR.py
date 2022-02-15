@@ -813,10 +813,22 @@ class IconsCls(Frame):
 
 
     def _deactivate_motion(self, event=None):
+        print(3333333333333333333333333333333333333333333333333)
         pass
-        print(111111111) # hacer que cusndo se presione b1 motion se pare la secuencia para borrar la interface verticsl y si no esta visible que no aparezca y lo contrario
         self.master.unbind("<Motion>", self.off_motion)
 
+        """ e= event.x
+        #print(111111111) # hacer que cusndo se presione b1 motion se pare la secuencia para borrar la interface verticsl y si no esta visible que no aparezca y lo contrario
+        #self.master.unbind("<Motion>", self.off_motion)
+        if self.frame_container_global_1.winfo_ismapped():
+            #print('______ismaped_______________', e)
+            self.frame_container_global_2 .pack_forget()
+            self.frame_container_global_2 .pack(side='right', fill='both', expand=True)
+
+            # Description: Muestra la interface de botones.
+            self.frame_container_global_1 .pack(side='left', fill='y', expand=False)
+        else:
+            self.frame_container_global_1 .pack_forget() """
 
 
     ###########################################################################################################################################
@@ -1171,7 +1183,7 @@ class IconsCls(Frame):
         
     # Tarea: - Desactivar el evento motion
     def deactivate_motion(self, event=None):
-        self.master.unbind("<B1-Motion>", self.off_b1_motion)
+        #self.master.unbind("<B1-Motion>", self.off_b1_motion)
         print('error 2')
         self.master.unbind("<Motion>", self.off_motion)
 
@@ -1775,6 +1787,7 @@ class MoveAllCls():
 
         # [ 1 ] : Ventana principal
         # [ 2 ] : Ventanas secundarias
+        # [ 3 ] : 
 
         self.principal   = window
         self.secundarias = windows      
@@ -1802,6 +1815,10 @@ class MoveAllCls():
         self._x = None
         self._y = None
 
+        #self._displace = None
+
+        #print('____stop___', self._displace)
+
     def access_move_all(self, event):
         # [self.movable]   : Lista que permite mover su ventana
         # [self.immovable] : Lista que no permite mover su ventana
@@ -1825,7 +1842,9 @@ class MoveAllCls():
         for i in range(3):
             if self.window == self.secundarias[i] and self._booleans[i]:
                 if not self._disabled[i]:
+                    #self._displace = 'desplazando ventana'
                     self.on_move_all()
+                    #print('___access move____', self._displace)
         
         
 
