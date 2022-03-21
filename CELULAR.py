@@ -762,7 +762,7 @@ class IconsCls(Frame):
     def __init__(self, master, path_lst1=None, path_lst2=None, indice1=None, indice2=None, frames=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
 
-        #____Variables de control: Indice del boton presionado(0-21)
+        #____Variable de control: Indice del boton presionado(0-21)
         self.indice1 = indice1
 
         #____Variable de Control: (if-else)
@@ -794,7 +794,6 @@ class IconsCls(Frame):
         
 
         #____Enlaces: 
-        #self.master.bind('<Motion>',self.open_interface_buttons)
         self.master.bind("<ButtonRelease-1>", self._release)
         self.bind('<Map>', self.activate_motion)
         self.bind('<Unmap>', self.deactivate_motion)
@@ -804,18 +803,13 @@ class IconsCls(Frame):
         self.create_container_1()
         self.create_container_2()
         self.create_list_interfaces()
-
-
-        self.grip = ttk.Sizegrip(self, style='TSizegrip')
-        self.grip .place (relx=1.0, rely=1.0, anchor='center')
-        ttk.Style().configure('TSizegrip', bg='black')
-        
+        self.create_sizegrip()
 
 
     def _deactivate_motion(self, event=None):
         print(3333333333333333333333333333333333333333333333333)
         pass
-        self.master.unbind("<Motion>", self.off_motion)
+        #self.master.unbind("<Motion>", self.off_motion)
 
         """ e= event.x
         #print(111111111) # hacer que cusndo se presione b1 motion se pare la secuencia para borrar la interface verticsl y si no esta visible que no aparezca y lo contrario
@@ -830,6 +824,11 @@ class IconsCls(Frame):
         else:
             self.frame_container_global_1 .pack_forget() """
 
+    # Tarea: - Crear el sizegrip     
+    def create_sizegrip(self):
+        self.grip = ttk.Sizegrip(self, style='TSizegrip')
+        self.grip .place (relx=1.0, rely=1.0, anchor='center')
+        ttk.Style().configure('TSizegrip', bg='black')
 
     ###########################################################################################################################################
     ######################################################  INTERFACE VERTICAL DE BOTONES  ####################################################
@@ -883,31 +882,36 @@ class IconsCls(Frame):
         self.button_4 .grid(column=0, row=3, padx=5, pady=5)
         self.button_5 .grid(column=0, row=4, padx=5, pady=30, sticky='s')
 
+
+        #------------------ EVENTOS ENLAZADOS A LOS BOTONES ---------------------
+
         #____Eventos:
-        self.button_1 .bind('<ButtonPress>', self.iniciar_test)
-        self.button_2 .bind('<ButtonPress>', self.iniciar_test)
-        self.button_3 .bind('<ButtonPress>', self.iniciar_test)
-        self.button_4 .bind('<ButtonPress>', self.iniciar_test)
-        self.button_5 .bind('<ButtonPress>', self.iniciar_test)
+        #________________________________________________________
+        self.button_1 .bind('<ButtonPress>',   self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_1 .bind('<ButtonRelease>', self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        #________________________________________________________
+        self.button_2 .bind('<ButtonPress>',   self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_2 .bind('<ButtonRelease>', self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        #________________________________________________________
+        self.button_3 .bind('<ButtonPress>',   self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_3 .bind('<ButtonRelease>', self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        #________________________________________________________
+        self.button_4 .bind('<ButtonPress>',   self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_4 .bind('<ButtonRelease>', self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        #________________________________________________________
+        self.button_5 .bind('<ButtonPress>',   self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_5 .bind('<ButtonRelease>', self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        self._off_ = self.button_5 .bind("<Enter>", self.enter_mouse_settings)              # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_5              .bind("<Leave>", self.leave_mouse_settings)              # Reiniciar el cronometro y mostrar la interface de botones
+        #________________________________________________________
 
-        self.button_1 .bind('<ButtonRelease>', self.iniciar_test)
-        self.button_2 .bind('<ButtonRelease>', self.iniciar_test)
-        self.button_3 .bind('<ButtonRelease>', self.iniciar_test)
-        self.button_4 .bind('<ButtonRelease>', self.iniciar_test)
-        self.button_5 .bind('<ButtonRelease>', self.iniciar_test)
-        
-        self.off_enter = self.button_5 .bind("<Enter>", self.enter_mouse_settings)
-        self.button_5 .bind("<Leave>", self.leave_mouse_settings)
 
-
-    #------------------ EVENTOS ENLAZADOS A LOS BOTONES ---------------------
-
-    #--------- BUTTON 5 ---------
-
+    # Tarea: -  Cambiar la imagen del boton setting a encendido
     def enter_mouse_settings(self, event=None):
         # Evento: Entrada del mouse sobre el boton.
         event.widget.config(image=self.Icons_1[5])
 
+    # Tarea: -  Cambiar la imagen del boton setting a apagado    
     def leave_mouse_settings(self, event=None):
         # Evento: Salida del mouse sobre el boton.
         event.widget.config(image=self.Icons_1[4])
@@ -919,7 +923,7 @@ class IconsCls(Frame):
     ###################################################  INTERFACE DERECHA DE DESARROLLO  #####################################################
     
 
-    # Tarea: - Crear la interface derecha contenedor del logo
+    # Tarea: -  Crear la interface derecha contenedor del logo
     def create_container_2(self):
         #--------------------------------------CONTENEDOR GLOBAL---------------------------------------------------------------------------
 
@@ -979,7 +983,7 @@ class IconsCls(Frame):
     # Tarea: - Desactiva el evento y cambia la imagen a dark
     def deactivate_enter_settings(self, event=None):
         # Description: Desactiva el evento para cambiar la imagen del boton setting a encendido
-        self.button_5 .unbind('<Enter>', self.off_enter)
+        self.button_5 .unbind('<Enter>', self._off_)
         
         # Description: Cambia la imagen del boton setting a apagado
         self.button_5 .config(image=self.Icons_1[4])
@@ -987,7 +991,7 @@ class IconsCls(Frame):
     # Tarea: - Activa el evento y cambia la imagen a light
     def activate_enter_settings(self, var=None, vent=None):
         # Description: Activa el evento para cambiar la imagen del boton setting a encendido
-        self.off_enter = self.button_5 .bind('<Enter>', self.enter_mouse_settings)
+        self._off_ = self.button_5 .bind('<Enter>', self.enter_mouse_settings)
 
         # Description: Si se llama al metodo con el argumento 1 cambia la imagen del boton setting a encendido
         if var == 1:
@@ -1202,6 +1206,8 @@ class IconsCls(Frame):
         # [ 2 ] : self.frame_container_album_2           : Contenedor: Imagenes para mostrar el delay general       active: [Boton 2]
         self.list_interfaces = [self.frame_image_guiadetiro, self.frame_container_album_2, self.frame_container_settings]
 
+
+
     def checked(self):
         self.checkbutton1 .check()
 
@@ -1238,7 +1244,7 @@ class TopIzqCls(Frame):
         self.Icons = icon_lst1
         self.Mobiles = icon_lst2
 
-        #____Variables de Control: Indice de la sublista.
+        #____Variables de Control: Indice de la sublista de b
         self.indice = indice
 
         #____Lista de indices de las imagenes:
@@ -1250,6 +1256,10 @@ class TopIzqCls(Frame):
         self._5 = arg_5
         self._6 = arg_6
         self._7 = arg_7
+
+
+        self._start = None
+        self._btn = None
 
         #____Peso de distribucion principal:
         self.grid_columnconfigure(0, weight=1)
@@ -1335,7 +1345,7 @@ class TopIzqCls(Frame):
     def change_interfaces(self, number):
         if number == 0:
             self.frame_container_global_1 .grid_remove()
-            self.frame_container_global_2 .grid()
+            self.frame_container_global_2 .pack(fill='both', expand=True)
 
 
 
@@ -1346,18 +1356,14 @@ class TopIzqCls(Frame):
 
         #____CONTENEDOR EXTERIOR 2:
         self.frame_container_global_2 = Frame(self)
-        self.frame_container_global_2 .grid(column=0, row=0, sticky='news')
+        self.frame_container_global_2 .pack(fill='both', expand=True)
 
         #____CONTENEDOR INTERIOR:
         self.frame_container_widgets_2 = Frame(self.frame_container_global_2, bg='#1b1d22', bd=0, height=42)
-        self.frame_container_widgets_2 .grid(column=0, row=0, sticky='news')
+        self.frame_container_widgets_2 .pack(fill='both')
 
-        #____Peso de distribucion:
-        self.frame_container_global_2 .columnconfigure(0, weight=1)
-        self.frame_container_global_2 .rowconfigure   (0, weight=0)
-        self.frame_container_global_2 .rowconfigure   (1, weight=1)
 
-        #____Peso de distribucion:
+        #____Peso de distribucion: Contenedor Interior
         self.frame_container_widgets_2 .columnconfigure(0, weight=1)
         self.frame_container_widgets_2 .columnconfigure(1, weight=1)
         self.frame_container_widgets_2 .columnconfigure(2, weight=1)
@@ -1370,39 +1376,39 @@ class TopIzqCls(Frame):
 
     def create_items_2(self):
         #____BOTONES: ( 4 )
-        self.button_0 = Button(self.frame_container_widgets_2, text='Atrás', font=('Calibri',8,'bold'), command=lambda:self.change_image(0), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_1 = Button(self.frame_container_widgets_2, text='Laser', font=('Calibri',8,'bold'), command=lambda:self.change_image(1), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_2 = Button(self.frame_container_widgets_2, text='Raon', font=('Calibri',8,'bold'), command=lambda:self.change_image(2), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_3 = Button(self.frame_container_widgets_2, text='Reset', font=('Calibri',8,'bold'), command=lambda:self.change_image(3), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_4 = Button(self.frame_container_widgets_2, text='Más', font=('Calibri',8,'bold'), command=lambda:self.change_image(4), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
-        self.button_5 = Button(self.frame_container_widgets_2, text='Otros', font=('Calibri',8,'bold'), command=lambda:self.change_image(5), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_1 = Button(self.frame_container_widgets_2, text='Atrás', font=('Calibri',8,'bold'), command=lambda:self.start_test(1), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_2 = Button(self.frame_container_widgets_2, text='Chart', font=('Calibri',8,'bold'), command=lambda:self.start_test(2), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2', state='disabled')
+        self.button_3 = Button(self.frame_container_widgets_2, text='Otros', font=('Calibri',8,'bold'), command=lambda:self.start_test(3), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2', state='disabled')
+        self.button_4 = Button(self.frame_container_widgets_2, text='Extra', font=('Calibri',8,'bold'), command=lambda:self.start_test(4), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_5 = Button(self.frame_container_widgets_2, text='Laser', font=('Calibri',8,'bold'), command=lambda:self.start_test(5), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
+        self.button_6 = Button(self.frame_container_widgets_2, text='Más',   font=('Calibri',8,'bold'), command=lambda:self.start_test(6), bg='#2b313c', fg='white', activebackground='#4ca6ff', activeforeground='white', bd=0, cursor='hand2')
 
         #____Posicionamiento:
-        self.button_0 .grid(column=0, row=0, pady=(0,1), padx=(2), sticky='news')
-        self.button_1 .grid(column=1, row=0, pady=(0,1), sticky='news' )
-        self.button_2 .grid(column=2, row=0, pady=(0,1), padx=(2), sticky='news')
-        self.button_3 .grid(column=0, row=1, pady=(1,2), padx=(2), sticky='news')
-        self.button_4 .grid(column=1, row=1, pady=(1,2), sticky='news')
-        self.button_5 .grid(column=2, row=1, pady=(1,2), padx=(2), sticky='news')
+        self.button_1 .grid(column=0, row=0, pady=(0,1), padx=(2), sticky='news')
+        self.button_2 .grid(column=1, row=0, pady=(0,1), sticky='news' )
+        self.button_3 .grid(column=2, row=0, pady=(0,1), padx=(2), sticky='news')
+        self.button_4 .grid(column=0, row=1, pady=(1,2), padx=(2), sticky='news')
+        self.button_5 .grid(column=1, row=1, pady=(1,2), sticky='news')
+        self.button_6 .grid(column=2, row=1, pady=(1,2), padx=(2), sticky='news')
 
         #____Enlaces:
-        self.button_0 .bind("<Enter>", self.enter_mouse)
-        self.button_0 .bind("<Leave>", self.leave_mouse)
-
         self.button_1 .bind("<Enter>", self.enter_mouse)
         self.button_1 .bind("<Leave>", self.leave_mouse)
 
         self.button_2 .bind("<Enter>", self.enter_mouse)
         self.button_2 .bind("<Leave>", self.leave_mouse)
-        
+
         self.button_3 .bind("<Enter>", self.enter_mouse)
         self.button_3 .bind("<Leave>", self.leave_mouse)
-
+        
         self.button_4 .bind("<Enter>", self.enter_mouse)
         self.button_4 .bind("<Leave>", self.leave_mouse)
 
         self.button_5 .bind("<Enter>", self.enter_mouse)
         self.button_5 .bind("<Leave>", self.leave_mouse)
+
+        self.button_6 .bind("<Enter>", self.enter_mouse)
+        self.button_6 .bind("<Leave>", self.leave_mouse)
 
         #------------------------------------------------------------------------------------------------------
         # [ 1 ] self.frame_image_delay_trico  : Imagen -->  Base por defecto + delay trico
@@ -1416,45 +1422,120 @@ class TopIzqCls(Frame):
         self.frame_image_1forma = ResizeCls(self.frame_container_global_2, self.Images[17][4], value2=42, bd=0)
         self.frame_image_laser = ResizeCls(self.frame_container_global_2, self.Images[17][5], value2=42, bd=0)
 
-        #____Orden de apilamiento de imagenes:
-        self.frame_image_delay_trico .lift()
-
         #____Posicionamiento:
-        self.frame_image_delay_trico .grid(column=0, row=1, sticky='news')
-        self.frame_image_delay_raon .grid(column=0, row=1, sticky='news')
-        self.frame_image_1forma .grid(column=0, row=1, sticky='news')
-        self.frame_image_laser .grid(column=0, row=1, sticky='news')
+        self.frame_image_delay_trico .pack(fill='both', expand=True)
+        #self.frame_image_delay_raon .pack(fill='both', expand=True)
+        #self.frame_image_1forma .pack(fill='both', expand=True)
+        #self.frame_image_laser .pack(fill='both', expand=True)
+
+        self.collection = [None, self.frame_image_delay_trico, None, None, self.frame_image_1forma, self.frame_image_laser, self.frame_image_delay_raon]
+
+
+    def start_test(self, number):
+        # [ 1 ] : number           : Número asignado al botón presionado
+        # [ 2 ] : self._start      : Controla la direccion de ejecucion
+        # [ 3 ] : self._indice     : Indice de la lista de imagenes actualmente visible
+
+
+        # Descroption(if): Solo se ejecuta 1 vez cuando es creado el contenedor global
+        if self._start is None:
+            self._start = number                     # Guarda el numero del boton
+            self._indice = 1                         # Asigna el indice de la imagen por default
+
+            # Description: Metodo llamado
+            self.change_image(number)
+
+
+        # Descroption(elif): Si se presiona el mismo boton anterior, quita la imagen visible actual + posiciona la imagen por default
+        elif self._start == number and number != 1:
+            # Description: Hace de controlador (if/else)
+            self._start = '...'
+
+            # Description: Quita la imagen actualmente visible
+            self.collection[self._indice] .pack_forget()
+
+            # Description: Posiciona la imagen por default
+            self.collection[1] .pack(fill='both', expand=True)
+
+            # Description: Llama al metodo de la ventana derecha y posiciona la imagen por default
+            self.master.frames[1].change_image(0, self._indice)
+
+            # Description: Actualiza el indice actualmente posisionado
+            self._indice = 1
+
+
+        else:
+            self.change_image(number)
+
 
 
     def change_image(self, number):
-        if number == 0:
+
+        #--------------------------------- ATRAS --------------------------------------
+        if number == 1:
             # Description: Quita la interface del trico
-            self.frame_container_global_2 .grid_remove()
-            # Description: Crea la interface standar del mobil
+            self.frame_container_global_2 .pack_forget()
+            # Description: Crea la interface standar del mobil y el sizegrip
             self.create_container_1()
+            self.create_sizegrip()
 
-        elif number == 1:
-            self.frame_image_laser .lift()
-            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
-            self.master.frames[1].change_image(number)
-
+            
+        #--------------------------- (CHART) DISABLED ---------------------------------
         elif number == 2:
-            self.frame_image_delay_raon .lift()
-            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
-            self.master.frames[1].change_image(number)
-
-        elif number == 3:
-            self.frame_image_delay_trico .lift()
-            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
-            self.master.frames[1].change_image(number)
-
-        elif number == 4:
-            self.frame_image_1forma .lift()
-            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
-            self.master.frames[1].change_image(number)
-        
-        elif number == 5:
             pass
+
+
+        #--------------------------- (OTROS) DISABLED ---------------------------------
+        elif number == 3:
+            pass
+
+
+        #-------------------------------- EXTRA ---------------------------------------
+        elif number == 4:
+            # Description: Quita la imagen actual + Posiciona la nueva imagen
+            self.collection[self._indice] .pack_forget()
+            self.collection[number] .pack(fill='both', expand=True)
+            
+            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
+            self.master.frames[1].change_image(number, self._indice)
+
+            # Description: Almacenan el numero del boton presionado
+            self._indice = number
+            self._start = self._indice
+
+
+        #-------------------------------- LASER ---------------------------------------
+        elif number == 5:
+            # Description: Quita la imagen actual y posiciona la nueva imagen
+            self.collection[self._indice] .pack_forget()
+            self.collection[number] .pack(fill='both', expand=True)
+            
+            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
+            self.master.frames[1].change_image(number, self._indice)
+
+            # Description: Almacenan el numero del boton presionado
+            self._indice = number
+            self._start = self._indice
+        
+
+        #---------------------------------- MÁS ---------------------------------------
+        elif number == 6:
+            # Description: Quita la imagen actual y posiciona la nueva imagen
+            self.collection[self._indice] .pack_forget()
+            self.collection[number] .pack(fill='both', expand=True)
+            
+            # Description: Llama al metodo de la ventana derecha para cambiar el orden de apilamiento de las imagenes
+            self.master.frames[1].change_image(number, self._indice)
+
+            # Description: Almacenan el numero del boton presionado
+            self._indice = number
+            self._start = self._indice
+
+
+    def create_sizegrip(self):
+        self.grip = ttk.Sizegrip(self, style='TSizegrip')
+        self.grip .place (relx=1.0, rely=1.0, anchor='center')
+        ttk.Style().configure('TSizegrip', bg='black')
 
 
     def enter_mouse(self, event):
@@ -1626,31 +1707,62 @@ class TopDerCls(Frame):
         self.frame_image_delay_trico .lift()
 
         #____Posicionamiento:
-        self.frame_image_delay_trico .grid(column=0, row=0, sticky='news')
-        self.frame_image_laser       .grid(column=0, row=0, sticky='news')
-        self.frame_image_raon        .grid(column=0, row=0, sticky='news')
+        self.frame_image_delay_trico .pack(fill='both', expand=True)
+        #self.frame_image_laser       .grid(column=0, row=0, sticky='news')
+        #self.frame_image_raon        .grid(column=0, row=0, sticky='news')
+
+        self.collection2 = [self.frame_image_delay_trico, None, None, None, self.frame_image_laser, self.frame_image_raon]
 
     
     # Tarea: - Cambia el orden de apilamiento de las imagenes en la interface del trico
-    def change_image(self, number=None):
+    def change_image(self, number=None, prenumber=None):
+        prenumber-= 1
 
-        if number == 1:
-            self.frame_image_laser .lift()
+        if prenumber
+
+        if self.master.version is None:
+            pass
+            #if number == 5:
+        if prenumber == 1:
+            pass
+
+
+        if number == 1: #no se lllama
+            print('1:__  ',prenumber)
+            self.collection2[prenumber] .pack_forget()
+            self.collection2[0] .pack(fill='both', expand=True)
 
         elif number == 2:
-            self.frame_image_delay_trico .lift()
-
-            if self.master.version is not None:
-                self.frame_image_raon .lift()
+            print(2)
+            pass
 
         elif number == 3:
-            self.frame_image_delay_trico .lift()
+            print('3:__  ',prenumber)
+            pass
 
         elif number == 4:
-            self.frame_image_delay_trico .lift()
-        
+            print('4:__  ',prenumber)
+            pass
+
         elif number == 5:
             pass
+            print('5:__  ',prenumber)
+
+            #if self.var == '':
+            #    prenumber = 0
+            """ self.collection2[prenumber] .pack_forget()
+            self.collection2[number] .pack(fill='both', expand=True) """
+        
+        elif number == 6:
+            pass
+            print('6:__  ',prenumber)
+
+            """ if self.master.version is not None:
+                self.collection2[prenumber] .pack_forget()
+                self.collection2[number] .pack(fill='both', expand=True) """
+            #else:
+            #    self.var = ''
+            
 
 
     # Tarea: - Activar todas las opciones de imagenes que se pueden mostrar       
@@ -2044,8 +2156,8 @@ class ToplevelCls(Toplevel, MoveAllCls):
 
     def create_label_title(self, **kwargs):
         #____TITULO DE LA VENTANA:
-        self.label_title = Label(self.frame_manager, font=('Ghotam',8,'bold'), fg="white", bg="#1b1d22", bd=0, **kwargs)
-        self.label_title .pack(side=LEFT, padx=10, pady=0)
+        self.label_title = Label(self.frame_manager, font=('Ghotam',8,'bold'), fg="green2", bg="#1b1d22", bd=0, **kwargs)
+        self.label_title .pack(side=BOTTOM, padx=10, pady=0)
 
         #____Enlaces: Mueven la ventana
         self.label_title .bind("<ButtonPress-1>", self.start_move)
@@ -2542,7 +2654,7 @@ class InterfazCls(Frame, MoveAllCls):
 
         #____Lista de argumentos de los metodos de la ventana:
         title = ['Hoja Izquierda', 'Hoja Derecha', 'Game Stuff']
-        text  = ['AshmanBot:  1', 'AshmanBot:  2', 'AshmanBot:  3']
+        text  = ['1', '2', '3']
         size  = [self.geo_izq.get(), self.geo_der.get(), self.geo_stuf.get()]
         
 
@@ -2563,10 +2675,11 @@ class InterfazCls(Frame, MoveAllCls):
 
                 #____Eventos:
                 # [ 1 ]  :  Actualiza las ventanas cerradas para volver a abrirlas
-                # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default
+                # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default cuando el mouse sale de la ventana
                 
                 window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
                 self.off_leave1 = window .bind('<Leave>', lambda event, number=i: self.leave_windows(number, event))
+
 
                 # Description: Desactiva el evento que quita la interface vertical de botones
 
