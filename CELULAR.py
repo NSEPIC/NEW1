@@ -928,24 +928,11 @@ class IconsCls(Frame):
         #________________________________________________________
 
 
-    # Tarea: -  Cambiar la imagen del boton setting a encendido
-    def enter_mouse_settings(self, event=None):
-        # Evento: Entrada del mouse sobre el boton.
-        event.widget.config(image=self.Icons_1[5])
-
-    # Tarea: -  Cambiar la imagen del boton setting a apagado    
-    def leave_mouse_settings(self, event=None):
-        # Evento: Salida del mouse sobre el boton.
-        event.widget.config(image=self.Icons_1[4])
-
-
-
     ######################################################################################
     ######################################################################################
-    ##########################  COMMAND: GLOBAL 1  ###########################
+    ###########################  MÉTODOS[COMMAND]: GLOBAL 1  #############################
 
-    #________________________________________ 1 __________________________________________
-
+    #______________________________________ 1 __________________________________________
     # Tarea: - Muestra y oculta las imagenes del boton presionado
     def open_interface(self, number=None):
 
@@ -988,8 +975,11 @@ class IconsCls(Frame):
         self.option = number
 
 
-    #_____________________________________ 2 __________________________________________
+    ######################################################################################
+    ######################################################################################
+    #######################  METODOS[EVENTOS-CALLBACK]: GLOBAL 1  ########################
 
+    #_____________________________________ 1 __________________________________________
     # Tarea: -  Reiniciar el conometro y mostrar la interface de botones
     def iniciar_test(self, event=None):
          # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1. [fraccion: para visualizar la interface de botones ]
@@ -1007,8 +997,7 @@ class IconsCls(Frame):
         # Metodo llamado:
         self.timer()
 
-    #____________________________________ 2.1 _________________________________________
-
+    #____________________________________ 1.1 _________________________________________
     # Tarea: -  Iniciar el conometro para ocultar la interface de botones
     def timer(self):
         # Metodo llamado:
@@ -1023,12 +1012,24 @@ class IconsCls(Frame):
             # Description: Oculta la interface de botones.
             self.frame_container_global_1 .pack_forget()       
 
-    #____________________________________ 2.2 _________________________________________
-
+    #____________________________________ 1.2 _________________________________________
     # Tarea: -  Servir de conometro
     def run_timer(self):
         if self.conteo >= 0:
             self.conteo -= 1
+
+
+    #_____________________________________ 2 _________________________________________
+    # Tarea: -  Cambiar la imagen del boton setting a encendido
+    def enter_mouse_settings(self, event=None):
+        # Evento: Entrada del mouse sobre el boton.
+        event.widget.config(image=self.Icons_1[5])
+
+    #_____________________________________ 3 _________________________________________
+    # Tarea: -  Cambiar la imagen del boton setting a apagado    
+    def leave_mouse_settings(self, event=None):
+        # Evento: Salida del mouse sobre el boton.
+        event.widget.config(image=self.Icons_1[4])
 
 
 
@@ -1070,8 +1071,7 @@ class IconsCls(Frame):
 
 
     ###########################################################################################################################################
-    ################################  PRIMER SUBCONTENEDOR INTERNO  ###########################################################################
-
+    ################################  SUBCONTENEDOR 1: GLOBAL 2  ######################################################################
 
     # Tarea: - Crear el "PRIMER" subcontenedor interno del contenedor global 2     
     def create_subcontainer_1(self):
@@ -1102,7 +1102,7 @@ class IconsCls(Frame):
         self.image_delay3 = ResizeCls(self.glb2_frame_subcontainer_1, self.Images[22][2], 2, 10, bd=0)
 
         #____Orden de apilamiento de imagenes:
-        self.image_delay3 .lower()
+        self.image_delay3 .lower(). #_______^^¢^¢ ver utilidad
 
         #____Posicionamiento:
         self.image_delay1 .grid(column=0, row=0, sticky='news')
@@ -1124,11 +1124,16 @@ class IconsCls(Frame):
         self.button_next = Button(self.frame_manager_button, image=self.Icons_1[6], command=self.change_image, bg='#1b1d22', activebackground='#1b1d22', bd=0, cursor='hand2')
         self.button_next .pack()
 
-        #____Eventos:
+        #____Eventos(Callback):
         self.button_next .bind("<Enter>", self.enter_mouse_next)
         self.button_next .bind("<Leave>", self.leave_mouse_next)
 
 
+    ######################################################################################
+    ######################################################################################
+    ###########################  MÉTODOS[COMMAND]: GLOBAL 2  #############################
+    
+    #_____________________________________ 1 __________________________________________
     # Tarea: - Cambia el orden de apilamiento de las imagenes que estan en el subcontenedor 1
     def change_image(self):
         if not self.var2:
@@ -1138,20 +1143,26 @@ class IconsCls(Frame):
             self.var2 = False
             self.image_delay2 .lift()
 
+    ######################################################################################
+    ######################################################################################
+    #######################  MÉTODOS[EVENTOS-CALLBACK]: GLOBAL 2  ########################
 
+    #_____________________________________ 1 __________________________________________
     # Tarea: -  Cambiar la flecha de la imagen del boton next a celeste
     def enter_mouse_next(self, event=None):
         # Evento: Entrada del mouse sobre el boton.
         event.widget.config(image=self.Icons_1[7])
-
+    
+    #_____________________________________ 2 __________________________________________
     # Tarea: -  Cambiar la flecha de la imagen del boton next a blanco
     def leave_mouse_next(self, event=None):
         # Evento: Salida del mouse sobre el boton.
         event.widget.config(image=self.Icons_1[6])
 
 
+
     ###########################################################################################################################################
-    ###################################################  SEGUNDO SUBCONTENEDOR INTERNO  #####################################################
+    ################################  SUBCONTENEDOR 2: GLOBAL 2  ##############################################################################
 
     # Tarea: - Crear el "SEGUNDO" subcontenedor interno del contenedor global 2     
     def create_subcontainer_2(self):
@@ -1167,7 +1178,7 @@ class IconsCls(Frame):
         self.frame_container_settings .rowconfigure(1, weight=1)
         self.frame_container_settings .rowconfigure(2, weight=1) """
 
-        #____Eventos:
+        #____Eventos(Callback):
         self.glb2_frame_subcontainer_2_settings .bind('<Map>', self.deactivate_enter_settings) 
         self.glb2_frame_subcontainer_2_settings .bind('<Unmap>', self.activate_enter_settings) 
 
