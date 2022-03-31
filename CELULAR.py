@@ -1,4 +1,3 @@
-from tkinter.tix import Tree
 from Importaciones import *
 
 # INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
@@ -907,7 +906,7 @@ class IconsCls(Frame):
         self.button_5 .grid(column=0, row=4, padx=5, pady=30, sticky='s')
 
 
-        #------------------ EVENTOS ENLAZADOS A LOS BOTONES ---------------------
+        #____Eventos(Callback):
 
         #________________________________________________________
         self.button_1 .bind('<ButtonPress>',   self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
@@ -925,7 +924,7 @@ class IconsCls(Frame):
         self.button_5 .bind('<ButtonPress>',   self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
         self.button_5 .bind('<ButtonRelease>', self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
         self.off_enter = self.button_5 .bind("<Enter>", self.enter_mouse_settings)          # Reiniciar el cronometro y mostrar la interface de botones
-        self.button_5                   .bind("<Leave>", self.leave_mouse_settings)         # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_5                  .bind("<Leave>", self.leave_mouse_settings)          # Reiniciar el cronometro y mostrar la interface de botones
         #________________________________________________________
 
 
@@ -943,7 +942,7 @@ class IconsCls(Frame):
 
     ######################################################################################
     ######################################################################################
-    ##########################  FUNCIONES ENLAZADAS: GLOBAL 1  ###########################
+    ##########################  COMMAND: GLOBAL 1  ###########################
 
     #________________________________________ 1 __________________________________________
 
