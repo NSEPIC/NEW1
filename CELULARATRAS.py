@@ -776,10 +776,9 @@ class IconsCls(Frame):
 
         self.off_after = None                        # Type: None - string    - Caracteres: String              Funcion: Guardar la funcion after para cancelarla despues
 
-        self.off_mousewheel = None                       # Type: None - string    - Caracteres: String              Funcion: Guardar la funcion after para cancelarla despues
+        self.off_motion = None                       # Type: None - string    - Caracteres: String              Funcion: Guardar la funcion after para cancelarla despues
 
         self.abc = None
-        self.off_motion = None
         #____Colección de Imágenes:
         self.Images  = path_lst1        # Coleccion: Imagenes principales para las ventanas
         self.Icons_1 = path_lst2        # Coleccion: Iconos N°2   [ Destino: Class.IconsCls ]
@@ -806,46 +805,43 @@ class IconsCls(Frame):
 
     # Tarea: - Activa el evento '<Motion>', cuando se mapea la interface global
     def activate_motion(self, event=None):
-        #self.off_b1_motion = self.master.bind('<B1-Motion>', self._deactivate_motion)
-        print('_____1')
-        self.off_mousewheel  = self.master.bind('<MouseWheel>',    self.mousewheel_open_interface_vertical)
-        self.off_motion      = self.master.bind('<Motion>',        self.aa)
+        self.off_b1_motion = self.master.bind('<B1-Motion>', self._deactivate_motion)
+        #print('error 1')
+        self.off_motion    = self.master.bind('<Motion>',    self.motion_open_interface_vertical)
 
         #self.off_leave = self.master.master.bind
 
         # Description: Ejecuta la funcion enlazada al evento movimiento de raton que no se ejecuto despues de mapearse su contenedor
-        #self.motion_open_interface_vertical()
+        self.motion_open_interface_vertical()
         # Description: (Solucion temporal): Abre la interface vertical de botones que no se visualiza al segundo intento de abrir la interface total
-        #self.motion_open_interface_vertical()
+        self.motion_open_interface_vertical()
 
-    
+
     #____________________________________ 1.1 _________________________________________
 
     # Tarea: -  Muestra y oculta la interface vertical de botones.
-    def mousewheel_open_interface_vertical(self, event=None):
-        print('_____2')
+    def motion_open_interface_vertical(self, event=None):
         if not self.variable:
-            self.iniciar_test(plus=1)
+            print('´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´´')
+            self.iniciar_test()
 
-    def aa(self, event=None):
-        self.mouse = event.widget.winfo_containing(event.x_root, event.y_root)
-        if self.mouse == self.frame_container_global_1:
-            self.iniciar_test(plus=1)
-            print(self.mouse)
+
     #------------------------------------- 2 ------------------------------------------ Evento: '<Unmap>'
 
     # Tarea: - Desactivar el evento motion
     def deactivate_motion(self, event=None):
         #self.master.unbind("<B1-Motion>", self.off_b1_motion)
         #print('error 2')
-        self.master.unbind("<MouseWheel>", self.off_mousewheel)
-        self.master.unbind("<Motion>",     self.off_motion)
+        self.master.unbind("<Motion>", self.off_motion)
         #self.off_motion = None
 
 
 
     def _deactivate_motion(self, event=None):
+        print(333333333333)
         pass
+        self.abc = 1
+        #self.master.unbind("<Motion>", self.off_motion)
 
         """ e= event.x
         #print(111111111) # hacer que cusndo se presione b1 motion se pare la secuencia para borrar la interface verticsl y si no esta visible que no aparezca y lo contrario
@@ -866,8 +862,8 @@ class IconsCls(Frame):
     # Tarea: - Ejecutar el metodo: [ open_interface_buttons ] no se bien
     def _release(self, event=None):
         print('releaseee')
-        #self.abc = 2
-        #self.iniciar_test()
+        self.abc = 2
+        self.iniciar_test()
         #self.variable = False
 
 
@@ -895,21 +891,10 @@ class IconsCls(Frame):
         self.frame_container_global_1 .rowconfigure(3, weight=0)
         self.frame_container_global_1 .rowconfigure(4, weight=1)
 
-        #self.frame_container_global_1. bind('<Motion>', self.a)
-        #self.frame_container_global_1. bind('<Leave>', self.b)
-
-    
-
-
         #________Metodos Llamados:
         self.create_buttons_manager()
     
-    def a (self, e):
-        print(1111111116666666666661111)
-    """ def b (self, e):
-        if not self.label_logo.winfo_ismapped():
-            print('container_global_1___LEAVE')
-            self.frame_container_global_1.pack_forget() """
+
     #-------------------- BOTONES ADMINISTRADORES ---------------------------
 
 
@@ -1027,21 +1012,21 @@ class IconsCls(Frame):
     #    método   ==>  def. motion_open_interface_vertical()
 
     # Tarea: -  Reiniciar el conometro y mostrar la interface de botones
-    def iniciar_test(self, event=None, plus=None):
-        # Description: Muestra la interface de botones.
-        self.frame_container_global_1 .pack(side='left', fill='y', expand=False)
+    def iniciar_test(self, event=None):
          # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1. [fraccion: para visualizar la interface de botones ]
         self.frame_container_global_2 .pack_forget()
         self.frame_container_global_2 .pack(side='right', fill='both', expand=True)
 
+        # Description: Muestra la interface de botones.
+        self.frame_container_global_1 .pack(side='left', fill='y', expand=False)
+
         # Description: Variable asignada en el método "timer" para cancelar la funcion after                Prederminado: None
         if self.off_after is not None:
             self.after_cancel(self.off_after)
-            
-        self.conteo = 1
+        self.conteo = 1.5
 
         # Metodo llamado:
-        self.timer(plus)
+        self.timer()
 
     #____________________________________ 1.1 _________________________________________
 
@@ -1049,23 +1034,19 @@ class IconsCls(Frame):
     #    método   ==>  def. iniciar_test()
 
     # Tarea: -  Iniciar el conometro para ocultar la interface de botones
-    def timer(self, plus=None):
-        #neww
-        plus = 5000 if plus is not None else 400
-
+    def timer(self):
         # Metodo llamado:
         self.run_timer()
 
         if self.conteo >= 0:
-            self.off_after = self.after(plus, self.timer)
+            self.off_after = self.after(1000, self.timer)
 
         # Entonces si "self.conteo" es menor a 0:
         else:
             self.off_after = None
             # Description: Oculta la interface de botones.
-            #if self.abc == 2:
-            if not self.label_logo.winfo_ismapped():
-                print(11111111223000000000000003)
+            if self.abc == 2:
+                print(self.abc, 111111112233)
                 self.frame_container_global_1 .pack_forget()       
 
     #____________________________________ 1.2 _________________________________________
@@ -1935,7 +1916,7 @@ class TopDerCls(Frame):
 
     # Tarea: - [ Soluciona error ] Reactiva el evento motion
     def reactivate_motion(self, event=None):
-        #print('reactivando motion')
+        print('reactivando motion')
         if self.indice != 17:
             self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
 
@@ -1976,11 +1957,11 @@ class TopDerCls(Frame):
             if not self._motion_1:    # Predeterminado: False
 
                 if self.x1 <(x)< self.x2  and  self.y1 <(y)< self.y2:  
-                    #print('motion if')  
+                    print('motion if')  
                     self.label_text_mostrar_77 .grid()
 
                 else:
-                    #print('motion else')  
+                    print('motion else')  
 
                     self.label_text_mostrar_77 .grid_remove()
 
