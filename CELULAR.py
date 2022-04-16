@@ -1773,18 +1773,17 @@ class TopDerCls(Frame):
 
     #___< B U T T O N - 1 > :
     def open_text_flecha(self, event):
-
-        # Description: Convierte el tamaño total de la ventana en porcentaje:  100 %
+        # Descrip: Convierte el tamaño total de la ventana en porcentaje:  100 %
         x = event.x / self.master.winfo_width() * 100
         y = event.y / self.master.winfo_height() * 100
       
-        if self.x1 <(x)< self.x2  and  self.y1 <(y)< self.y2: 
+        if 0 <(x)< 100  and  10 <(y)< 100: 
 
             if not self._button_1:       # Predeterminado: False
                 self._button_1 = True
                 self._motion_1 = True
                 
-                # Description: Posiciona
+                # Descrip: Posiciona
                 self.frame_image_base_77   .grid()
                 self.label_text_mostrar_77 .grid_remove()
 
@@ -1795,7 +1794,7 @@ class TopDerCls(Frame):
                 self._button_1 = False
                 self._motion_1 = False
 
-                # Description: Oculta
+                # Descrip: Oculta
                 self.frame_image_base_77   .grid_remove()
                 self.label_text_mostrar_77 .grid()
                 self.label_text_flecha     .grid_remove()
@@ -1808,16 +1807,17 @@ class TopDerCls(Frame):
 
         if not self._motion_1:    # Predeterminado: False
 
-            if self.x1 <(x)< self.x2  and  self.y1 <(y)< self.y2:  
+            if 0 <(x)< 100  and  10 <(y)< 100:  
                 #print('motion if')  
                 self.label_text_mostrar_77 .grid()
 
             else:
                 #print('motion else')  
                 self.label_text_mostrar_77 .grid_remove()
-
-        if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
-            self.label_text_mostrar_77     .grid_remove()
+        
+        # Dice: Si el angulo 77 esta mapeado en pantalla:
+        #if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
+            #self.label_text_mostrar_77     .grid_remove()
 
     
     # Tarea: - [ Soluciona error ] Reactiva el evento motion
