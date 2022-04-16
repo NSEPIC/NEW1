@@ -400,7 +400,7 @@ class ModeConfigurerCls(Frame):
         label_option1 = Label (self, text= 'Mover ventana :' , font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
         label_option2 = Label (self, text= 'Modo Lista :', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
         label_option3 = Label (self, text= 'Mover ventanas ', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
-        label_option4 = Label (self, text= 'Activar Modo On :', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
+        label_option4 = Label (self, text= 'Quitar menús :', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
         label_option5 = Label (self, text= 'Activar Modo Lista :', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
         label_option6 = Label (self, text= 'Activar Modo Guía :', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
         label_option7 = Label (self, text= 'Desactivar Movimiento :', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
@@ -456,10 +456,15 @@ class ModeConfigurerCls(Frame):
             if self.checkbutton3 .variable.get():
                 for i in range(3):
                     self.master._booleans[i] = True
+                # Descrip: Activa el desplazamiento de las ventanas por medio de la barra de titulo.
+                self.master.activate_move()
+                
             else:
                 for i in range(3):
                     self.master._booleans[i] = False
-        
+                # Descrip: Desactiva el desplazamiento de las ventanas por medio de la barra de titulo.
+                self.master.deactivate_move()
+
 
         if number == 4:
             if self.checkbutton4 .variable.get():
@@ -769,17 +774,12 @@ class IconsCls(Frame):
 
         self.option = None                           # Type: entero           - Caracteres: 0 - 4               Funcion: Rastrear el botón presionado
 
-        self.variable = False                        # Type: booleano         - Caracteres: False - True        Funcion: Permitir o denegar la ejecucion del metodo que muestra la interface vertical de 5 botones
-
-        self.indice2 = indice2                       # Type: entero           - Caracteres:                     Funcion:
+        self.indice2 = indice2                       # Type: entero           - Caracteres: 0 - 2               Funcion: Asigna un número a cada ventana
         self.frames = frames                         # Sin uso   
 
-        self.off_after = None                        # Type: None - string    - Caracteres: String              Funcion: Guardar la funcion after para cancelarla despues
+        self.off_mousewheel = None                   # Type: None - string    - Caracteres: String              Funcion: Guardar la funcion after para cancelarla despues
 
-        self.off_mousewheel = None                       # Type: None - string    - Caracteres: String              Funcion: Guardar la funcion after para cancelarla despues
 
-        self.abc = None
-        self.off_motion = None
         #____Colección de Imágenes:
         self.Images  = path_lst1        # Coleccion: Imagenes principales para las ventanas
         self.Icons_1 = path_lst2        # Coleccion: Iconos N°2   [ Destino: Class.IconsCls ]
@@ -790,7 +790,6 @@ class IconsCls(Frame):
         #self.master.bind("<ButtonRelease-1>", self._release)
         self.bind('<Map>', self.activate_motion)
         self.bind('<Unmap>', self.deactivate_motion)
-        self.master.bind('<ButtonRelease-1>', self._release)
 
         #____Metodos Llamados:_
         self.create_container_1()
@@ -804,71 +803,26 @@ class IconsCls(Frame):
 
     #------------------------------------- 1 ------------------------------------------ Evento: '<Map>'
 
-    # Tarea: - Activa el evento '<Motion>', cuando se mapea la interface global
+    # Tarea: - Activa el evento '<MouseWheel>', cuando se mapea la interface global
     def activate_motion(self, event=None):
-        #self.off_b1_motion = self.master.bind('<B1-Motion>', self._deactivate_motion)
-        print('_____1')
+        # Descr: Activa el método de devolucion de llamada enlazado a la rueda del mouse.
         self.off_mousewheel  = self.master.bind('<MouseWheel>',    self.mousewheel_open_interface_vertical)
-        self.off_motion      = self.master.bind('<Motion>',        self.aa)
 
-        #self.off_leave = self.master.master.bind
-
-        # Description: Ejecuta la funcion enlazada al evento movimiento de raton que no se ejecuto despues de mapearse su contenedor
-        #self.motion_open_interface_vertical()
-        # Description: (Solucion temporal): Abre la interface vertical de botones que no se visualiza al segundo intento de abrir la interface total
-        #self.motion_open_interface_vertical()
-
-    
     #____________________________________ 1.1 _________________________________________
 
-    # Tarea: -  Muestra y oculta la interface vertical de botones.
+    # Tarea: -  Muestra la interface vertical de botones.
     def mousewheel_open_interface_vertical(self, event=None):
-        print('_____2')
-        if not self.variable:
-            self.iniciar_test(plus=1)
+        # Descr: Muestra la interface vertical de botones.
+        self.open_interface_vertical()
 
-    def aa(self, event=None):
-        self.mouse = event.widget.winfo_containing(event.x_root, event.y_root)
-        if self.mouse == self.frame_container_global_1:
-            self.iniciar_test(plus=1)
-            print(self.mouse)
+   
     #------------------------------------- 2 ------------------------------------------ Evento: '<Unmap>'
 
-    # Tarea: - Desactivar el evento motion
+    # Tarea: - Desactivar el evento '<MouseWheel>'
     def deactivate_motion(self, event=None):
-        #self.master.unbind("<B1-Motion>", self.off_b1_motion)
-        #print('error 2')
+        # Descr: Desactiva el evento '<MouseWheel>'
         self.master.unbind("<MouseWheel>", self.off_mousewheel)
-        self.master.unbind("<Motion>",     self.off_motion)
-        #self.off_motion = None
 
-
-
-    def _deactivate_motion(self, event=None):
-        pass
-
-        """ e= event.x
-        #print(111111111) # hacer que cusndo se presione b1 motion se pare la secuencia para borrar la interface verticsl y si no esta visible que no aparezca y lo contrario
-        #self.master.unbind("<Motion>", self.off_motion)
-        if self.frame_container_global_1.winfo_ismapped():
-            #print('______ismaped_______________', e)
-            self.frame_container_global_2 .pack_forget()
-            self.frame_container_global_2 .pack(side='right', fill='both', expand=True)
-
-            # Description: Muestra la interface de botones.
-            self.frame_container_global_1 .pack(side='left', fill='y', expand=False)
-        else:
-            self.frame_container_global_1 .pack_forget() """
-
-
-    #------------------------------------- 3 ------------------------------------------ Evento: '<ButtonRelease-1>'
-
-    # Tarea: - Ejecutar el metodo: [ open_interface_buttons ] no se bien
-    def _release(self, event=None):
-        print('releaseee')
-        #self.abc = 2
-        #self.iniciar_test()
-        #self.variable = False
 
 
     ###########################################################################################################################################
@@ -895,21 +849,19 @@ class IconsCls(Frame):
         self.frame_container_global_1 .rowconfigure(3, weight=0)
         self.frame_container_global_1 .rowconfigure(4, weight=1)
 
-        #self.frame_container_global_1. bind('<Motion>', self.a)
-        #self.frame_container_global_1. bind('<Leave>', self.b)
-
-    
-
+        #____Eventos(Callback):
+        self.frame_container_global_1. bind('<Leave>', self.remove_interface_vertical)
 
         #________Metodos Llamados:
         self.create_buttons_manager()
+
+
+    # Tarea: - Remueve la interface vertical de botones si no estan visibles la imagen del logo y la interface de ajustes.
+    def remove_interface_vertical(self, event):
+        if not self.label_logo.winfo_ismapped() == True and not self.global2_frame_subcontainer_2_settings .winfo_ismapped():
+            self.frame_container_global_1 .pack_forget()
+
     
-    def a (self, e):
-        print(1111111116666666666661111)
-    """ def b (self, e):
-        if not self.label_logo.winfo_ismapped():
-            print('container_global_1___LEAVE')
-            self.frame_container_global_1.pack_forget() """
     #-------------------- BOTONES ADMINISTRADORES ---------------------------
 
 
@@ -938,22 +890,17 @@ class IconsCls(Frame):
 
         #____Eventos(Callback):
         #________________________________________________________
-        self.button_1 .bind('<ButtonPress>',   self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
-        self.button_1 .bind('<ButtonRelease>', self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_1 .bind('<ButtonPress>',   self.open_interface_vertical)                           # Reiniciar el cronometro y mostrar la interface de botones
         #________________________________________________________
-        self.button_2 .bind('<ButtonPress>',   self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
-        self.button_2 .bind('<ButtonRelease>', self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_2 .bind('<ButtonPress>',   self.open_interface_vertical)                           # Reiniciar el cronometro y mostrar la interface de botones
         #________________________________________________________
-        self.button_3 .bind('<ButtonPress>',   self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
-        self.button_3 .bind('<ButtonRelease>', self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_3 .bind('<ButtonPress>',   self.open_interface_vertical)                           # Reiniciar el cronometro y mostrar la interface de botones
         #________________________________________________________
-        self.button_4 .bind('<ButtonPress>',   self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
-        self.button_4 .bind('<ButtonRelease>', self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_4 .bind('<ButtonPress>',   self.open_interface_vertical)                           # Reiniciar el cronometro y mostrar la interface de botones
         #________________________________________________________
-        self.button_5 .bind('<ButtonPress>',   self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
-        self.button_5 .bind('<ButtonRelease>', self.iniciar_test)                           # Reiniciar el cronometro y mostrar la interface de botones
-        self.off_enter = self.button_5 .bind('<Enter>', self.enter_mouse_settings)          # Reiniciar el cronometro y mostrar la interface de botones
-        self.button_5                  .bind('<Leave>', self.leave_mouse_settings)          # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_5 .bind('<ButtonPress>',   self.open_interface_vertical)                           # Reiniciar el cronometro y mostrar la interface de botones
+        self.off_enter = self.button_5 .bind('<Enter>', self.enter_mouse_settings)                     # Reiniciar el cronometro y mostrar la interface de botones
+        self.button_5                  .bind('<Leave>', self.leave_mouse_settings)                     # Reiniciar el cronometro y mostrar la interface de botones
         #________________________________________________________
 
 
@@ -984,6 +931,10 @@ class IconsCls(Frame):
         # Description: Muestra la imagen del boton presionado
         if not self.var1:
             self.var1 = True
+
+            # Descrip: Si el boton presionado no es el numero 2:
+            if number != 2:
+                self.frame_container_global_1 .pack_forget()
 
             # Description: Oculta el logo
             self.label_logo .grid_remove()
@@ -1016,7 +967,7 @@ class IconsCls(Frame):
     ##########################  MÉTODOS BIND: GLOBAL 1  #######################################################################################
     ###########################################################################################################################################
 
-    #------------------------------------- 1 ------------------------------------------ Eventos: '<ButtonPress>' - '<ButtonRelease>'
+    #------------------------------------- 1 ------------------------------------------ Eventos: '<ButtonPress>'
     
     # Origen de llamadas:
     #    widget   ==> self. button_1
@@ -1024,60 +975,16 @@ class IconsCls(Frame):
     #    widget   ==> self. button_3
     #    widget   ==> self. button_4
     #    widget   ==> self. button_5
-    #    método   ==>  def. motion_open_interface_vertical()
+    #    método   ==>  def. mousewheel_open_interface_vertical()
 
-    # Tarea: -  Reiniciar el conometro y mostrar la interface de botones
-    def iniciar_test(self, event=None, plus=None):
+    # Tarea: -  Muestra la interface vertical de botones.
+    def open_interface_vertical(self, event=None):
         # Description: Muestra la interface de botones.
         self.frame_container_global_1 .pack(side='left', fill='y', expand=False)
-         # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1. [fraccion: para visualizar la interface de botones ]
+         # Description: Actualiza la posicion del contenedor 2 para que sea visible el contenedor 1. [Resumen: Permite visualizar la interface de botones ]
         self.frame_container_global_2 .pack_forget()
         self.frame_container_global_2 .pack(side='right', fill='both', expand=True)
-
-        # Description: Variable asignada en el método "timer" para cancelar la funcion after                Prederminado: None
-        if self.off_after is not None:
-            self.after_cancel(self.off_after)
-            
-        self.conteo = 1
-
-        # Metodo llamado:
-        self.timer(plus)
-
-    #____________________________________ 1.1 _________________________________________
-
-    # Origen de llamadas:
-    #    método   ==>  def. iniciar_test()
-
-    # Tarea: -  Iniciar el conometro para ocultar la interface de botones
-    def timer(self, plus=None):
-        #neww
-        plus = 5000 if plus is not None else 400
-
-        # Metodo llamado:
-        self.run_timer()
-
-        if self.conteo >= 0:
-            self.off_after = self.after(plus, self.timer)
-
-        # Entonces si "self.conteo" es menor a 0:
-        else:
-            self.off_after = None
-            # Description: Oculta la interface de botones.
-            #if self.abc == 2:
-            if not self.label_logo.winfo_ismapped():
-                print(11111111223000000000000003)
-                self.frame_container_global_1 .pack_forget()       
-
-    #____________________________________ 1.2 _________________________________________
-
-    # Origen de llamadas:
-    #    método   ==>  def. timer()
-
-    # Tarea: -  Servir de conometro
-    def run_timer(self):
-        if self.conteo >= 0:
-            self.conteo -= 1
-
+    
 
     #------------------------------------- 2 ------------------------------------------ Evento: '<Enter>'
 
@@ -1085,10 +992,11 @@ class IconsCls(Frame):
     #    widget   ==> self. button_5
     #    método   ==>  def. activate_enter_settings()
 
-    # Tarea: -  Cambiar la imagen del boton setting a encendido
+    # Tarea: -  Cambiar la imagen del boton settings a encendido
     def enter_mouse_settings(self, event=None):
         # Evento: Entrada del mouse sobre el boton.
         event.widget.config(image=self.Icons_1[5])
+
 
     #------------------------------------- 3 ------------------------------------------ Evento: '<Leave>'
 
@@ -1285,7 +1193,7 @@ class IconsCls(Frame):
     def create_mini_interface_sub2(self):
 
         #____ETIQUETAS:
-        label_1 = Label (self.global2_frame_subcontainer_2_settings, text='Deshabilitar \nde ventana :' ,font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
+        label_1 = Label (self.global2_frame_subcontainer_2_settings, text='Deshabilitar \ndesplazamiento :' ,font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
         label_2 = Label (self.global2_frame_subcontainer_2_settings, text='Bloquear ventana :'          ,font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
 
         #____Posicionamiento:
@@ -1432,6 +1340,9 @@ class TopIzqCls(Frame):
         #____Metodos Llamados:
         self.open_interface()
 
+
+    def aa(self):
+        self.up()
 
     # Tarea: - Abrir la interface del mobil
     def open_interface(self):
@@ -1758,6 +1669,11 @@ class TopDerCls(Frame):
         self.y1 = 67
         self.y2 = 100
 
+        self.xx1 = 0
+        self.xx2 = 100
+        self.yy1 = 33
+        self.yy2 = 66
+
         #____Variables de Control para los Eventos:
         self._button_1 = False  # Creado para el evento: Button-1
         self._motion_1 = False  # Creado para el evento: Motion
@@ -1801,7 +1717,16 @@ class TopDerCls(Frame):
             #____Metodos Llamados:
             self.create_container_1()
 
+            if self.indice == 5:
+                self.label_text_mostrar_77 .config(text="Haga  'Click'  para mostrar:\nBase  N°2")
 
+                self.frame_image_base_77      = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._4], bd=0)
+
+    ###########################################################################################################################################
+    ################################                     ######################################################################################
+    ################################  INTERFACE STANDAR  ######################################################################################
+    ################################                     ######################################################################################
+    ###########################################################################################################################################
 
 
     # Tarea: - Crea el primer contenedor global  [ INTERFACE: STANDAR]
@@ -1831,13 +1756,13 @@ class TopDerCls(Frame):
         self.frame_image_base_77      = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._3], bd=0)
 
         #____WIDGETS:  ( 2 widgets )
-        self.label_text_mostrar_77        = Label(self.frame_container_global_1, text="Haga ' Click ' para mostrar:\nAngulo ' 77 '", font=('Bickham Script Pro',8,'bold'), bg='#2f3337', fg='white', width=50, height=2)
-        self.label_text_flecha            = Label(self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2f3337', fg='green2', width=1, height=1)
+        self.label_text_mostrar_77        = Label(self.frame_container_global_1, text="Haga  'Click'  para mostrar:\nAngulo  77 ", font=('Calibri',10,'bold'), bg='#2f3337', fg='white', width=50, height=2)
+        self.label_text_flecha            = Label(self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2f3337', fg='green2')
 
         #____Posicionamiento:
         self.frame_image_base_initial .grid(column=0, row=0, sticky='news')
         self.frame_image_base_77      .grid(column=0, row=0, sticky='news')
-        self.label_text_mostrar_77    .grid(column=0, row=0, ipadx=5, ipady=5, sticky='n',)
+        self.label_text_mostrar_77    .grid(column=0, row=0, ipadx=5, ipady=5, sticky='new',)
         self.label_text_flecha        .grid(column=0, row=0, ipadx=5, sticky=SE)
 
         #____Desposicionados: o #____Orden de apilamiento de imagenes:
@@ -1846,7 +1771,67 @@ class TopDerCls(Frame):
         self.label_text_flecha     .grid_remove()
 
 
+    #___< B U T T O N - 1 > :
+    def open_text_flecha(self, event):
 
+        # Description: Convierte el tamaño total de la ventana en porcentaje:  100 %
+        x = event.x / self.master.winfo_width() * 100
+        y = event.y / self.master.winfo_height() * 100
+      
+        if self.x1 <(x)< self.x2  and  self.y1 <(y)< self.y2: 
+
+            if not self._button_1:       # Predeterminado: False
+                self._button_1 = True
+                self._motion_1 = True
+                
+                # Description: Posiciona
+                self.frame_image_base_77   .grid()
+                self.label_text_mostrar_77 .grid_remove()
+
+                # Descrip: No posiciona la flecha si no es visible el angulo 77 [self.frame_image_base_77: Actualmente desactualizado]
+                if self.frame_image_base_77 .winfo_ismapped():
+                    self.label_text_flecha .grid()
+            else:
+                self._button_1 = False
+                self._motion_1 = False
+
+                # Description: Oculta
+                self.frame_image_base_77   .grid_remove()
+                self.label_text_mostrar_77 .grid()
+                self.label_text_flecha     .grid_remove()
+    
+
+    #___< M O T I O N > :
+    def open_text_mostrar_77(self, event=None):
+        x  = event.x / self.master.winfo_width() * 100
+        y = event.y / self.master.winfo_height() * 100
+
+        if not self._motion_1:    # Predeterminado: False
+
+            if self.x1 <(x)< self.x2  and  self.y1 <(y)< self.y2:  
+                #print('motion if')  
+                self.label_text_mostrar_77 .grid()
+
+            else:
+                #print('motion else')  
+                self.label_text_mostrar_77 .grid_remove()
+
+        if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
+            self.label_text_mostrar_77     .grid_remove()
+
+    
+    # Tarea: - [ Soluciona error ] Reactiva el evento motion
+    def reactivate_motion(self, event=None):
+        #print('reactivando motion')
+        if self.indice != 17:
+            self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
+
+
+    ###########################################################################################################################################
+    ################################                     ######################################################################################
+    ################################   INTERFACE TRICO   ######################################################################################
+    ################################                     ######################################################################################
+    ###########################################################################################################################################
 
 
     # Tarea: - Crea el segundo contenedor global  [ INTERFACE: TRICO]
@@ -1933,60 +1918,6 @@ class TopDerCls(Frame):
             self.master.check_version = False
             self.master.version = 'desactivado'
 
-    # Tarea: - [ Soluciona error ] Reactiva el evento motion
-    def reactivate_motion(self, event=None):
-        #print('reactivando motion')
-        if self.indice != 17:
-            self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
-
-
-    #___< B U T T O N - 1 > :
-    def open_text_flecha(self, event):
-
-        # Description: Convierte el tamaño total de la ventana en porcentaje:  100 %
-        x = event.x / self.master.winfo_width() * 100
-        y = event.y / self.master.winfo_height() * 100
-      
-        if self.x1 <(x)< self.x2  and  self.y1 <(y)< self.y2: 
-
-            if not self._button_1:       # Predeterminado: False
-                self._button_1 = True
-                self._motion_1 = True
-                
-                # Description: Posiciona
-                self.frame_image_base_77   .grid()
-                self.label_text_mostrar_77 .grid_remove()
-                self.label_text_flecha     .grid()
-            else:
-                self._button_1 = False
-                self._motion_1 = False
-
-                # Description: Oculta
-                self.frame_image_base_77   .grid_remove()
-                self.label_text_mostrar_77 .grid()
-                self.label_text_flecha     .grid_remove()
-
-
-    #___< M O T I O N > :
-    def open_text_mostrar_77(self, event=None):
-        x  = event.x / self.master.winfo_width() * 100
-        y = event.y / self.master.winfo_height() * 100
-
-        if self.indice != 17:
-            if not self._motion_1:    # Predeterminado: False
-
-                if self.x1 <(x)< self.x2  and  self.y1 <(y)< self.y2:  
-                    #print('motion if')  
-                    self.label_text_mostrar_77 .grid()
-
-                else:
-                    #print('motion else')  
-
-                    self.label_text_mostrar_77 .grid_remove()
-
-            if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
-                self.label_text_mostrar_77     .grid_remove()
-
  
 
 #************************            ███████    ██████████████        *************************
@@ -2056,7 +1987,6 @@ class MoveAllCls():
         self.immovable = []
         self._boolean = True
         self._booleans = [True] * 3
-        #self._disabled = [False] * 3
 
         #---------------------------ARGUMENTOS RECIBIDOS-------------------------------------------------
 
@@ -2269,6 +2199,8 @@ class ToplevelCls(Toplevel, MoveAllCls):
 
         self.indice = None
 
+        self.displacement = True
+
         #____Coleccion de Imagenes:
         self.Images  = path_lst1               # Imagenes-Iconos: Menu de opciones
         self.Icons_1 = path_lst2
@@ -2395,14 +2327,14 @@ class ToplevelCls(Toplevel, MoveAllCls):
         deltax = event.x - self._x
         deltay = event.y - self._y
         new_position = "+{}+{}".format(self.winfo_x() + deltax, self.winfo_y() + deltay)
-        self.geometry(new_position)                 # Mueve todas las ventanas en general menos root
+
+        if self.displacement:
+            self.geometry(new_position)                 # Mueve todas las ventanas en general menos root
 
         #Dice: Si el padre de la ventana es una instancia de Tk():
         if isinstance(self.master.winfo_toplevel(), Tk):
             #print('moveee')
             self.master.geometry(new_position)                    # Mueve la ventana root
-        else:
-            self.icons_interface.variable = True
 
     def configure_toplevel(self, title, size):  # Opciones de las Ventanas Secundarias
         self.title (title)
@@ -2867,6 +2799,11 @@ class InterfazCls(Frame, MoveAllCls):
 
                 self._windows[i] .icons_interface .deactivate_motion()
 
+                # Description: Actualiza el controlador(if-else), que abre la interface del menú.
+                self._windows[i] .cascade = False
+
+
+
             self._frame[i] = container[i]
             # Description: Posiciona las instancias(frames) de las ventanas abiertas
             self._frame[i] .pack(fill='both', expand=True)
@@ -2879,6 +2816,10 @@ class InterfazCls(Frame, MoveAllCls):
             self.grip = ttk.Sizegrip(self._frame[i], style='TSizegrip')
             self.grip .place (relx=1.0, rely=1.0, anchor='center')
             ttk.Style().configure('TSizegrip', bg='black')
+
+            #Descrip: Desactiva el desplazamiento de las ventanas secundarias abiertas
+            if not self.frame_configurer .checkbutton3 .variable.get():
+                self.deactivate_move()
 
         
             #--------------------------------CONFIGURACION DEL LOGOTIPO-------------------------------------------
@@ -2902,7 +2843,7 @@ class InterfazCls(Frame, MoveAllCls):
                 # Descripcion: Almacena el nombre del boton presionado en el modo botones o lista.
                 self.mobil_selected = name
                 break
-    
+
 
     # Tarea: - Actualizar las ventanas cerradas para volver a abrirlas
     def update_open(self, number, event=None):
@@ -2976,6 +2917,22 @@ class InterfazCls(Frame, MoveAllCls):
         """ for i in range(len(self._open)):
             self.off_leave1 = self._windows[i] .bind('<Leave>', lambda event, number=i: self.forget_container_icons(number, event))
         """
+
+    # Tarea: - Activa el desplazamiento de las ventanas secundarias abiertas
+    def activate_move(self):
+        for i in range(len(self._open)):
+            # Dice: Si la ventana esta abierta:
+            if self._open[i] == True:
+                self._windows[i].displacement = True
+    
+    # Tarea: - Desactiva el desplazamiento de las ventanas secundarias abiertas
+    def deactivate_move(self):
+        for i in range(len(self._open)):
+            # Dice: Si la ventana esta abierta:
+            if self._open[i] == True:
+                self._windows[i].displacement = False
+                
+
 
 
 def main (): #-----------------------------------------------
