@@ -1695,7 +1695,7 @@ class TopDerCls(Frame):
         self.off_leave  = self.bind ('<Leave>', lambda arg:self.label_text_mostrar_77 .grid_remove())       # 2
         self.off_button = self.master.bind("<Button-1>",   self.open_text_flecha)                           # 3
         self.off_motion = self.master.bind("<Motion>",     self.open_text_mostrar_77)                       # 4
-        self.master.bind("<Map>", self.reactivate_motion)                                                          # 5 - DESACT
+        #self.master.bind("<Map>", self.reactivate_motion)                                                          # 5 - DESACT
 
         #____Metodos Llamados:
         self.open_interface()
@@ -1729,6 +1729,13 @@ class TopDerCls(Frame):
 
                 #____Agregando ala lista:
                 self.list_images .insert(2, self.frame_image_base_3)
+
+
+    ### externo:
+    def active_binds(self):
+        if self.indice == 17:
+            self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
+
 
     ###########################################################################################################################################
     ################################                     ######################################################################################
