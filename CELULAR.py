@@ -1793,8 +1793,8 @@ class TopDerCls(Frame):
         #print(event.widget)
         print(y)
         #if event.widget != self.master:
-        if 0 <(x)< 100  and  (y) > 2:
-            if event.widget.master != self.a[0] and event.widget != self.a[0]:
+        #if 0 <(x)< 100  and  (y) > 2:
+            if event.widget.winfo_parent() == self:
                 print('entreeeeeeeeeee')
                 self.n += 1                                     # Predeterminado: 0
                 # Dice: Si 2 ó 3 es igual self.n:
