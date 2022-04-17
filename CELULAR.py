@@ -1674,6 +1674,8 @@ class TopDerCls(Frame):
         self.yy1 = 33
         self.yy2 = 66
 
+        self.n = 0
+
         #____Variables de Control para los Eventos:
         self._button_1 = False  # Creado para el evento: Button-1
         self._motion_1 = False  # Creado para el evento: Motion
@@ -1720,7 +1722,11 @@ class TopDerCls(Frame):
             if self.indice == 5:
                 self.label_text_mostrar_77 .config(text="Haga  'Click'  para mostrar:\nBase  N°2")
 
-                self.frame_image_base_77      = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._4], bd=0)
+                # Imagen N°3:
+                self.frame_image_base_3 = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._4], bd=0)
+
+                #____Agregando ala lista:
+                self.frame_image_base_3 .insert(1, self.list_images)
 
     ###########################################################################################################################################
     ################################                     ######################################################################################
@@ -1751,24 +1757,31 @@ class TopDerCls(Frame):
         # [ 1 ] self.label_text_mostrar_77           : Label-Texto: "Haga click" para mostrar el angulo 77"                  : NO POSICIONADO
         # [ 1 ] self.label_text_flecha               : Label-Texto: "↑"                                                      : NO POSICIONADO
 
-        #____IMAGENES:  ( 2 instancias )
+        #____Lista de imágenes:
+        self.list_images = []
+
+        #____IMAGENES: ( 2 instancias )
         self.frame_image_base_initial = ResizeCls(self.frame_container_global_1, self.Images[self.indice][self._2], bd=0)
-        self.frame_image_base_77      = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._3], bd=0)
+        self.frame_image_base_2       = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._3], bd=0)
 
         #____WIDGETS:  ( 2 widgets )
-        self.label_text_mostrar_77        = Label(self.frame_container_global_1, text="Haga  'Click'  para mostrar:\nAngulo  77 ", font=('Calibri',10,'bold'), bg='#2f3337', fg='white', width=50, height=2)
-        self.label_text_flecha            = Label(self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2f3337', fg='green2')
+        self.label_text_mostrar_77    = Label(self.frame_container_global_1, text="Haga  'Click'  para mostrar:\nAngulo  77 ", font=('Calibri',10,'bold'), bg='#2f3337', fg='white', width=50, height=2)
+        self.label_text_flecha        = Label(self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2f3337', fg='green2')
 
         #____Posicionamiento:
         self.frame_image_base_initial .grid(column=0, row=0, sticky='news')
-        self.frame_image_base_77      .grid(column=0, row=0, sticky='news')
+        self.frame_image_base_2       .grid(column=0, row=0, sticky='news')
         self.label_text_mostrar_77    .grid(column=0, row=0, ipadx=5, ipady=5, sticky='new',)
         self.label_text_flecha        .grid(column=0, row=0, ipadx=5, sticky=SE)
 
         #____Desposicionados: o #____Orden de apilamiento de imagenes:
-        self.frame_image_base_77   .grid_remove()
+        self.frame_image_base_2    .grid_remove()
         self.label_text_mostrar_77 .grid_remove()
         self.label_text_flecha     .grid_remove()
+
+        #____Agregando ala lista:
+        self.frame_image_base_initial .append(self.list_images)
+        self.frame_image_base_2       .append(self.list_images)
 
 
     #___< B U T T O N - 1 > :
@@ -1780,24 +1793,39 @@ class TopDerCls(Frame):
         if 0 <(x)< 100  and  10 <(y)< 100: 
 
             if not self._button_1:       # Predeterminado: False
-                self._button_1 = True
+                #self._button_1 = True
                 self._motion_1 = True
+
+                # Descrip: Posiciona la última imagen de la lista.
+                self.n += 1
+                # Dice: Si 2 ó 3 es igual self.n:
+                if self.list_images.len() == self.n:
+                    # Descrip: Muestra la imagen inicial.
+                    self.n = 0
+                    self.list_images[self.0] .lift()
+                else:
+                    # Descrip: Muestra la imagen siguiente.
+                    self.list_images[self.n] .lift()
                 
-                # Descrip: Posiciona
-                self.frame_image_base_77   .grid()
-                self.label_text_mostrar_77 .grid_remove()
+            
+
+          #      self.frame_image_base_2   .grid()
+          #      self.label_text_mostrar_77 .grid_remove()
 
                 # Descrip: No posiciona la flecha si no es visible el angulo 77 [self.frame_image_base_77: Actualmente desactualizado]
-                if self.frame_image_base_77 .winfo_ismapped():
+                if self.frame_image_base_2 .winfo_ismapped():
                     self.label_text_flecha .grid()
-            else:
+                else:
+                    self.label_text_flecha .grid_remove()
+
+            """else:
                 self._button_1 = False
                 self._motion_1 = False
 
                 # Descrip: Oculta
-                self.frame_image_base_77   .grid_remove()
+         #       self.frame_image_base_2    .grid_remove()
                 self.label_text_mostrar_77 .grid()
-                self.label_text_flecha     .grid_remove()
+                self.label_text_flecha     .grid_remove()"""
     
 
     #___< M O T I O N > :
@@ -1816,7 +1844,7 @@ class TopDerCls(Frame):
                 self.label_text_mostrar_77 .grid_remove()
         
         # Dice: Si el angulo 77 esta mapeado en pantalla:
-        #if self.frame_image_base_77 .grid_info() != {}:   # == {} (no mapeado) 
+        #if self.frame_image_base_2 .grid_info() != {}:   # == {} (no mapeado) 
             #self.label_text_mostrar_77     .grid_remove()
 
     
