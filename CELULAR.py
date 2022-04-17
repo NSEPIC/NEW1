@@ -1692,7 +1692,7 @@ class TopDerCls(Frame):
         # [ 5 ]  :  Soluciona error: Reactiva el evento motion que se desactiva por algun motivo cuando se desactiva el evento motion de la interface de iconos
         
         self.master.bind("ash", lambda _: self.activate_version())                                          # 1 - SIN CONFLICTO
-        self.off_leave  = self.bind ('<Leave>', lambda arg:self.label_text_mostrar_77 .grid_remove())       # 2
+        self.off_leave  = self.bind ('<Leave>', lambda arg:self.label_text_mostrar_77 .lower())             # 2
         self.off_button = self.master.bind("<Button-1>",   self.open_text_flecha)                           # 3
         self.off_motion = self.master.bind("<Motion>",     self.open_text_mostrar_77)                       # 4
         #self.master.bind("<Map>", self.reactivate_motion)                                                          # 5 - DESACT
@@ -1720,6 +1720,7 @@ class TopDerCls(Frame):
             self.create_container_1()
 
             if self.indice == 5:
+                # Descrip: Ca
                 self.label_text_mostrar_77 .config(text="Haga  'Click'  para mostrar:\nBase  N°2")
 
                 # Imagen N°3:
@@ -1732,7 +1733,7 @@ class TopDerCls(Frame):
 
 
     ### externo:
-    def active_binds(self):
+    def reactive_binds(self):
         if self.indice == 17:
             self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
 
@@ -1801,7 +1802,7 @@ class TopDerCls(Frame):
         print(y)
         #if event.widget != self.master:
         #if 0 <(x)< 100  and  (y) > 2:
-            if event.widget.winfo_parent() == self:
+            if event.widget.winfo_parent() == self.frame_container_global_1:
                 print('entreeeeeeeeeee')
                 self.n += 1                                     # Predeterminado: 0
                 # Dice: Si 2 ó 3 es igual self.n:
@@ -1812,6 +1813,11 @@ class TopDerCls(Frame):
 
                     # Descrip: Oculta la flecha que señala al 77.
                     self.label_text_flecha .lower()
+
+                    # Descrip: Modificaciones según el móbil:
+                    if self.indice == 5:
+                        self.label_text_mostrar_77 .config(text="Haga  'Click'  para mostrar:\nBase  N°2")
+
 
                 else:
 
@@ -1849,17 +1855,19 @@ class TopDerCls(Frame):
 
     #___< M O T I O N > :
     def open_text_mostrar_77(self, event=None):
-        x  = event.x / self.master.winfo_width() * 100
-        y = event.y / self.master.winfo_height() * 100
+        #x  = event.x / self.master.winfo_width() * 100
+        #y = event.y / self.master.winfo_height() * 100
 
         #if not self._motion_1:    # Predeterminado: False
-        if 0 <(x)< 100  and  10 <(y)< 100:  
+        #if 0 <(x)< 100  and  10 <(y)< 100:  
+
+        if event.widget.winfo_parent() == self.frame_container_global_1:
             #print('motion if')  
-            self.label_text_mostrar_77 .grid()
+            self.label_text_mostrar_77 .lift()
 
         else:
             #print('motion else')  
-            self.label_text_mostrar_77 .grid_remove()
+            self.label_text_mostrar_77 .lower()
         
         # Dice: Si el angulo 77 esta mapeado en pantalla:
         #if self.frame_image_base_2 .grid_info() != {}:   # == {} (no mapeado) 
@@ -1869,11 +1877,11 @@ class TopDerCls(Frame):
     # acceso extermo
     
     # Tarea: - [ Soluciona error ] Reactiva el evento motion
-    def reactivate_motion(self, event=None):
+    """def reactivate_motion(self, event=None):
         #print('reactivando motion')
         if self.indice != 17:
             #print('reactive motion')
-            self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
+            self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)"""
 
     """ def reactivate_motionn(self, event=None):
         if self.indice != 17:
