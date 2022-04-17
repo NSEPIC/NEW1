@@ -1724,9 +1724,11 @@ class TopDerCls(Frame):
 
                 # Imagen N°3:
                 self.frame_image_base_3 = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._4], bd=0)
+                self.frame_image_base_3 .grid(column=0, row=0, sticky='news')
+                self.frame_image_base_3 .lower(self.frame_image_base_2)
 
                 #____Agregando ala lista:
-                self.frame_image_base_3 .insert(1, self.list_images)
+                self.list_images .insert(2, self.frame_image_base_3)
 
     ###########################################################################################################################################
     ################################                     ######################################################################################
@@ -1757,7 +1759,6 @@ class TopDerCls(Frame):
         # [ 1 ] self.label_text_mostrar_77           : Label-Texto: "Haga click" para mostrar el angulo 77"                  : NO POSICIONADO
         # [ 1 ] self.label_text_flecha               : Label-Texto: "↑"                                                      : NO POSICIONADO
 
-        #____Lista de imágenes:
         self.list_images = []
 
         #____IMAGENES: ( 2 instancias )
@@ -1774,49 +1775,60 @@ class TopDerCls(Frame):
         self.label_text_mostrar_77    .grid(column=0, row=0, ipadx=5, ipady=5, sticky='new',)
         self.label_text_flecha        .grid(column=0, row=0, ipadx=5, sticky=SE)
 
-        #____Desposicionados: o #____Orden de apilamiento de imagenes:
-        self.frame_image_base_2    .grid_remove()
-        self.label_text_mostrar_77 .grid_remove()
-        self.label_text_flecha     .grid_remove()
+        #____Orden de apilamiento:
+        self.frame_image_base_initial .lift()
 
         #____Agregando ala lista:
-        self.frame_image_base_initial .append(self.list_images)
-        self.frame_image_base_2       .append(self.list_images)
+        self.list_images .append(self.frame_image_base_initial)
+        self.list_images .append(self.frame_image_base_2)
 
 
     #___< B U T T O N - 1 > :
     def open_text_flecha(self, event):
+        self.a = self.master.winfo_children()
+        #print(self.a)
         # Descrip: Convierte el tamaño total de la ventana en porcentaje:  100 %
         x = event.x / self.master.winfo_width() * 100
-        y = event.y / self.master.winfo_height() * 100
-      
-        if 0 <(x)< 100  and  10 <(y)< 100: 
-
-            if not self._button_1:       # Predeterminado: False
-                #self._button_1 = True
-                self._motion_1 = True
-
-                # Descrip: Posiciona la última imagen de la lista.
-                self.n += 1
+        y = event.y / self.master.master.winfo_height() * 100
+        #print(event.widget)
+        print(y)
+        #if event.widget != self.master:
+        if 0 <(x)< 100  and  (y) > 2:
+            if event.widget.master != self.a[0] and event.widget != self.a[0]:
+                print('entreeeeeeeeeee')
+                self.n += 1                                     # Predeterminado: 0
                 # Dice: Si 2 ó 3 es igual self.n:
-                if self.list_images.len() == self.n:
+                if len(self.list_images) == self.n:
+                    self.n = 0                                  # Actualiza
                     # Descrip: Muestra la imagen inicial.
-                    self.n = 0
-                    self.list_images[self.0] .lift()
+                    self.list_images[0] .lift()
+
+                    # Descrip: Oculta la flecha que señala al 77.
+                    self.label_text_flecha .lower()
+
                 else:
+
                     # Descrip: Muestra la imagen siguiente.
                     self.list_images[self.n] .lift()
-                
-            
 
-          #      self.frame_image_base_2   .grid()
-          #      self.label_text_mostrar_77 .grid_remove()
+                    # Dice: Si la lista tiene 2 imagenes:
+                    if len(self.list_images) < 3:
+                        self.label_text_flecha .lift()
+                    else:
+                        # Dice: Si la lista tiene 3 imagenes:
+                        if self.n == 2:
+                            self.label_text_flecha .lift()
 
-                # Descrip: No posiciona la flecha si no es visible el angulo 77 [self.frame_image_base_77: Actualmente desactualizado]
-                if self.frame_image_base_2 .winfo_ismapped():
-                    self.label_text_flecha .grid()
-                else:
-                    self.label_text_flecha .grid_remove()
+        
+
+        #      self.frame_image_base_2   .grid()
+        #      self.label_text_mostrar_77 .grid_remove()
+
+            # Descrip: No posiciona la flecha si no es visible el angulo 77 [self.frame_image_base_77: Actualmente desactualizado]
+            """ if self.n != 0 and self.n != 2:
+                self.label_text_flecha .lift()
+            else:
+                self.label_text_flecha .lower() """
 
             """else:
                 self._button_1 = False
@@ -1833,26 +1845,38 @@ class TopDerCls(Frame):
         x  = event.x / self.master.winfo_width() * 100
         y = event.y / self.master.winfo_height() * 100
 
-        if not self._motion_1:    # Predeterminado: False
+        #if not self._motion_1:    # Predeterminado: False
+        if 0 <(x)< 100  and  10 <(y)< 100:  
+            #print('motion if')  
+            self.label_text_mostrar_77 .grid()
 
-            if 0 <(x)< 100  and  10 <(y)< 100:  
-                #print('motion if')  
-                self.label_text_mostrar_77 .grid()
-
-            else:
-                #print('motion else')  
-                self.label_text_mostrar_77 .grid_remove()
+        else:
+            #print('motion else')  
+            self.label_text_mostrar_77 .grid_remove()
         
         # Dice: Si el angulo 77 esta mapeado en pantalla:
         #if self.frame_image_base_2 .grid_info() != {}:   # == {} (no mapeado) 
             #self.label_text_mostrar_77     .grid_remove()
 
+
+    # acceso extermo
     
     # Tarea: - [ Soluciona error ] Reactiva el evento motion
     def reactivate_motion(self, event=None):
         #print('reactivando motion')
         if self.indice != 17:
+            #print('reactive motion')
             self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
+
+    """ def reactivate_motionn(self, event=None):
+        if self.indice != 17:
+            self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
+            self.off_button = self.master.bind("<Button-1>",   self.open_text_flecha)
+    
+    def deactivate_motion(self, event=None):
+        if self.indice != 17:
+            self.master.unbind("<Button-1>", self.off_button)
+            self.master.unbind("<Motion>", self.off_motion) """
 
 
     ###########################################################################################################################################
@@ -2327,9 +2351,9 @@ class ToplevelCls(Toplevel, MoveAllCls):
             for i in range(len(self.frames)):
                 if self.frames[i] in relation:
                     self.frames[i]. pack_forget()
-
             # Description: Muestra la interface del menu
             self.icons_interface .pack(fill=BOTH, expand=True)
+
 
         # OCULTAR INTERFACE:
         else:
@@ -2338,9 +2362,9 @@ class ToplevelCls(Toplevel, MoveAllCls):
             for i in range(len(self.frames)):
                 if self.frames[i] in relation:
                     self.frames[i] .pack(fill=BOTH, expand=True)
-
             # Description: Oculta la interface del menu
             self.icons_interface .pack_forget()
+
 
 
     def start_move(self, event=None):   # Activado temporalmente:  Razon: Arriba lo dice  
@@ -2449,7 +2473,6 @@ class RootCls(Tk):
 
         #____SubMétodos Llamados: ( 1 )
         self.toplevel_principal .create_frame_manager(self.ico1_lst, side=RIGHT, fill=BOTH)     # Frame Manager
-
         #____Posicionamiento:
         self.frame_interface .pack(side=RIGHT, fill=BOTH)
 
@@ -2829,8 +2852,6 @@ class InterfazCls(Frame, MoveAllCls):
 
                 # Description: Actualiza el controlador(if-else), que abre la interface del menú.
                 self._windows[i] .cascade = False
-
-
 
             self._frame[i] = container[i]
             # Description: Posiciona las instancias(frames) de las ventanas abiertas
