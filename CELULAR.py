@@ -2845,20 +2845,25 @@ class InterfazCls(Frame, MoveAllCls):
                     self._windows[i] .unbind('<Leave>', self.off_leave1)
 
 
-            # Description: Reemplaza los elementos[None] de la lista *container*
+            # Descrip: Reemplaza los elementos[None] de la lista *container*
             container[i] = args[i] (self._windows[i])
 
-            # Description: Destruye las instancias(frames) de las ventanas abiertas
+            # Descrip: Destruye las instancias(frames) de las ventanas abiertas
             if self._frame[i] is not None:
                 self._frame[i] .destroy()
-                # Description: Recrea la interface al destruirse su contenedor
+
+                # Descrip: Destruye la interface del menú y lo vuelve a crear.
                 self._windows[i] .icons_interface .destroy()
                 self._windows[i] .create_container_icons(indice_mobil, i, self._disabled[i])
 
                 self._windows[i] .icons_interface .deactivate_motion()
 
-                # Description: Actualiza el controlador(if-else), que abre la interface del menú.
+                # Descrip: Actualiza el controlador(if-else), que abre la interface del menú.
                 self._windows[i] .cascade = False
+
+                if i == 1:
+                    # Descrip: Reactiva los eventos cada vez que se destruye el contenedor 2(Frame)
+                    container[1] .reactive_binds()
 
             self._frame[i] = container[i]
             # Description: Posiciona las instancias(frames) de las ventanas abiertas
