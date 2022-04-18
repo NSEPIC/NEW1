@@ -1692,6 +1692,10 @@ class TopDerCls(Frame):
     # Tarea: - Abrir la interface del mobil
     def open_interface(self):
 
+        #################################
+        #######     T R I C O     #######
+        #################################
+
         if self.indice == 17:
 
             # Description: [ DESACTIVA LOS EVENTOS ]
@@ -1702,34 +1706,44 @@ class TopDerCls(Frame):
             #____Metodos Llamados:
             self.create_container_2()
 
+        #################################
+        #######   S T A N D A R   #######
+        #################################
+
         else:
             #____Metodos Llamados:
             self.create_container_1()
 
             if self.indice == 5:
-                # Imagen N°3:
+                # Descrip: Crea una nueva imagen que se posiciona ultimo en su orden de apilamiento.
                 self.frame_image_base_3 = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._4], bd=0)
                 self.frame_image_base_3 .grid(column=0, row=0, sticky='news')
                 self.frame_image_base_3 .lower(self.frame_image_base_2)
 
-                #____Agregando ala lista:
+                # Descrip: Agrega a la lista de imágenes que se muestran en toda la interfaz.
                 self.list_images .insert(2, self.frame_image_base_3)
 
 
-    ### externo:
+    #################################################################
+    #######   M E T O D O S  DE  A C C E S O  E X T E R N O   #######
+    #################################################################
+
+    #------------------------------ 1 -------------------------------
+
     def reactive_binds(self):
         if self.indice != 17:
             self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
 
+    #------------------------------ 2 -------------------------------
 
-    
-    # acceso extermo
     def active_(self, event=None):
         #print('active bind.master')
         if self.indice != 17:
             self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
             self.off_button = self.master.bind("<Button-1>",   self.open_text_flecha)
-    
+
+    #------------------------------ 3 -------------------------------
+
     def deactive_(self, event=None):
         #print('desactive bind.master')
         if self.indice != 17:
