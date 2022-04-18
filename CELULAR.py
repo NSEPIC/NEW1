@@ -1680,8 +1680,8 @@ class TopDerCls(Frame):
         
         self.master.bind("ash", lambda _: self.activate_version())                                          # 1 - SIN CONFLICTO
         self.off_leave  = self.bind ('<Leave>', lambda arg:self.label_text_siguiente .lower())              # 2
-        self.off_button = self.master.bind("<Button-1>",   self.open_text_flecha)                           # 3
-        self.off_motion = self.master.bind("<Motion>",     self.open_text_mostrar_77)                       # 4
+        self.off_button = self.master.bind("<ButtonRelease-1>",   self.change_images)                           # 3
+        self.off_motion = self.master.bind("<Motion>",     self.open_next_poster)                       # 4
         self.bind("<Unmap>", self.deactive_)
         #self.bind("<Map>", self.active_)       # se cambio por una llamada desde afuera
 
@@ -1714,6 +1714,9 @@ class TopDerCls(Frame):
             #____Metodos Llamados:
             self.create_container_1()
 
+            #################################
+            #######      G R U B      #######
+            #################################
             if self.indice == 5:
                 # Descrip: Crea una nueva imagen que se posiciona ultimo en su orden de apilamiento.
                 self.frame_image_base_3 = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._4], bd=0)
@@ -1723,6 +1726,11 @@ class TopDerCls(Frame):
                 # Descrip: Agrega a la lista de imágenes que se muestran en toda la interfaz.
                 self.list_images .insert(2, self.frame_image_base_3)
 
+            #################################
+            #######  B I G   F O O T  #######
+            #################################
+            elif self.indice == 19:
+                self.label_text_flecha  .grid_remove()
 
     #################################################################
     #######   M E T O D O S  DE  A C C E S O  E X T E R N O   #######
@@ -1732,22 +1740,22 @@ class TopDerCls(Frame):
 
     def reactive_binds(self):
         if self.indice != 17:
-            self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
+            self.off_motion = self.master.bind("<Motion>", self.open_next_poster)
 
     #------------------------------ 2 -------------------------------
 
     def active_(self, event=None):
         #print('active bind.master')
         if self.indice != 17:
-            self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
-            self.off_button = self.master.bind("<Button-1>",   self.open_text_flecha)
+            self.off_motion = self.master.bind("<Motion>", self.open_next_poster)
+            self.off_button = self.master.bind("<ButtonRelease-1>",   self.change_images)
 
     #------------------------------ 3 -------------------------------
 
     def deactive_(self, event=None):
         #print('desactive bind.master')
         if self.indice != 17:
-            self.master.unbind("<Button-1>", self.off_button)
+            self.master.unbind("<ButtonRelease-1>", self.off_button)
             self.master.unbind("<Motion>", self.off_motion)
 
 
@@ -1788,13 +1796,13 @@ class TopDerCls(Frame):
         self.frame_image_base_2       = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._3], bd=0)
 
         #____WIDGETS:  ( 2 widgets )
-        self.label_text_siguiente    = Label(self.frame_container_global_1, text=">   Siguiente   >", font=('Calibri',10,'bold'), bg='#830082', fg='white', borderwidth=2, relief='groove')
-        self.label_text_flecha        = Label(self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2f3337', fg='green2')
+        self.label_text_siguiente     = Label(self.frame_container_global_1, text=">   Siguiente   >", font=('Calibri',10,'bold'), bg='#830082', fg='white', borderwidth=2, relief='groove')
+        self.label_text_flecha        = Label(self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2b313c', fg='green2')
 
         #____Posicionamiento:
         self.frame_image_base_initial .grid(column=0, row=0, sticky='news')
         self.frame_image_base_2       .grid(column=0, row=0, sticky='news')
-        self.label_text_siguiente    .grid(column=0, row=0, ipadx=5, ipady=5, sticky='new',)
+        self.label_text_siguiente     .grid(column=0, row=0, ipadx=5, ipady=5, sticky='new',)
         self.label_text_flecha        .grid(column=0, row=0, ipadx=5, sticky=SE)
 
         #____Orden de apilamiento:
@@ -1804,51 +1812,68 @@ class TopDerCls(Frame):
         self.list_images .extend([self.frame_image_base_initial, self.frame_image_base_2])
 
 
-    #___< B U T T O N - 1 > :
-    def open_text_flecha(self, event):
+    #################################################################
+    #######              M E T O D O S   B I N D              ####### : Enlazados a la ventana superior
+    #################################################################
+
+    #------------------------------ 1 ------------------------------- Evento: '<Button-1>'
+
+    def change_images(self, event):
+        # Descrip: Captura al widget debajo del mouse cuando el boton derecho dejo de ser presionado, si no hay ninguno arroja None.
+        self._end = widget_release = event.widget.winfo_containing(event.x_root, event.y_root)
+        # Descrip: Captura al widget que desencadeno el evento.
+        widget = event.widget
 
         if isinstance(event.widget.master, ResizeCls) == True or event.widget.master == self.frame_container_global_1:
-            self.n += 1                                     # Predeterminado: 0
-            # Dice: Si 2 ó 3 es igual self.n:
-            if len(self.list_images) == self.n:
-                self.n = 0                                  # Actualiza a su valor inicial
-                # Descrip: Muestra la imagen inicial.
-                self.list_images[0] .lift()
+            # Descrip: Si el widget presionado es el mismo widget despresionado.
+            if widget == self._end:
+                self.n += 1                                     # Predeterminado: 0
+                # Dice: Si 2 ó 3 es igual self.n:
+                if len(self.list_images) == self.n:
+                    self.n = 0                                  # Actualiza a su valor inicial
+                    # Descrip: Muestra la imagen inicial.
+                    self.list_images[0] .lift()
 
-                # Descrip: Actualiza el cartel de texto.
-                self.label_text_siguiente .config(text=">   Siguiente   >")
-
-                # Descrip: Superpone el cartel de texto.
-                self.label_text_siguiente .lift()
-
-                # Descrip: Oculta la flecha que señala al 77.
-                self.label_text_flecha .lower()
-
-            else:
-
-                # Descrip: Muestra la imagen siguiente.
-                self.list_images[self.n] .lift()
-
-                # Descrip: Si solo falta 1 imagen por mostrar.
-                if self.n + 1 == len(self.list_images):
                     # Descrip: Actualiza el cartel de texto.
-                    self.label_text_siguiente .config(text="<   Reiniciar   >")
+                    self.label_text_siguiente .config(text=">   Siguiente   >")
 
-                # Descrip: Superpone el cartel de texto.
-                self.label_text_siguiente .lift()
+                    # Descrip: Superpone el cartel de texto.
+                    self.label_text_siguiente .lift()
 
+                    if self.label_text_flecha .winfo_ismapped():
+                        # Descrip: Oculta la flecha que señala al 77.
+                        self.label_text_flecha .lower()
 
-                # (if-else): Si la lista tiene 2 imagenes:
-                if len(self.list_images) < 3:
-                    self.label_text_flecha .lift()
                 else:
-                    # Dice: Si la lista tiene 3 imagenes:
-                    if self.n == 2:
-                        self.label_text_flecha .lift()
+
+                    # Descrip: Muestra la imagen siguiente.
+                    self.list_images[self.n] .lift()
+
+                    # Descrip: Si solo falta 1 imagen por mostrar.
+                    if self.n + 1 == len(self.list_images):
+                        # Descrip: Actualiza el cartel de texto.
+                        self.label_text_siguiente .config(text="<   Reiniciar   >")
+
+                    # Descrip: Superpone el cartel de texto.
+                    self.label_text_siguiente .lift()
+
+
+                    # (if-else): Si la lista tiene 2 imagenes:
+                    if len(self.list_images) < 3:
+                        if self.label_text_flecha .winfo_ismapped():
+                            # Descrip: Muestra la flecha que señala al 77.
+                            self.label_text_flecha .lift()
+                    else:
+                        # Dice: Si la lista tiene 3 imagenes:
+                        if self.n == 2:
+                            if self.label_text_flecha .winfo_ismapped():
+                                # Descrip: Muestra la flecha que señala al 77.
+                                self.label_text_flecha .lift()
 
         
-    #___< M O T I O N > :
-    def open_text_mostrar_77(self, event=None):
+    #------------------------------ 2 ------------------------------- Evento: '<Motion>'
+
+    def open_next_poster(self, event=None):
 
         if isinstance(event.widget.master, ResizeCls) == True or event.widget.master == self.frame_container_global_1:
             # Descrip: Muestra el cartel si el mouse se posiciona sobre una instancia de la clase: ResizeCls o es hijo del contenedor global 1
