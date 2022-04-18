@@ -188,6 +188,7 @@ class LogotipoCls(Frame):
     #--------------------------------------------------------------------------------------
     # Tarea - Cambiar la imagen del boton logotipo a celeste encendido
     def map_widget(self, event=None):
+        #print('mepando frame')
         n1 = 0
         n2 = self.master._open .count(True)
 
@@ -205,6 +206,7 @@ class LogotipoCls(Frame):
     #--------------------------------------------------------------------------------------
     # Tarea - Cambiar la imagen del boton logotipo a celeste apagado
     def unmap_widget(self, event=None):
+        #print('dessss frame')
         self.logotipo = 'off'
         self.btn_logotipo .config(image=self.Icons[2],)
 
@@ -807,14 +809,13 @@ class IconsCls(Frame):
     def activate_motion(self, event=None):
         # Descr: Activa el método de devolucion de llamada enlazado a la rueda del mouse.
         self.off_mousewheel  = self.master.bind('<MouseWheel>',    self.mousewheel_open_interface_vertical)
-
+        #self.frames[1].deactive_()    
     #____________________________________ 1.1 _________________________________________
 
     # Tarea: -  Muestra la interface vertical de botones.
     def mousewheel_open_interface_vertical(self, event=None):
         # Descr: Muestra la interface vertical de botones.
         self.open_interface_vertical()
-
    
     #------------------------------------- 2 ------------------------------------------ Evento: '<Unmap>'
 
@@ -822,6 +823,7 @@ class IconsCls(Frame):
     def deactivate_motion(self, event=None):
         # Descr: Desactiva el evento '<MouseWheel>'
         self.master.unbind("<MouseWheel>", self.off_mousewheel)
+        #self.frames[1].active_()
 
 
 
@@ -1664,21 +1666,7 @@ class TopDerCls(Frame):
         self._7 = arg_7
 
         #____Variables de Control:
-        self.x1 = 0
-        self.x2 = 100
-        self.y1 = 67
-        self.y2 = 100
-
-        self.xx1 = 0
-        self.xx2 = 100
-        self.yy1 = 33
-        self.yy2 = 66
-
         self.n = 0
-
-        #____Variables de Control para los Eventos:
-        self._button_1 = False  # Creado para el evento: Button-1
-        self._motion_1 = False  # Creado para el evento: Motion
 
         #____Peso de distribucion:
         self.columnconfigure(0, weight=1)
@@ -1689,17 +1677,16 @@ class TopDerCls(Frame):
         # [ 2 ]  :  Quita el Label-texto: "Haga click" para mostrar el angulo 77"
         # [ 3 ]  :  Posiciona y Quita los widgets:   [ Label-texto"Haga click" para mostrar el angulo 77" ], [ Label-texto: "↑" ]
         # [ 4 ]  :  Posiciona y Quita el widget:     [ Label-texto"Haga click" para mostrar el angulo 77" ]
-        # [ 5 ]  :  Soluciona error: Reactiva el evento motion que se desactiva por algun motivo cuando se desactiva el evento motion de la interface de iconos
         
         self.master.bind("ash", lambda _: self.activate_version())                                          # 1 - SIN CONFLICTO
-        self.off_leave  = self.bind ('<Leave>', lambda arg:self.label_text_mostrar_77 .lower())             # 2
+        self.off_leave  = self.bind ('<Leave>', lambda arg:self.label_text_siguiente .lower())              # 2
         self.off_button = self.master.bind("<Button-1>",   self.open_text_flecha)                           # 3
         self.off_motion = self.master.bind("<Motion>",     self.open_text_mostrar_77)                       # 4
-        #self.master.bind("<Map>", self.reactivate_motion)                                                          # 5 - DESACT
+        self.bind("<Unmap>", self.deactive_)
+        #self.bind("<Map>", self.active_)       # se cambio por una llamada desde afuera
 
         #____Metodos Llamados:
         self.open_interface()
-
 
 
     # Tarea: - Abrir la interface del mobil
@@ -1720,9 +1707,6 @@ class TopDerCls(Frame):
             self.create_container_1()
 
             if self.indice == 5:
-                # Descrip: Ca
-                self.label_text_mostrar_77 .config(text="Haga  'Click'  para mostrar:\nBase  N°2")
-
                 # Imagen N°3:
                 self.frame_image_base_3 = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._4], bd=0)
                 self.frame_image_base_3 .grid(column=0, row=0, sticky='news')
@@ -1734,8 +1718,23 @@ class TopDerCls(Frame):
 
     ### externo:
     def reactive_binds(self):
-        if self.indice == 17:
+        if self.indice != 17:
             self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
+
+
+    
+    # acceso extermo
+    def active_(self, event=None):
+        #print('active bind.master')
+        if self.indice != 17:
+            self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
+            self.off_button = self.master.bind("<Button-1>",   self.open_text_flecha)
+    
+    def deactive_(self, event=None):
+        #print('desactive bind.master')
+        if self.indice != 17:
+            self.master.unbind("<Button-1>", self.off_button)
+            self.master.unbind("<Motion>", self.off_motion)
 
 
     ###########################################################################################################################################
@@ -1769,129 +1768,81 @@ class TopDerCls(Frame):
 
         self.list_images = []
 
+
         #____IMAGENES: ( 2 instancias )
         self.frame_image_base_initial = ResizeCls(self.frame_container_global_1, self.Images[self.indice][self._2], bd=0)
         self.frame_image_base_2       = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._3], bd=0)
 
         #____WIDGETS:  ( 2 widgets )
-        self.label_text_mostrar_77    = Label(self.frame_container_global_1, text="Haga  'Click'  para mostrar:\nAngulo  77 ", font=('Calibri',10,'bold'), bg='#2f3337', fg='white', width=50, height=2)
+        self.label_text_siguiente    = Label(self.frame_container_global_1, text=">   Siguiente   >", font=('Calibri',10,'bold'), bg='#830082', fg='white', borderwidth=2, relief='groove')
         self.label_text_flecha        = Label(self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2f3337', fg='green2')
 
         #____Posicionamiento:
         self.frame_image_base_initial .grid(column=0, row=0, sticky='news')
         self.frame_image_base_2       .grid(column=0, row=0, sticky='news')
-        self.label_text_mostrar_77    .grid(column=0, row=0, ipadx=5, ipady=5, sticky='new',)
+        self.label_text_siguiente    .grid(column=0, row=0, ipadx=5, ipady=5, sticky='new',)
         self.label_text_flecha        .grid(column=0, row=0, ipadx=5, sticky=SE)
 
         #____Orden de apilamiento:
         self.frame_image_base_initial .lift()
 
-        #____Agregando ala lista:
-        self.list_images .append(self.frame_image_base_initial)
-        self.list_images .append(self.frame_image_base_2)
+        #____Agregando ala lista de imagenes:
+        self.list_images .extend([self.frame_image_base_initial, self.frame_image_base_2])
 
 
     #___< B U T T O N - 1 > :
     def open_text_flecha(self, event):
-        self.a = self.master.winfo_children()
-        #print(self.a)
-        # Descrip: Convierte el tamaño total de la ventana en porcentaje:  100 %
-        x = event.x / self.master.winfo_width() * 100
-        y = event.y / self.master.master.winfo_height() * 100
-        #print(event.widget)
-        print(y)
-        #if event.widget != self.master:
-        #if 0 <(x)< 100  and  (y) > 2:
-            if event.widget.winfo_parent() == self.frame_container_global_1:
-                print('entreeeeeeeeeee')
-                self.n += 1                                     # Predeterminado: 0
-                # Dice: Si 2 ó 3 es igual self.n:
-                if len(self.list_images) == self.n:
-                    self.n = 0                                  # Actualiza
-                    # Descrip: Muestra la imagen inicial.
-                    self.list_images[0] .lift()
 
-                    # Descrip: Oculta la flecha que señala al 77.
-                    self.label_text_flecha .lower()
+        if isinstance(event.widget.master, ResizeCls) == True or event.widget.master == self.frame_container_global_1:
+            self.n += 1                                     # Predeterminado: 0
+            # Dice: Si 2 ó 3 es igual self.n:
+            if len(self.list_images) == self.n:
+                self.n = 0                                  # Actualiza a su valor inicial
+                # Descrip: Muestra la imagen inicial.
+                self.list_images[0] .lift()
 
-                    # Descrip: Modificaciones según el móbil:
-                    if self.indice == 5:
-                        self.label_text_mostrar_77 .config(text="Haga  'Click'  para mostrar:\nBase  N°2")
+                # Descrip: Actualiza el cartel de texto.
+                self.label_text_siguiente .config(text=">   Siguiente   >")
+
+                # Descrip: Superpone el cartel de texto.
+                self.label_text_siguiente .lift()
+
+                # Descrip: Oculta la flecha que señala al 77.
+                self.label_text_flecha .lower()
+
+            else:
+
+                # Descrip: Muestra la imagen siguiente.
+                self.list_images[self.n] .lift()
+
+                # Descrip: Si solo falta 1 imagen por mostrar.
+                if self.n + 1 == len(self.list_images):
+                    # Descrip: Actualiza el cartel de texto.
+                    self.label_text_siguiente .config(text="<   Reiniciar   >")
+
+                # Descrip: Superpone el cartel de texto.
+                self.label_text_siguiente .lift()
 
 
+                # (if-else): Si la lista tiene 2 imagenes:
+                if len(self.list_images) < 3:
+                    self.label_text_flecha .lift()
                 else:
-
-                    # Descrip: Muestra la imagen siguiente.
-                    self.list_images[self.n] .lift()
-
-                    # Dice: Si la lista tiene 2 imagenes:
-                    if len(self.list_images) < 3:
+                    # Dice: Si la lista tiene 3 imagenes:
+                    if self.n == 2:
                         self.label_text_flecha .lift()
-                    else:
-                        # Dice: Si la lista tiene 3 imagenes:
-                        if self.n == 2:
-                            self.label_text_flecha .lift()
 
         
-
-        #      self.frame_image_base_2   .grid()
-        #      self.label_text_mostrar_77 .grid_remove()
-
-            # Descrip: No posiciona la flecha si no es visible el angulo 77 [self.frame_image_base_77: Actualmente desactualizado]
-            """ if self.n != 0 and self.n != 2:
-                self.label_text_flecha .lift()
-            else:
-                self.label_text_flecha .lower() """
-
-            """else:
-                self._button_1 = False
-                self._motion_1 = False
-
-                # Descrip: Oculta
-         #       self.frame_image_base_2    .grid_remove()
-                self.label_text_mostrar_77 .grid()
-                self.label_text_flecha     .grid_remove()"""
-    
-
     #___< M O T I O N > :
     def open_text_mostrar_77(self, event=None):
-        #x  = event.x / self.master.winfo_width() * 100
-        #y = event.y / self.master.winfo_height() * 100
 
-        #if not self._motion_1:    # Predeterminado: False
-        #if 0 <(x)< 100  and  10 <(y)< 100:  
-
-        if event.widget.winfo_parent() == self.frame_container_global_1:
-            #print('motion if')  
-            self.label_text_mostrar_77 .lift()
+        if isinstance(event.widget.master, ResizeCls) == True or event.widget.master == self.frame_container_global_1:
+            # Descrip: Muestra el cartel si el mouse se posiciona sobre una instancia de la clase: ResizeCls o es hijo del contenedor global 1
+            self.label_text_siguiente .lift()
 
         else:
-            #print('motion else')  
-            self.label_text_mostrar_77 .lower()
-        
-        # Dice: Si el angulo 77 esta mapeado en pantalla:
-        #if self.frame_image_base_2 .grid_info() != {}:   # == {} (no mapeado) 
-            #self.label_text_mostrar_77     .grid_remove()
-
-
-    # acceso extermo
-    
-    # Tarea: - [ Soluciona error ] Reactiva el evento motion
-    """def reactivate_motion(self, event=None):
-        #print('reactivando motion')
-        if self.indice != 17:
-            #print('reactive motion')
-            self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)"""
-
-    """ def reactivate_motionn(self, event=None):
-        if self.indice != 17:
-            self.off_motion = self.master.bind("<Motion>", self.open_text_mostrar_77)
-            self.off_button = self.master.bind("<Button-1>",   self.open_text_flecha)
-    
-    def deactivate_motion(self, event=None):
-        if self.indice != 17:
-            self.master.unbind("<Button-1>", self.off_button)
-            self.master.unbind("<Motion>", self.off_motion) """
+            # Descrip: Oculta la flecha cuando el mouse se posiciona sobre el sisegrip.  
+            self.label_text_siguiente .lower()
 
 
     ###########################################################################################################################################
@@ -2365,7 +2316,13 @@ class ToplevelCls(Toplevel, MoveAllCls):
             # Description (for): Encuentra el frame hijo de la ventana y lo oculta.
             for i in range(len(self.frames)):
                 if self.frames[i] in relation:
-                    self.frames[i]. pack_forget()
+                    #if i == 1:
+                        # Descrip: Desactiva los eventos enlazados a la ventana para evitar la ejecucion de sus funciones enlazadas.
+                        #self.frames[i] .deactive_()
+
+                    # Descrip: Oculta el frame global.
+                    self.frames[i] .pack_forget()
+
             # Description: Muestra la interface del menu
             self.icons_interface .pack(fill=BOTH, expand=True)
 
@@ -2376,7 +2333,14 @@ class ToplevelCls(Toplevel, MoveAllCls):
             # Description (for): Encuentra el frame hijo de la ventana y lo muestra.
             for i in range(len(self.frames)):
                 if self.frames[i] in relation:
+
+                    # Descrip: Oculta el frame global.
                     self.frames[i] .pack(fill=BOTH, expand=True)
+
+                    #if i == 1:
+                        # Descrip: Activa los eventos enlazados a la ventana para ejecutar sus funciones enlazadas.
+                    #    self.frames[i] .active_()
+
             # Description: Oculta la interface del menu
             self.icons_interface .pack_forget()
 
@@ -2896,7 +2860,8 @@ class InterfazCls(Frame, MoveAllCls):
             #____Eventos:
             # [ 1 ]  :  Actualiza las ventanas cerradas para volver a abrirlas
             # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default
-            self._frame[i].bind("<Map>", self.frame_static .map_widget)
+            #self._frame[i].bind("<Map>", self.frame_static .map_widget)                         # antes
+            self._frame[i].bind("<Map>", lambda event, number=i: self.map_frames(number, event)) # ahora
             self._windows[i].frame_manager.bind("<Unmap>", self.frame_static .unmap_widget)
 
             # Description: Cambia la imagen del boton a celeste encendido
@@ -3001,6 +2966,17 @@ class InterfazCls(Frame, MoveAllCls):
             if self._open[i] == True:
                 self._windows[i].displacement = False
                 
+
+
+
+    def map_frames (self, number, event=None):
+        # Descrip: Ejecuta si se  mapee cualquier frame.
+        self.frame_static .map_widget()
+
+        # Descrip: Si el frame que se mapeo es la numero 2.
+        if number == 1:
+            # Descrip: Activa los eventos enlazados a la frame.
+            self._frame[1].active_()
 
 
 
