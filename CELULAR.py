@@ -1707,33 +1707,37 @@ class TopDerCls(Frame):
             #____Metodos Llamados:
             self.create_container_2()
 
+
         #################################
         #######   S T A N D A R   #######
         #################################
 
         else:
-            #____Metodos Llamados:
-            self.create_container_1()
+
 
             #################################
             #######      G R U B      #######
             #################################
+
             if self.indice == 5:
                 # Descrip: Crea una nueva imagen
                 self.frame_image_base_3 = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._4], bd=0)
 
                 # Descrip: Agrega a la lista de imágenes que se muestran en toda la interfaz.
-                self.list_images .insert(2, self.frame_image_base_3)
+                self.list_images .append(self.frame_image_base_3)
 
             #################################
             #######  B I G   F O O T  #######
             #################################
-            elif self.indice == 19:
-                self.label_text_flecha  .place_forget()
 
-                # Descrip: Crea una nueva imagen
-                self.frame_image_base_4 = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._4], bd=0)
-                
+            elif self.indice == 19:
+                # Descrip: Modifica la variable para abrir otra imagen.
+                if self.master.version == 'activado':
+                    self._2 = 4
+
+            #____Metodos Llamados:
+            self.create_container_1()
+
 
 
     #################################################################
@@ -1788,11 +1792,11 @@ class TopDerCls(Frame):
 
     def create_items_1(self):
         # [ 1 ] self.frame_image_base_initial        : Imagen: Base inicial del mobil                                        : POSICIONADO
-        # [ 1 ] self.frame_image_base_77             : Imagen: Base 77 del mobil                                             : NO POSICIONADO
-        # [ 1 ] self.label_text_mostrar_77           : Label-Texto: "Haga click" para mostrar el angulo 77"                  : NO POSICIONADO
+        # [ 1 ] self.frame_image_base_2              : Imagen: Base 77 del mobil                                             : NO POSICIONADO
+        # [ 1 ] self.label_text_siguiente            : Label-Texto: ">Siguiente>  /  <Reiniciar>"                  : NO POSICIONADO
         # [ 1 ] self.label_text_flecha               : Label-Texto: "↑"                                                      : NO POSICIONADO
 
-        self.list_images = []
+        self.list_images = [None] * 2
 
 
         #____IMAGENES: ( 2 instancias )
@@ -1804,20 +1808,15 @@ class TopDerCls(Frame):
         self.label_text_flecha        = Label(self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2b313c', fg='green2')
 
         #____Posicionamiento:
-        #self.frame_image_base_initial .grid(column=0, row=0, sticky='news')
-        #self.frame_image_base_2       .grid(column=0, row=0, sticky='news')
-        #self.label_text_siguiente     .grid(column=0, row=0, ipadx=5, ipady=5, sticky='new',)
-        #self.label_text_flecha        .grid(column=0, row=0, ipadx=5, sticky=SE)
-
         self.frame_image_base_initial .pack(fill='both', expand=True)
         self.label_text_siguiente     .place(x=0, y=0, relwidth=1, height=25) # 32
-        #self.label_text_flecha        .place(relx=1.0, rely=1.0, anchor='se')
+        #self.label_text_flecha       .place(relx=1.0, rely=1.0, anchor='se')
 
         #____Orden de apilamiento:
-        self.frame_image_base_initial .lift()
+        #self.frame_image_base_initial .lift()
 
         #____Agregando ala lista de imagenes:
-        self.list_images .extend([self.frame_image_base_initial, self.frame_image_base_2])
+        self.list_images[0,1] = self.frame_image_base_initial, self.frame_image_base_2
 
 
     #################################################################
@@ -1901,7 +1900,7 @@ class TopDerCls(Frame):
         if self.master.version == 'activado':
             print('iff')
             self.update_idletasks()
-            self.list_images[0] = self.frame_image_base_4
+            self.list_images[0] = self.frame_image_base_initial
             self.update_idletasks()
 
 
