@@ -1,3 +1,4 @@
+from numpy import place
 from Importaciones import *
 
 # INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
@@ -1718,10 +1719,8 @@ class TopDerCls(Frame):
             #######      G R U B      #######
             #################################
             if self.indice == 5:
-                # Descrip: Crea una nueva imagen que se posiciona ultimo en su orden de apilamiento.
+                # Descrip: Crea una nueva imagen
                 self.frame_image_base_3 = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._4], bd=0)
-                self.frame_image_base_3 .grid(column=0, row=0, sticky='news')
-                self.frame_image_base_3 .lower(self.frame_image_base_2)
 
                 # Descrip: Agrega a la lista de imágenes que se muestran en toda la interfaz.
                 self.list_images .insert(2, self.frame_image_base_3)
@@ -1730,7 +1729,12 @@ class TopDerCls(Frame):
             #######  B I G   F O O T  #######
             #################################
             elif self.indice == 19:
-                self.label_text_flecha  .grid_remove()
+                self.label_text_flecha  .place_forget()
+
+                # Descrip: Crea una nueva imagen
+                self.frame_image_base_4 = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._4], bd=0)
+                
+
 
     #################################################################
     #######   M E T O D O S  DE  A C C E S O  E X T E R N O   #######
@@ -1772,7 +1776,7 @@ class TopDerCls(Frame):
 
         #____CONTENEDOR EXTERIOR 1:
         self.frame_container_global_1 = Frame(self)
-        self.frame_container_global_1 .grid(sticky='news')
+        self.frame_container_global_1 .grid(column=0, row=0, sticky='news')
 
         #____Peso de distribucion:
         self.frame_container_global_1 .columnconfigure(0, weight=1)
@@ -1800,10 +1804,14 @@ class TopDerCls(Frame):
         self.label_text_flecha        = Label(self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2b313c', fg='green2')
 
         #____Posicionamiento:
-        self.frame_image_base_initial .grid(column=0, row=0, sticky='news')
-        self.frame_image_base_2       .grid(column=0, row=0, sticky='news')
-        self.label_text_siguiente     .grid(column=0, row=0, ipadx=5, ipady=5, sticky='new',)
-        self.label_text_flecha        .grid(column=0, row=0, ipadx=5, sticky=SE)
+        #self.frame_image_base_initial .grid(column=0, row=0, sticky='news')
+        #self.frame_image_base_2       .grid(column=0, row=0, sticky='news')
+        #self.label_text_siguiente     .grid(column=0, row=0, ipadx=5, ipady=5, sticky='new',)
+        #self.label_text_flecha        .grid(column=0, row=0, ipadx=5, sticky=SE)
+
+        self.frame_image_base_initial .pack(fill='both', expand=True)
+        self.label_text_siguiente     .place(x=0, y=0, relwidth=1, height=25) # 32
+        #self.label_text_flecha        .place(relx=1.0, rely=1.0, anchor='se')
 
         #____Orden de apilamiento:
         self.frame_image_base_initial .lift()
@@ -1827,12 +1835,18 @@ class TopDerCls(Frame):
         if isinstance(event.widget.master, ResizeCls) == True or event.widget.master == self.frame_container_global_1:
             # Descrip: Si el widget presionado es el mismo widget despresionado.
             if widget == self._end:
-                self.n += 1                                     # Predeterminado: 0
+                self.n += 1                         # Predeterminado: 0
+
+                if self.indice == 19:
+                    self.test_version()
+
                 # Dice: Si 2 ó 3 es igual self.n:
                 if len(self.list_images) == self.n:
-                    self.n = 0                                  # Actualiza a su valor inicial
                     # Descrip: Muestra la imagen inicial.
-                    self.list_images[0] .lift()
+                    self.list_images[self.n-1] .pack_forget()
+                    self.list_images[0] .pack(fill='both', expand=True)
+
+                    self.n = 0                                  # Actualiza a su valor inicial
 
                     # Descrip: Actualiza el cartel de texto.
                     self.label_text_siguiente .config(text=">   Siguiente   >")
@@ -1840,14 +1854,14 @@ class TopDerCls(Frame):
                     # Descrip: Superpone el cartel de texto.
                     self.label_text_siguiente .lift()
 
-                    if self.label_text_flecha .winfo_ismapped():
-                        # Descrip: Oculta la flecha que señala al 77.
-                        self.label_text_flecha .lower()
+                    # Descrip: Oculta la flecha que señala al 77.
+                    self.label_text_flecha .place_forget()
 
                 else:
 
                     # Descrip: Muestra la imagen siguiente.
-                    self.list_images[self.n] .lift()
+                    self.list_images[self.n-1] .pack_forget()
+                    self.list_images[self.n] .pack(fill='both', expand=True)
 
                     # Descrip: Si solo falta 1 imagen por mostrar.
                     if self.n + 1 == len(self.list_images):
@@ -1859,16 +1873,15 @@ class TopDerCls(Frame):
 
 
                     # (if-else): Si la lista tiene 2 imagenes:
-                    if len(self.list_images) < 3:
-                        if self.label_text_flecha .winfo_ismapped():
-                            # Descrip: Muestra la flecha que señala al 77.
-                            self.label_text_flecha .lift()
+                    if len(self.list_images) < 3 and self.indice != 19:
+                        # Descrip: Muestra la flecha que señala al 77.
+                        self.label_text_flecha .place(relx=1.0, rely=1.0, anchor='se')
                     else:
+
                         # Dice: Si la lista tiene 3 imagenes:
                         if self.n == 2:
-                            if self.label_text_flecha .winfo_ismapped():
-                                # Descrip: Muestra la flecha que señala al 77.
-                                self.label_text_flecha .lift()
+                            # Descrip: Muestra la flecha que señala al 77.
+                            self.label_text_flecha .place(relx=1.0, rely=1.0, anchor='se')
 
         
     #------------------------------ 2 ------------------------------- Evento: '<Motion>'
@@ -1882,6 +1895,25 @@ class TopDerCls(Frame):
         else:
             # Descrip: Oculta la flecha cuando el mouse se posiciona sobre el sisegrip.  
             self.label_text_siguiente .lower()
+
+
+    def test_version(self):
+        if self.master.version == 'activado':
+            print('iff')
+            self.update_idletasks()
+            self.list_images[0] = self.frame_image_base_4
+            self.update_idletasks()
+
+
+        else:
+            print('elsee')
+
+            pass
+            #print(len(self.list_images),'b')
+
+            #self.list_images[0] = self.frame_image_base_initial
+
+            #self.frame_image_base_3 .lower()
 
 
     ###########################################################################################################################################

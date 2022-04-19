@@ -51,3 +51,17 @@ def minimize_all(self):
                     if self.master._open[i] == True:
                         self.master._windows[i] .frame_manager .window_manager_off()
                         self.update_position(self.master._windows[i]) 
+
+
+
+        """ def test_version(self):
+            print('testtttttt')
+            if self.master.version == 'activado':
+                self.list_images[0] = self.frame_image_base_3
+                self.frame_image_base_3 .grid()
+                self.frame_image_base_initial .grid_remove()
+
+            else:
+                self.list_images[0] = self.frame_image_base_initial
+                self.frame_image_base_initial .grid()
+                self.frame_image_base_3 .grid_remove() """
