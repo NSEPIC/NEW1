@@ -1,3 +1,4 @@
+from telnetlib import STATUS
 from numpy import place
 from Importaciones import *
 
@@ -1683,7 +1684,7 @@ class TopDerCls(Frame):
         self.off_leave  = self.bind ('<Leave>', lambda arg:self.label_text_siguiente .lower())              # 2
         self.off_button = self.master.bind("<ButtonRelease-1>",   self.change_images)                           # 3
         self.off_motion = self.master.bind("<Motion>",     self.open_next_poster)                       # 4
-        self.bind("<Unmap>", self.deactive_)
+        self.bind("<Unmap>", self.deactive_binds)
         #self.bind("<Map>", self.active_)       # se cambio por una llamada desde afuera
 
         #____Metodos Llamados:
@@ -1693,11 +1694,10 @@ class TopDerCls(Frame):
     # Tarea: - Abrir la interface del mobil
     def open_interface(self):
 
-        #################################
-        #######     T R I C O     #######
-        #################################
-
         if self.indice == 17:
+            #################################
+            #######     T R I C O     #######
+            #################################
 
             # Description: [ DESACTIVA LOS EVENTOS ]
             self.unbind("", self.off_leave)  # Puede crear errores, falta poner <Leave>
@@ -1708,36 +1708,14 @@ class TopDerCls(Frame):
             self.create_container_2()
 
 
-        #################################
-        #######   S T A N D A R   #######
-        #################################
 
         else:
-
-
             #################################
-            #######      G R U B      #######
+            #######   S T A N D A R   #######
             #################################
-
-            if self.indice == 5:
-                # Descrip: Crea una nueva imagen
-                self.frame_image_base_3 = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._4], bd=0)
-
-                # Descrip: Agrega a la lista de imágenes que se muestran en toda la interfaz.
-                self.list_images .append(self.frame_image_base_3)
-
-            #################################
-            #######  B I G   F O O T  #######
-            #################################
-
-            elif self.indice == 19:
-                # Descrip: Modifica la variable para abrir otra imagen.
-                if self.master.version == 'activado':
-                    self._2 = 4
 
             #____Metodos Llamados:
             self.create_container_1()
-
 
 
     #################################################################
@@ -1746,13 +1724,15 @@ class TopDerCls(Frame):
 
     #------------------------------ 1 -------------------------------
 
-    def reactive_binds(self):
+    # Tarea: - Reactiva el evento motion cada vez que se destruye el contenedor global
+    def reactive_bind(self):
         if self.indice != 17:
             self.off_motion = self.master.bind("<Motion>", self.open_next_poster)
 
     #------------------------------ 2 -------------------------------
 
-    def active_(self, event=None):
+    # Tarea: - Activa los eventos cuando se visualiza la interface.
+    def active_binds(self, event=None):
         #print('active bind.master')
         if self.indice != 17:
             self.off_motion = self.master.bind("<Motion>", self.open_next_poster)
@@ -1760,7 +1740,8 @@ class TopDerCls(Frame):
 
     #------------------------------ 3 -------------------------------
 
-    def deactive_(self, event=None):
+    # Tarea: - Desactiva los eventos cuando se visualiza la interface de menu.
+    def deactive_binds(self, event=None):
         #print('desactive bind.master')
         if self.indice != 17:
             self.master.unbind("<ButtonRelease-1>", self.off_button)
@@ -1791,33 +1772,93 @@ class TopDerCls(Frame):
 
 
     def create_items_1(self):
-        # [ 1 ] self.frame_image_base_initial        : Imagen: Base inicial del mobil                                        : POSICIONADO
-        # [ 1 ] self.frame_image_base_2              : Imagen: Base 77 del mobil                                             : NO POSICIONADO
-        # [ 1 ] self.label_text_siguiente            : Label-Texto: ">Siguiente>  /  <Reiniciar>"                  : NO POSICIONADO
-        # [ 1 ] self.label_text_flecha               : Label-Texto: "↑"                                                      : NO POSICIONADO
+        # [ 1 ] self.frame_image_base_initial        : Imagen: Base inicial del mobil                             : POSICIONADO
+        # [ 1 ] self.frame_image_base_2              : Imagen: Base 2                                             : NO POSICIONADO
+        # [ 1 ] self.frame_image_base_3              : Imagen: Base 3                                             : NO POSICIONADO
+        # [ 1 ] self.label_text_siguiente            : Label-Texto: ">Siguiente>  /  <Reiniciar>"                 : POSICIONADO
+        # [ 1 ] self.label_text_flecha               : Label-Texto: "↑"                                           : NO POSICIONADO
 
         self.list_images = [None] * 2
 
-
         #____IMAGENES: ( 2 instancias )
         self.frame_image_base_initial = ResizeCls(self.frame_container_global_1, self.Images[self.indice][self._2], bd=0)
-        self.frame_image_base_2       = ResizeCls(self.frame_container_global_1, self.Images [self.indice][self._3], bd=0)
+        self.frame_image_base_2       = ResizeCls(self.frame_container_global_1, self.Images[self.indice][self._3], bd=0)
+
+        if self.indice in [5,19]:
+            # Descrip: Crea la imagen N°3 para ciertos moviles: [Grub: 5, Bigfoot: 19]
+            self.frame_image_base_3   = ResizeCls(self.frame_container_global_1, self.Images[self.indice][self._4], bd=0)
+
 
         #____WIDGETS:  ( 2 widgets )
         self.label_text_siguiente     = Label(self.frame_container_global_1, text=">   Siguiente   >", font=('Calibri',10,'bold'), bg='#830082', fg='white', borderwidth=2, relief='groove')
         self.label_text_flecha        = Label(self.frame_container_global_1, text='↑', font=('Calibri',30,'bold'), bg='#2b313c', fg='green2')
+
 
         #____Posicionamiento:
         self.frame_image_base_initial .pack(fill='both', expand=True)
         self.label_text_siguiente     .place(x=0, y=0, relwidth=1, height=25) # 32
         #self.label_text_flecha       .place(relx=1.0, rely=1.0, anchor='se')
 
-        #____Orden de apilamiento:
-        #self.frame_image_base_initial .lift()
-
         #____Agregando ala lista de imagenes:
-        self.list_images[0,1] = self.frame_image_base_initial, self.frame_image_base_2
+        self.list_images[0] = self.frame_image_base_initial
+        self.list_images[1] = self.frame_image_base_2
 
+
+        # Descrip: Comprueba si tiene que hacer modificaciones en la creacion de los widgets
+        if self.indice == 5:
+            self.check_mobil(self.indice)
+        
+        elif self.indice == 19:
+            self.check_mobil(self.indice)
+
+
+    #################################################################
+    #######          M E T O D O S   L L A M A D O S          #######
+    #################################################################
+
+    #------------------------------ 1 -------------------------------
+
+    def check_mobil(self, indice):
+
+        if indice == 5:
+            #################################
+            #######      G R U B      #######
+            #################################
+
+            # Descrip: Agrega la imagen  N° 3  a la lista de imágenes al final de este.
+            self.list_images .append(self.frame_image_base_3)
+
+
+        elif indice == 19:
+            #################################
+            #######  B I G   F O O T  #######
+            #################################
+
+            if self.master.version == 'activado':
+                # Descrip: Quita la imagen N°1.   
+                self.list_images[0] .pack_forget()
+                # Descrip: Cambia la imagen N°1 por la N°3
+                self.list_images[0] = self.frame_image_base_3
+                self.list_images[0] .pack(fill='both', expand=True)
+
+
+    #------------------------------ 2 -------------------------------
+
+    def test_version(self):
+        if self.master.version == 'activado':
+            # Descrip: Quita la imagen N°1.   
+            self.list_images[0] .pack_forget()
+            # Descrip: Cambia la imagen N°1 por la N°3
+            self.list_images[0] = self.frame_image_base_3
+
+        else:
+            # Descrip: Quita la imagen N°1. 
+            self.list_images[0] .pack_forget()
+            # Descrip: Cambia la imagen N°3 por la N°1
+            self.list_images[0] = self.frame_image_base_initial
+       
+
+       
 
     #################################################################
     #######              M E T O D O S   B I N D              ####### : Enlazados a la ventana superior
@@ -1894,25 +1935,6 @@ class TopDerCls(Frame):
         else:
             # Descrip: Oculta la flecha cuando el mouse se posiciona sobre el sisegrip.  
             self.label_text_siguiente .lower()
-
-
-    def test_version(self):
-        if self.master.version == 'activado':
-            print('iff')
-            self.update_idletasks()
-            self.list_images[0] = self.frame_image_base_initial
-            self.update_idletasks()
-
-
-        else:
-            print('elsee')
-
-            pass
-            #print(len(self.list_images),'b')
-
-            #self.list_images[0] = self.frame_image_base_initial
-
-            #self.frame_image_base_3 .lower()
 
 
     ###########################################################################################################################################
@@ -2002,9 +2024,12 @@ class TopDerCls(Frame):
         if not self.master.check_version:
             self.master.check_version = True
             self.master.version = 'activado'
+            self.master.master.modify_title(True)
+
         else:
             self.master.check_version = False
             self.master.version = 'desactivado'
+            self.master.master.modify_title(False)
 
  
 
@@ -2905,7 +2930,7 @@ class InterfazCls(Frame, MoveAllCls):
 
                 if i == 1:
                     # Descrip: Reactiva los eventos cada vez que se destruye el contenedor 2(Frame)
-                    container[1] .reactive_binds()
+                    container[1] .reactive_bind()
 
             self._frame[i] = container[i]
             # Description: Posiciona las instancias(frames) de las ventanas abiertas
@@ -3046,7 +3071,18 @@ class InterfazCls(Frame, MoveAllCls):
         # Descrip: Si el frame que se mapeo es la numero 2.
         if number == 1:
             # Descrip: Activa los eventos enlazados a la frame.
-            self._frame[1].active_()
+            self._frame[1].active_binds()
+
+    # Tarea: - Modifica el titulo de las ventanas si la variable: "self.version" esta activada o no.  
+    def modify_title(self, state):
+        title = ['1 +','2 +','3 +']
+
+        for i in range(len(self._open)):
+            if state:
+                self._windows[i].label_title.config(text= title[i])
+            else:
+                self._windows[i].label_title.config(text= i + 1)
+
 
 
 
