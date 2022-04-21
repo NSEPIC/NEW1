@@ -1,5 +1,3 @@
-from telnetlib import STATUS
-from numpy import place
 from Importaciones import *
 
 # INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
@@ -1691,31 +1689,82 @@ class TopDerCls(Frame):
         self.open_interface()
 
 
-    # Tarea: - Abrir la interface del mobil
-    def open_interface(self):
+    #################################################################
+    #######       M E T O D O S   M A S T E R . B I N D       ####### : Enlazados a la ventana superior
+    #################################################################
 
-        if self.indice == 17:
-            #################################
-            #######     T R I C O     #######
-            #################################
+    #------------------------------ 1 ------------------------------- Evento: '<Button-1>'
 
-            # Description: [ DESACTIVA LOS EVENTOS ]
-            self.unbind("", self.off_leave)  # Puede crear errores, falta poner <Leave>
-            self.master.unbind("<Button-1>", self.off_button)
-            self.master.unbind("<Motion>", self.off_motion)
+    def change_images(self, event):
+        # Descrip: Captura al widget debajo del mouse cuando el boton derecho dejo de ser presionado, si no hay ninguno arroja None.
+        self._end = widget_release = event.widget.winfo_containing(event.x_root, event.y_root)
+        # Descrip: Captura al widget que desencadeno el evento.
+        widget = event.widget
 
-            #____Metodos Llamados:
-            self.create_container_2()
+        if isinstance(event.widget.master, ResizeCls) == True or event.widget.master == self.frame_container_global_1:
+            # Descrip: Si el widget presionado es el mismo widget despresionado.
+            if widget == self._end:
+                self.n += 1                         # Predeterminado: 0
+
+                if self.indice == 19:
+                    self.test_version()
+
+                # Dice: Si 2 ó 3 es igual self.n:
+                if len(self.list_images) == self.n:
+                    # Descrip: Muestra la imagen inicial.
+                    self.list_images[self.n-1] .pack_forget()
+                    self.list_images[0] .pack(fill='both', expand=True)
+
+                    self.n = 0                                  # Actualiza a su valor inicial
+
+                    # Descrip: Actualiza el cartel de texto.
+                    self.label_text_siguiente .config(text=">   Siguiente   >")
+
+                    # Descrip: Superpone el cartel de texto.
+                    self.label_text_siguiente .lift()
+
+                    # Descrip: Oculta la flecha que señala al 77.
+                    self.label_text_flecha .place_forget()
+
+                else:
+
+                    # Descrip: Muestra la imagen siguiente.
+                    self.list_images[self.n-1] .pack_forget()
+                    self.list_images[self.n] .pack(fill='both', expand=True)
+
+                    # Descrip: Si solo falta 1 imagen por mostrar.
+                    if self.n + 1 == len(self.list_images):
+                        # Descrip: Actualiza el cartel de texto.
+                        self.label_text_siguiente .config(text="<   Reiniciar   >")
+
+                    # Descrip: Superpone el cartel de texto.
+                    self.label_text_siguiente .lift()
 
 
+                    # (if-else): Si la lista tiene 2 imagenes:
+                    if len(self.list_images) < 3 and self.indice != 19:
+                        # Descrip: Muestra la flecha que señala al 77.
+                        self.label_text_flecha .place(relx=1.0, rely=1.0, anchor='se')
+                    else:
+
+                        # Dice: Si la lista tiene 3 imagenes:
+                        if self.n == 2:
+                            # Descrip: Muestra la flecha que señala al 77.
+                            self.label_text_flecha .place(relx=1.0, rely=1.0, anchor='se')
+
+        
+    #------------------------------ 2 ------------------------------- Evento: '<Motion>'
+
+    def open_next_poster(self, event=None):
+
+        if isinstance(event.widget.master, ResizeCls) == True or event.widget.master == self.frame_container_global_1:
+            # Descrip: Muestra el cartel si el mouse se posiciona sobre una instancia de la clase: ResizeCls o es hijo del contenedor global 1
+            self.label_text_siguiente .lift()
 
         else:
-            #################################
-            #######   S T A N D A R   #######
-            #################################
+            # Descrip: Oculta la flecha cuando el mouse se posiciona sobre el sisegrip.  
+            self.label_text_siguiente .lower()
 
-            #____Metodos Llamados:
-            self.create_container_1()
 
 
     #################################################################
@@ -1731,7 +1780,7 @@ class TopDerCls(Frame):
 
     #------------------------------ 2 -------------------------------
 
-    # Tarea: - Activa los eventos cuando se visualiza la interface.
+    # Tarea: - Activa los eventos cuando se visualiza la interface global.
     def active_binds(self, event=None):
         #print('active bind.master')
         if self.indice != 17:
@@ -1748,6 +1797,38 @@ class TopDerCls(Frame):
             self.master.unbind("<Motion>", self.off_motion)
 
 
+
+    ###########################################################################################################################################
+    ######################                                                       ##############################################################
+    ######################        A P E R T U R A  DE  I N T E R F A C E S       ##############################################################
+    ######################                                                       ##############################################################
+    ###########################################################################################################################################
+
+    # Tarea: - Abrir la interface del mobil.
+    def open_interface(self):
+
+        if self.indice == 17:
+            #################################
+            #######     T R I C O     #######
+            #################################
+
+            # Description: [ DESACTIVA LOS EVENTOS ]
+            self.unbind("", self.off_leave)  # Puede crear errores, falta poner <Leave>
+            self.master.unbind("<Button-1>", self.off_button)
+            self.master.unbind("<Motion>", self.off_motion)
+
+            #____Metodos Llamados:
+            self.create_container_2()
+
+        else:
+            #################################
+            #######   S T A N D A R   #######
+            #################################
+
+            #____Metodos Llamados:
+            self.create_container_1()
+
+    
     ###########################################################################################################################################
     ################################                     ######################################################################################
     ################################  INTERFACE STANDAR  ######################################################################################
@@ -1856,85 +1937,6 @@ class TopDerCls(Frame):
             self.list_images[0] .pack_forget()
             # Descrip: Cambia la imagen N°3 por la N°1
             self.list_images[0] = self.frame_image_base_initial
-       
-
-       
-
-    #################################################################
-    #######              M E T O D O S   B I N D              ####### : Enlazados a la ventana superior
-    #################################################################
-
-    #------------------------------ 1 ------------------------------- Evento: '<Button-1>'
-
-    def change_images(self, event):
-        # Descrip: Captura al widget debajo del mouse cuando el boton derecho dejo de ser presionado, si no hay ninguno arroja None.
-        self._end = widget_release = event.widget.winfo_containing(event.x_root, event.y_root)
-        # Descrip: Captura al widget que desencadeno el evento.
-        widget = event.widget
-
-        if isinstance(event.widget.master, ResizeCls) == True or event.widget.master == self.frame_container_global_1:
-            # Descrip: Si el widget presionado es el mismo widget despresionado.
-            if widget == self._end:
-                self.n += 1                         # Predeterminado: 0
-
-                if self.indice == 19:
-                    self.test_version()
-
-                # Dice: Si 2 ó 3 es igual self.n:
-                if len(self.list_images) == self.n:
-                    # Descrip: Muestra la imagen inicial.
-                    self.list_images[self.n-1] .pack_forget()
-                    self.list_images[0] .pack(fill='both', expand=True)
-
-                    self.n = 0                                  # Actualiza a su valor inicial
-
-                    # Descrip: Actualiza el cartel de texto.
-                    self.label_text_siguiente .config(text=">   Siguiente   >")
-
-                    # Descrip: Superpone el cartel de texto.
-                    self.label_text_siguiente .lift()
-
-                    # Descrip: Oculta la flecha que señala al 77.
-                    self.label_text_flecha .place_forget()
-
-                else:
-
-                    # Descrip: Muestra la imagen siguiente.
-                    self.list_images[self.n-1] .pack_forget()
-                    self.list_images[self.n] .pack(fill='both', expand=True)
-
-                    # Descrip: Si solo falta 1 imagen por mostrar.
-                    if self.n + 1 == len(self.list_images):
-                        # Descrip: Actualiza el cartel de texto.
-                        self.label_text_siguiente .config(text="<   Reiniciar   >")
-
-                    # Descrip: Superpone el cartel de texto.
-                    self.label_text_siguiente .lift()
-
-
-                    # (if-else): Si la lista tiene 2 imagenes:
-                    if len(self.list_images) < 3 and self.indice != 19:
-                        # Descrip: Muestra la flecha que señala al 77.
-                        self.label_text_flecha .place(relx=1.0, rely=1.0, anchor='se')
-                    else:
-
-                        # Dice: Si la lista tiene 3 imagenes:
-                        if self.n == 2:
-                            # Descrip: Muestra la flecha que señala al 77.
-                            self.label_text_flecha .place(relx=1.0, rely=1.0, anchor='se')
-
-        
-    #------------------------------ 2 ------------------------------- Evento: '<Motion>'
-
-    def open_next_poster(self, event=None):
-
-        if isinstance(event.widget.master, ResizeCls) == True or event.widget.master == self.frame_container_global_1:
-            # Descrip: Muestra el cartel si el mouse se posiciona sobre una instancia de la clase: ResizeCls o es hijo del contenedor global 1
-            self.label_text_siguiente .lift()
-
-        else:
-            # Descrip: Oculta la flecha cuando el mouse se posiciona sobre el sisegrip.  
-            self.label_text_siguiente .lower()
 
 
     ###########################################################################################################################################
@@ -1942,7 +1944,6 @@ class TopDerCls(Frame):
     ################################   INTERFACE TRICO   ######################################################################################
     ################################                     ######################################################################################
     ###########################################################################################################################################
-
 
     # Tarea: - Crea el segundo contenedor global  [ INTERFACE: TRICO]
     def create_container_2(self):
