@@ -1829,10 +1829,20 @@ class TopDerCls(Frame):
                         # Descrip: Actualiza el cartel de texto.
                         self.label_text_siguiente .config(text="<   Reiniciar   >")
 
-                        # Descrip: Si la imagen visible actual es la ultima de la lista de imagenes.
-                        if not self.indice in [19, 20, 21]:
+                        # Descrip: Si el mobil no es:
+                        if not self.indice in [13, 19, 20, 21]: # [Bigfoot - Barney - Dragon]
                             # Descrip: Muestra la flecha que señala al 77.
                             self.label_text_flecha .place(relx=1.0, rely=1.0, anchor='se')
+                        
+
+                    # Descrip: Si el mobil es:
+                    if self.indice in [13]: # [Turtle]
+                        if self._count == 1:
+                            self.label_text_flecha .place(relx=1.0, rely=1.0, anchor='se')
+                        else:
+                            self.label_text_flecha .place_forget()
+
+            
 
                     # Descrip: Superpone el cartel de texto.
                     self.label_text_siguiente .lift()
@@ -2001,7 +2011,6 @@ class TopDerCls(Frame):
             self.list_images .append(self.frame_image_base_3)
 
         elif indice == 13:
-            print(1111111)
             #################################
             #######    T U R T L E    #######
             #################################
