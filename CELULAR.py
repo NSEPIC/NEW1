@@ -269,12 +269,14 @@ class ModeButtonsCls(Frame):
     # Tarea: - Manda los indices para abrir las imagenes en las ventanas secundarias:
     def indices(self, indice):
         # I N D I C E S :
-        arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, = 0, 1, 2, 3, 4, 5, 6, 7 
+        arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, = 0, 1, 2, 3, 4, 5, 6, 7
 
-        return  lambda: self.master.create_windows(
-                lambda top1: TopIzqCls  (top1, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.ico2_lst, self.master.ico4_lst),
-                lambda top2: TopDerCls  (top2, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.ico2_lst),
-                lambda top3: TopStufCls (top3, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.ico2_lst), indice)
+        if self.master._open .count(False):
+
+            return  lambda: self.master.create_windows(
+                    lambda top1: TopIzqCls  (top1, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.ico2_lst, self.master.ico4_lst),
+                    lambda top2: TopDerCls  (top2, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.ico2_lst),
+                    lambda top3: TopStufCls (top3, indice, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, self.master.main_lst, self.master.ico2_lst), indice)
 
         
     # Tarea: - Crea los 22 botones y las posiciona:
@@ -790,14 +792,16 @@ class ResizeCls(Frame):
 
         self.photo_image = ImageTk.PhotoImage(self.image)
 
-        self.img = Label(self, image=self.photo_image, bg='black')
+        self.img = Label(self, image=self.photo_image, bg='magenta2', bd=0)
         self.img .pack(fill='both', expand=True)
         self.img .bind('<Configure>', self.resize)
 
     def resize(self, event=None):
-        self.image = self.image_copy .resize((self.master.winfo_width(), self.master.winfo_height() // self.value1 - self.value2))
-        self.photo_image = ImageTk.PhotoImage(self.image)
-        self.img .config(image=self.photo_image)
+        self.image1 = self.image_copy .resize((self.master.winfo_width(), self.master.winfo_height() // self.value1 - self.value2))
+        self.photo_image1 = ImageTk.PhotoImage(self.image1)
+        self.img .config(image=self.photo_image1)
+
+
     
 #********************************        ██████████████
 #********************************        ██          ██
@@ -1133,9 +1137,9 @@ class IconsCls(Frame):
         # [ 3 ] self.image_delay3  : Imagen: Delay General (TP, Vida, Ang-Recto, Ang-Maximo)                       : POSICIONADO 
         
         #____IMAGENES: ( 3 instancias )
-        self.image_delay1 = ResizeCls(self.global2_frame_subcontainer_1, self.Images[22][0], 2, 10, bd=0)
-        self.image_delay2 = ResizeCls(self.global2_frame_subcontainer_1, self.Images[22][1], 2, 10, bd=0)
-        self.image_delay3 = ResizeCls(self.global2_frame_subcontainer_1, self.Images[22][2], 2, 10, bd=0)
+        self.image_delay1 = ResizeCls(self.global2_frame_subcontainer_1, self.Images[23][0], 2, 10, bd=0)
+        self.image_delay2 = ResizeCls(self.global2_frame_subcontainer_1, self.Images[23][1], 2, 10, bd=0)
+        self.image_delay3 = ResizeCls(self.global2_frame_subcontainer_1, self.Images[23][2], 2, 10, bd=0)
 
         #____Orden de apilamiento de imagenes:
         self.image_delay3 .lower()
@@ -1857,8 +1861,11 @@ class TopDerCls(Frame):
     #------------------------------ 3 ------------------------------- EVENTO: '<Motion>'
 
     def open_next_poster(self, event=None):
+        
+        widget = event.widget
+        x,y = widget.winfo_toplevel().winfo_width(), widget.winfo_toplevel().winfo_height()
 
-        if isinstance(event.widget.master, ResizeCls) == True or event.widget.master == self.frame_container_global_1:
+        if isinstance(widget.master, ResizeCls) == True or widget.master == self.frame_container_global_1:
             # Descrip: Muestra el cartel si el mouse se posiciona sobre una instancia de la clase: ResizeCls o es hijo del contenedor global 1
             self.label_text_siguiente .lift()
 
@@ -1867,6 +1874,11 @@ class TopDerCls(Frame):
             self.label_text_siguiente .lower()
 
 
+        # Descrip: Camufla la flecha que señala al 77 cuando la ventana pierde demasiado tamaño.
+        if x < 140 or y < 230:
+            self.label_text_flecha .config(font=('Calibri',10,'bold'), fg='#2b313c')
+        else:
+            self.label_text_flecha .config(font=('Calibri',30,'bold'), fg='green2')  #text='↑', font=('Calibri',30,'bold')
 
     #################################################################
     ######   M E T O D O S  D E  A C C E S O  E X T E R N O   #######
@@ -2143,22 +2155,56 @@ class TopDerCls(Frame):
 #____V E N T A N A___S T U F:
 class TopStufCls(Frame):
     def __init__(self, master, indice, arg_0=None, arg_1=None, arg_2=None, arg_3=None, arg_4=None, arg_5=None, arg_6=None, arg_7=None, main_lst=None, path_mine=None, *args, **kwargs):
-        super().__init__(master, *args, **kwargs)
-        pass
-        
-        """ if len(path_lst) > index_1:
-            self.img = ResizeCls (self, self.Images [index_1])
-            self.img.grid(column=0, row=0, sticky='news')
-        
-        if len(path_lst) > index_2:
-            self.img2 = ResizeCls (self, self.Images [index_2])
-            self.img2.grid(column=0, row=1, sticky='news') """
+        super().__init__(master, *args, bg='magenta2', **kwargs)
+        #____Indice del boton:
+        self.indice = indice
 
-        # column 0 will use full width
-        ##self.grid_columnconfigure(0, weight=1)
-        # row 0 will use 1/2 height AND row 1 will use 1/2 height
-        ##self.grid_rowconfigure(0, weight=1)     
-        ##elf.grid_rowconfigure(1, weight=1)
+        #____Colección de Imágenes:
+        self.Images = main_lst
+
+        #____Lista de indices de las imagenes:
+        self._0 = arg_0
+        self._1 = arg_1
+        self._2 = arg_2
+        self._3 = arg_3
+        self._4 = arg_4
+        self._5 = arg_5
+        self._6 = arg_6
+        self._7 = arg_7
+
+        #self.master.attributes("-transparentcolor", "magenta2")
+
+        #____Metodos Llamados:
+        self.create_container_1()
+
+    
+    ###########################################################################################################################################
+    ################################                     ######################################################################################
+    ################################  INTERFACE STANDAR  ######################################################################################
+    ################################                     ######################################################################################
+    ###########################################################################################################################################
+
+
+    # Tarea: - Crea el primer contenedor global  [ INTERFACE: STANDAR]
+    def create_container_1(self):
+        # [ 1 ] self.frame_container_global_1       : Contenedor global N° 1, muestra la imagen base standar del mobil           : POSICIONADO
+
+        #____CONTENEDOR EXTERIOR 1:
+
+        #____Peso de distribucion:
+        # self.frame_container_global_1 .columnconfigure(0, weight=1)
+        # self.frame_container_global_1 .rowconfigure   (0, weight=1)
+
+        #________Metodos Llamados:
+        self.create_items_1()
+
+
+    def create_items_1(self):
+        # [ 1 ] self.frame_image_base_initial        : Imagen: Base inicial del mobil                             : POSICIONADO
+
+        #____IMAGENES: ( 2 instancias )
+        self.frame_image_gamestuff = ResizeCls(self, self.Images[22][0], bd=0)
+        self.frame_image_gamestuff .pack(fill='both', expand=True)
 
 
 #************************            ███████          ███████
@@ -2566,13 +2612,18 @@ class ToplevelCls(Toplevel, MoveAllCls):
             #print('moveee')
             self.master.geometry(new_position)                    # Mueve la ventana root
 
-    def configure_toplevel(self, title, size):  # Opciones de las Ventanas Secundarias
+    def configure_toplevel(self, title, size, x1,y1, x2,y2):  # Opciones de las Ventanas Secundarias
         self.title (title)
         self.geometry (size)
+        self.minsize(x1, y1)
+        self.maxsize(x2, y2)
         self.resizable (1,1)
+
         self.wm_attributes ('-topmost', True)                     # FUNCIONA BIEN pero molesta para editar 
+        #self.wm_attributes ('-disabled', True) 
         self.config (bg = 'magenta2')                            # FUNCIONA BIEN pero tiene mal aspecto
-        #self.wm_attributes ('-transparentcolor', 'magenta2')     # FUNCIONA BIEN pero tiene mal aspecto
+        self.wm_attributes ('-transparentcolor', 'magenta2')     # FUNCIONA BIEN pero tiene mal aspecto
+        
 
 
     """ def visibility_on(self, event=None):
@@ -2671,8 +2722,8 @@ class RootCls(Tk):
 
         # Descripción: (1) Genera la lista principal de imagenes sin ininicializarlas
         if option == 1:
-            multilist = [[] for x in range(23)]  # antes 22
-            mobiles = ['Fro','Fox','Boo','Ice','JD','Gru','Lig','Adu','Kni','Kal','Mag','Ran','Jol','Tur','Arm','Asa','Rao','Tri','Nak','Big','Bar','Dra',  'Otros'] # antes sin Otros
+            multilist = [[] for x in range(24)]  # antes 22
+            mobiles = ['Fro','Fox','Boo','Ice','JD','Gru','Lig','Adu','Kni','Kal','Mag','Ran','Jol','Tur','Arm','Asa','Rao','Tri','Nak','Big','Bar','Dra',  'Game','Otros'] # antes sin Otros
 
             for i in ouput:
                 for index, mobil in enumerate(mobiles):
@@ -2811,15 +2862,15 @@ class InterfazCls(Frame, MoveAllCls):
         # Mi monitor: (1280 x 768)
 
         #____Tamaño del Monitor del Usuario:
-        screen_x = self.master.winfo_screenwidth()      # Tamaño Ancho
-        screen_y = self.master.winfo_screenheight()     # Tamaño Alto
+        self.screen_x = self.master.winfo_screenwidth()      # Tamaño Ancho
+        self.screen_y = self.master.winfo_screenheight()     # Tamaño Alto
         #print('Ancho Pantalla ---> ', screen_x, '\nAlto Pantalla ---> ', screen_y )
 
 
         #____VENTANA PRINCIPAL:                         # Redimensionable : No
         width = 834                                     # Tamaño Ancho
         height = 67                                     # Tamaño Alto
-        posx = screen_x // 2 - width // 2               # Posicion (x)    : (1280 / 2) - (830 / 2)
+        posx = self.screen_x // 2 - width // 2               # Posicion (x)    : (1280 / 2) - (830 / 2)
         posy = 0                                        # Posición (y)
         #____Tamaño y Posición: 
         window = '{}x{}+{}+{}'.format(width, height, posx, posy)
@@ -2827,27 +2878,27 @@ class InterfazCls(Frame, MoveAllCls):
         #---------------------------------------------------------------------------------------------------------
 
         #____VENTANA IZQUIERDA:                         # Redimensionable : Si
-        width_1 = int(screen_x * 15.6 / 100)            # Tamaño Ancho    : 199
-        height_1 = screen_y - 74                        # Tamaño Alto     : 694
+        self.width_1 = int(self.screen_x * 15.6 / 100)            # Tamaño Ancho    : 199
+        height_1 = self.screen_y - 74                        # Tamaño Alto     : 694
         posx_1 = 0                                      # Posición (x)
         posy_1 = 35                                     # Posición (y)
         #____Tamaño y Posición:
-        window_1 = '{}x{}+{}+{}'.format(width_1, height_1, posx_1, posy_1)
+        window_1 = '{}x{}+{}+{}'.format(self.width_1, height_1, posx_1, posy_1)
         self.geo_izq .set(window_1)
         #---------------------------------------------------------------------------------------------------------
 
         #____VENTANA DERECHA:
-        posx_2 = screen_x - width_1                     # Posición (x)    : (1280 - 199)
+        posx_2 = self.screen_x - self.width_1                     # Posición (x)    : (1280 - 199)
         #____Tamaño y Posición:
-        window_2 = '{}x{}+{}+{}'.format(width_1, height_1, posx_2, posy_1)
+        window_2 = '{}x{}+{}+{}'.format(self.width_1, height_1, posx_2, posy_1)
         self.geo_der .set(window_2)
         #---------------------------------------------------------------------------------------------------------
 
         #____VENTANA STUFF:                             # Redimensionable : Si
         width_3 = 860                                   # Tamaño Ancho    : 860
         height_3 = 75                                   # Tamaño Alto     : 75
-        posx_3 = screen_x // 2 - width_3 // 2           # Posicion (x)    : (1280 / 2) - (860 / 2)
-        posy_3 = screen_y - height_3 - 40               # Posición (y)    : (768 - 75) - 40
+        posx_3 = self.screen_x // 2 - width_3 // 2           # Posicion (x)    : (1280 / 2) - (860 / 2)
+        posy_3 = self.screen_y - height_3 - 40               # Posición (y)    : (768 - 75) - 40
         #____Tamaño y Posición:
         window_3 = '{}x{}+{}+{}'.format(width_3, height_3, posx_3, posy_3)
         self.geo_stuf .set(window_3)
@@ -2968,114 +3019,126 @@ class InterfazCls(Frame, MoveAllCls):
 
     def create_windows(self, var_1=None, var_2=None, var_3=None, indice_mobil=None):
 
-        #---------------------------------------------ARGUMENTOS------------------------------------------------------------
+        # Descrip: Si hay alguna ventana cerrada  ó  el mobil que se quiere abrir es diferente al mobil abierto actualmente: 
+        if self._open .count(False) or self.mobiles[indice_mobil] != self.mobil_selected:
 
-        #____Lista de argumentos de la funcion: ( 3 instancias(Frames) )
-        args = [var_1, var_2, var_3]
+            #---------------------------------------------ARGUMENTOS------------------------------------------------------------
 
-        #____Lista de contenedores de los frames:
-        container = [None] * 3
+            #____Lista de argumentos de la funcion: ( 3 instancias(Frames) )
+            args = [var_1, var_2, var_3]
 
-        #____Lista de argumentos de los metodos de la ventana:
-        title = ['Hoja Izquierda', 'Hoja Derecha', 'Game Stuff']
-        text  = ['1', '2', '3']
-        size  = [self.geo_izq.get(), self.geo_der.get(), self.geo_stuf.get()]
-        
+            #____Lista de contenedores de los frames:
+            container = [None] * 3
 
-        #----------------------------------------APERTURA DE VENTANAS------------------------------------------------------- 
+            #____Lista de argumentos de los metodos de la ventana:
+            title = ['Hoja Izquierda', 'Hoja Derecha', 'Game Stuff']
+            text  = ['1', '2', '3']
+            size  = [self.geo_izq.get(), self.geo_der.get(), self.geo_stuf.get()]
 
-        for i in range(len(self._open)):
-            # Dice: Si la ventana esta cerrada:
-            if not self._open[i] == True:
+            #________________________________________________________________________________________________
+            #                                           VENTANAS                                             l
+            #                     MINSIZE                                       MAXSIZE                      l
+            #        1               2              3              1               2               3         l
+            #________________________________________________________________________________________________l
 
-                #____VENTANAS:  ( 3 instancias )         
-                window = ToplevelCls (self, self.main_lst, self.ico2_lst, self._frame)
-                #____Métodos Llamados:
-                window .configure_toplevel(title[i], size[i])
-                window .create_frame_manager(self.ico1_lst, side=TOP, fill=BOTH)
-                window .create_container_icons(indice_mobil, i)
-                window .create_button_menu()
-                window .create_label_title(text=text[i])
+            x =     [70,            70,             70,     self.width_1*2, self.width_1*2, self.screen_x - self.width_1]     # ANCHO
+            y =     [67,            67,             50,     self.screen_y,  self.screen_y,  self.screen_y]                    # ALTO
+
+
+            #----------------------------------------APERTURA DE VENTANAS------------------------------------------------------- 
+
+            for i in range(len(self._open)):
+                # Dice: Si la ventana esta cerrada:
+                if not self._open[i] == True:
+
+                    #____VENTANAS:  ( 3 instancias )         
+                    window = ToplevelCls (self, self.main_lst, self.ico2_lst, self._frame)
+                    #____Métodos Llamados:
+                    window .configure_toplevel(title[i], size[i],  x[i], y[i], x[i+3], y[i+3])
+                    window .create_frame_manager(self.ico1_lst, side=TOP, fill=BOTH)
+                    window .create_container_icons(indice_mobil, i)
+                    window .create_button_menu()
+                    window .create_label_title(text=text[i])
+
+                    #____Eventos:
+                    # [ 1 ]  :  Actualiza las ventanas cerradas para volver a abrirlas
+                    # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default cuando el mouse sale de la ventana
+                    
+                    window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
+                    self.off_leave1 = window .bind('<Leave>', lambda event, number=i: self.leave_windows(number, event))
+
+
+                    # Description: Desactiva el evento que quita la interface vertical de botones
+
+                    # Description: Actualiza la lista de ventanas y booleanos
+                    self._windows[i] = window
+                    self._open[i] = True
+
+                    # Description: Desactiva el evento que quita la interface vertical de botones
+                    if self._deactivate:
+                        self._windows[i] .unbind('<Leave>', self.off_leave1)
+
+
+                # Descrip: Reemplaza los elementos[None] de la lista *container*
+                container[i] = args[i] (self._windows[i])
+
+                # Descrip: Destruye las instancias(frames) de las ventanas abiertas
+                if self._frame[i] is not None:
+                    self._frame[i] .destroy()
+
+                    # Descrip: Destruye la interface del menú y lo vuelve a crear.
+                    self._windows[i] .menu_interface .destroy()
+                    self._windows[i] .create_container_icons(indice_mobil, i, self._disabled[i])
+
+                    self._windows[i] .menu_interface .deactivate_motion()
+
+                    # Descrip: Actualiza el controlador(if-else), que abre la interface del menú.
+                    self._windows[i] .cascade = False
+
+                    if i == 1:
+                        # Descrip: Reactiva los eventos cada vez que se destruye el contenedor 2(Frame)
+                        container[1] .reactive_bind()
+
+                self._frame[i] = container[i]
+                # Description: Posiciona las instancias(frames) de las ventanas abiertas
+                self._frame[i] .pack(fill='both', expand=True)
+
+                """ # Description: Oculta el frame si la interface de iconos es visible.
+                if self._windows[i] .icons_interface .winfo_ismapped():pass
+                    #self._frame[i] .pack_forget() # sin uso """
+
+                # Description: Widget para redimensionar el frame.
+                self.grip = ttk.Sizegrip(self._frame[i], style='TSizegrip')
+                self.grip .place (relx=1.0, rely=1.0, anchor='center')
+                ttk.Style().configure('TSizegrip', bg='black')
+
+                #Descrip: Desactiva el desplazamiento de las ventanas secundarias abiertas
+                if not self.frame_configurer .checkbutton3 .variable.get():
+                    self.deactivate_move()
+
+            
+                #--------------------------------CONFIGURACION DEL LOGOTIPO-------------------------------------------
 
                 #____Eventos:
                 # [ 1 ]  :  Actualiza las ventanas cerradas para volver a abrirlas
-                # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default cuando el mouse sale de la ventana
+                # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default
+                #self._frame[i].bind("<Map>", self.frame_static .map_widget)                         # antes
+                self._frame[i].bind("<Map>", lambda event, number=i: self.map_frames(number, event)) # ahora
+                self._windows[i].frame_manager.bind("<Unmap>", self.frame_static .unmap_widget)
+
+                # Description: Cambia la imagen del boton a celeste encendido
+                self.frame_static .logotipo_off()
                 
-                window .bind('<Destroy>', lambda event, number=i: self.update_open(number, event))
-                self.off_leave1 = window .bind('<Leave>', lambda event, number=i: self.leave_windows(number, event))
 
 
-                # Description: Desactiva el evento que quita la interface vertical de botones
+            #------------------------------------NOMBRE DEL BOTON PRESIONADO-----------------------------------------------------
 
-                # Description: Actualiza la lista de ventanas y booleanos
-                self._windows[i] = window
-                self._open[i] = True
-
-                # Description: Desactiva el evento que quita la interface vertical de botones
-                if self._deactivate:
-                    self._windows[i] .unbind('<Leave>', self.off_leave1)
-
-
-            # Descrip: Reemplaza los elementos[None] de la lista *container*
-            container[i] = args[i] (self._windows[i])
-
-            # Descrip: Destruye las instancias(frames) de las ventanas abiertas
-            if self._frame[i] is not None:
-                self._frame[i] .destroy()
-
-                # Descrip: Destruye la interface del menú y lo vuelve a crear.
-                self._windows[i] .menu_interface .destroy()
-                self._windows[i] .create_container_icons(indice_mobil, i, self._disabled[i])
-
-                self._windows[i] .menu_interface .deactivate_motion()
-
-                # Descrip: Actualiza el controlador(if-else), que abre la interface del menú.
-                self._windows[i] .cascade = False
-
-                if i == 1:
-                    # Descrip: Reactiva los eventos cada vez que se destruye el contenedor 2(Frame)
-                    container[1] .reactive_bind()
-
-            self._frame[i] = container[i]
-            # Description: Posiciona las instancias(frames) de las ventanas abiertas
-            self._frame[i] .pack(fill='both', expand=True)
-
-            """ # Description: Oculta el frame si la interface de iconos es visible.
-            if self._windows[i] .icons_interface .winfo_ismapped():pass
-                #self._frame[i] .pack_forget() # sin uso """
-
-            # Description: Widget para redimensionar el frame.
-            self.grip = ttk.Sizegrip(self._frame[i], style='TSizegrip')
-            self.grip .place (relx=1.0, rely=1.0, anchor='center')
-            ttk.Style().configure('TSizegrip', bg='black')
-
-            #Descrip: Desactiva el desplazamiento de las ventanas secundarias abiertas
-            if not self.frame_configurer .checkbutton3 .variable.get():
-                self.deactivate_move()
-
-        
-            #--------------------------------CONFIGURACION DEL LOGOTIPO-------------------------------------------
-
-            #____Eventos:
-            # [ 1 ]  :  Actualiza las ventanas cerradas para volver a abrirlas
-            # [ 2 ]  :  Oculta la interface de menu y vuelve a mostrar la interface por default
-            #self._frame[i].bind("<Map>", self.frame_static .map_widget)                         # antes
-            self._frame[i].bind("<Map>", lambda event, number=i: self.map_frames(number, event)) # ahora
-            self._windows[i].frame_manager.bind("<Unmap>", self.frame_static .unmap_widget)
-
-            # Description: Cambia la imagen del boton a celeste encendido
-            self.frame_static .logotipo_off()
-            
-
-
-        #------------------------------------NOMBRE DEL BOTON PRESIONADO-----------------------------------------------------
-
-        # Descripcion: Reemplaza el indice que recibe la funcion por el nombre del boton presionado en el modo botones o lista.
-        for index, name in enumerate(self.mobiles):
-            if indice_mobil == index:
-                # Descripcion: Almacena el nombre del boton presionado en el modo botones o lista.
-                self.mobil_selected = name
-                break
+            # Descripcion: Reemplaza el indice que recibe la funcion por el nombre del boton presionado en el modo botones o lista.
+            for index, name in enumerate(self.mobiles):
+                if indice_mobil == index:
+                    # Descripcion: Almacena el nombre del boton presionado en el modo botones o lista.
+                    self.mobil_selected = name
+                    break
 
 
     # Tarea: - Actualizar las ventanas cerradas para volver a abrirlas
