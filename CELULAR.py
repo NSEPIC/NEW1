@@ -401,7 +401,7 @@ class LabelFrameCls(LabelFrame):
         super().__init__(master, *args, kwargs)
 
         self.canvas = Canvas(self, borderwidth=0,  bg='red', width=x, height=y, bd=0, highlightthickness=0)
-        self.canvas .pack(side="left", fill='x', expand=True)
+        self.canvas .pack(side="left", fill='x', expand=True, pady=(5,10))
 
         self.scrolly = Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.scrolly .pack(side="right", fill="y", expand=False)
