@@ -1,8 +1,5 @@
 from ast import Return
 from email.mime import image
-from tkinter import Canvas, Scrollbar
-from turtle import width
-from typing import Container
 from Importaciones import *
 
 # INDICE:  NOMBRE:              TAREA:                                    : HEREDA DE:
@@ -48,10 +45,6 @@ class LogotipoCls(Frame):
         #____Variables de seguimiento: [ self.btn_logotipo ]
         self.logotipo = 'default'
 
-        # self.columnconfigure(0, weight=1)
-        # self.rowconfigure(0, weight=1)
-        # self.rowconfigure(1, weight=1)
-
         #____Métodos Llamados:
         self.create_buttons()
 
@@ -65,21 +58,19 @@ class LogotipoCls(Frame):
                                    command=self.minimize_all,
                                    bg='#11161d',                                # Color(fondo)       : Azulino oscuro
                                    activebackground='#11161d',                  # Color(fondo/active): Azulino oscuro
-                                   width=55,
-                                   bd=0
+                                   bd=0,
                                    )
 
         self.btn_settings = Button(self, image=self.Icons[3],
                                    command=self.master.configure_app,
-                                   bg='#11161d',                                # Color(fondo)       : Azulino oscuro #11161d
+                                   bg='#11161d',                                # Color(fondo)       : Azulino oscuro
                                    activebackground='#11161d',                  # Color(fondo/active): Azulino oscuro
-                                   height=34,
-                                   bd=0
+                                   bd=0,
                                    )
                          
         #____Posicionamiento:
-        self.btn_logotipo .grid(column=0, row=0, sticky='news')
-        self.btn_settings .grid(column=0, row=1, sticky='news',)
+        self.btn_logotipo .grid(column=0, row=0, padx=(6,6))
+        self.btn_settings .grid(column=0, row=1)
 
         #____Eventos:
         # [ 1 ] : Cierra todas las ventanas secundarias abiertas y devuelve la imagen por defecto al boton logotipo
@@ -240,7 +231,7 @@ class LogotipoCls(Frame):
 
 class DefaultButtonCls(Button):
     def __init__(self, master, *args, **kwargs):
-        kwargs = {"font":('Calibri',9,'bold'), 'bg': '#11161d', 'fg':'white', 'activebackground':'#bdfe04', 'width':10, 'bd':0,  **kwargs}
+        kwargs = {"font":('Calibri',9,'bold'), 'bg': '#11161d', 'fg':'white', 'activebackground':'#bdfe04', 'width':10, 'bd':0, **kwargs}
         super().__init__(master, *args, **kwargs)
 
 
@@ -264,14 +255,9 @@ class ModeButtonsCls(Frame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
 
-        #____Distribucion del peso:
-        self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
-
-
         #____CONTENEDORES INTERNOS: ( 1 )
-        self.frame_1 = Frame (self, bg='#11161d', border=4, cursor='arrow')                                       # Color(fondo): Azulino
-        self.frame_1 .grid (padx=(10,10))
+        self.frame_1 = Frame (self, bg='#11161d')                                       # Color(fondo): Azulino
+        self.frame_1 .grid (padx=(10,10), pady=(6,6))
 
         #____Métodos Llamados:
         self.creator_buttons()
@@ -309,7 +295,9 @@ class ModeButtonsCls(Frame):
                                         command= self.indices(index2 + number)
                                         )
 
-                btn .grid(column=index2 , row=index1, ipady=2)
+                n1 = 5 if index2 == 0 else 0        
+                n2 = 5 if index2 == 10 else 0
+                btn .grid(column=index2 , row=index1 , pady=3, padx=(n1,n2))
 
                 # Enlaces: Cambian el color de los botones:
                 btn.bind("<Enter>", self.enter_mouse)
@@ -395,68 +383,15 @@ class ModeButtonsCls(Frame):
 #********************************                ██  ██
 #********************************                ██████             aqui me quedo
 
-
-class LabelFrameCls(LabelFrame):
-    def __init__(self, master, x=None, y=None, *args, **kwargs):
-        super().__init__(master, *args, kwargs)
-
-        self.canvas = Canvas(self, borderwidth=0,  bg='red', width=x, height=y, bd=0, highlightthickness=0)
-        self.canvas .pack(side="left", fill='x', expand=True)
-
-        self.scrolly = Scrollbar(self, orient="vertical", command=self.canvas.yview)
-        self.scrolly .pack(side="right", fill="y", expand=False)
-
-        self.frame = Frame(self.canvas, bg='#2b313c')
-        self.frame .pack(fill='both', expand=True)
-
-        self.canvas .config(yscrollcommand=self.scrolly.set)
-        self.canvas .bind("<Configure>", self.canvas_resize)
-        self.frame_id = self.canvas .create_window((0,0), window=self.frame, anchor="nw")
-
-
-    def canvas_resize(self, event=  None):
-        w = max(event.width, self.frame.winfo_width())
-        h = max(event.height, self.frame.winfo_height())
-        # resize the frame
-        self.canvas .itemconfig(self.frame_id, width=w, height=h)
-        self.canvas .configure(scrollregion=self.canvas.bbox('all'))
-
-
-
-        self.frame.update()        
-        print(w,h, event.widget)
-
-
 # Frame contenedor de checkbuttons y labels
 class ModeConfigurerCls(Frame):
-    def __init__(self, master, x=None, y=None, *args, **kwargs):
+    def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, kwargs)
 
-        self.list_label = []   # Lista de widgtes que no pueden mover la ventana
-        self.list_checkbutton = []
-
-        # self.container = Frame(self.canvas, bg='#2b313c')
-        # self.container .pack(fill='both', expand=True)
-
-        # self.container2= Frame(self.canvas, bg='#2b313c')
-        # self.container2 .pack(fill='both', expand=True)
-
-        self.lblframe = LabelFrameCls(self, x, y, text='Ajustes 0', bg='#2b313c', fg='green2', cursor='arrow')
-        self.lblframe .pack(side='left', fill='both', expand=True, padx=(10,5), pady=(0,10))
-
-        self.lblframe_2 = LabelFrameCls(self, x, y, text='Ajustes 0', bg='#2b313c', fg='green2', cursor='arrow')
-        self.lblframe_2 .pack(side='right', fill='both', expand=True, padx=(10,10), pady=(0,10))
-        print(2222)
-        # Descrip: Agregando a la lista.
-        #self.list_label .insert([self.lblframe.frame, self.lblframe_2.frame])
-
-        # self.lblframe.canvas_resize()
-
         #____Métodos Llamados:
-        self.create_label(self.lblframe.frame, self.lblframe_2.frame)
-        self.create_checkbutton(self.lblframe.frame, self.lblframe_2.frame)
+        self.create_label()
+        self.create_checkbutton()
         self.check_checkbox()
-
 
     def cheeck(self): # ES UN EVENTP QUE ´PASA CUANDO CHECKBUTON 5 CAMBIOA DE VALOR 
         pass
@@ -466,74 +401,52 @@ class ModeConfigurerCls(Frame):
             self.variable.set(False)
         """
 
-    def create_label(self, frame1, frame2):
+    def create_label(self):
 
-        frames = [frame1, frame2]
-        text = ['Mover ventana :',
-                'Modo Lista :',
-                'Mover ventanas :',
-                'Quitar menús :',
-                'Activar Modo Lista :',
-                'Activar Modo Guía :',
-                'Desactivar Movimiento :',
-                'Guargar Configuracion :',
-                ]
+        label_option1 = Label (self, text= 'Mover ventana :' , font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
+        label_option2 = Label (self, text= 'Modo Lista :', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
+        label_option3 = Label (self, text= 'Mover ventanas ', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
+        label_option4 = Label (self, text= 'Quitar menús :', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
+        label_option5 = Label (self, text= 'Activar Modo Lista :', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
+        label_option6 = Label (self, text= 'Activar Modo Guía :', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
+        label_option7 = Label (self, text= 'Desactivar Movimiento :', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
+        label_option8 = Label (self, text= 'Guargar Configuracion :', font=('Calibri',9,'bold'), bg='#31343a', fg='white', bd=0)
 
-        for i in range(8):
-            indice = 0 if i < 4 else 1      # Cambia al segundo padre en la lista "frames"
-            reset = 0 if i < 4 else 4       # Reinicia el valor de i a 0
-
-            label = Label(frames[indice], text=text[i], font=('Calibri',9,'bold'), bg='#2b313c', fg='white', bd=0)
-            label .grid(column=0, row=(i - reset), padx= (10,5), pady=(0,0), sticky='w')
-
-            self.list_label .append(label)
+        label_option1 .grid (column=0, row=0, padx= (30,5), pady=(10,0), sticky=W)
+        label_option2 .grid (column=0, row=1, padx= (30,5), pady=(0,0), sticky=W)
+        label_option3 .grid (column=2, row=0, padx= (30,5), pady=(10,0), sticky=W)
+        label_option4 .grid (column=2, row=1, padx= (30,5), pady=(0,0), sticky=W)
+        label_option5 .grid (column=4, row=0, padx= (30,5), pady=(10,0), sticky=W)
+        label_option6 .grid (column=4, row=1, padx= (30,5), pady=(0,0), sticky=W)   
+        label_option7 .grid (column=6, row=0, padx= (30,5), pady=(10,0), sticky=W)
+        label_option8 .grid (column=6, row=1, padx= (30,5), pady=(0,0), sticky=W)
         
-        
-
-
-        #self.list_label = [label_option1, label_option2, label_option3, label_option4, self.canvas, self.frame_1, self.labelframe_1]
-
     
-    def create_checkbutton(self, frame1, frame2):
+    def create_checkbutton(self):
 
-        frames = [frame1, frame2]
-
-        for i in range(8):
-            indice = 0 if i < 4 else 1      # Cambia al segundo padre en la lista "frames"
-            reset = 0 if i < 4 else 4       # Reinicia el valor de i a 0
-
-            ckbutton = CheckbuttonCls(frames[indice], command=lambda :self.seleccionar(i+1), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
-            ckbutton .grid(column=1, row=(i - reset), pady=(5,0), sticky='e')
-
-            self.list_checkbutton .append(ckbutton)
-        print(3333)
-        
-        # self.checkbutton1 = CheckbuttonCls (self.frame, command=lambda :self.seleccionar(1), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
-        # self.checkbutton2 = CheckbuttonCls (self.frame, bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
-        # self.checkbutton3 = CheckbuttonCls (self.frame, command=lambda :self.seleccionar(3), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
-        # self.checkbutton4 = CheckbuttonCls (self.frame, command=lambda :self.seleccionar(4), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
-        
-        # self.checkbutton5 = CheckbuttonCls (self.frame_2, command=lambda :self.seleccionar(5), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
-        # self.checkbutton6 = CheckbuttonCls (self.frame_2, command=lambda :self.seleccionar(6), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
-        # self.checkbutton7 = CheckbuttonCls (self.frame_2, command=lambda :self.seleccionar(7), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
-        # self.checkbutton8 = CheckbuttonCls (self.frame_2, command=lambda :self.seleccionar(8), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
+        self.checkbutton1 = CheckbuttonCls (self, command=lambda :self.seleccionar(1), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
+        self.checkbutton2 = CheckbuttonCls (self, bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
+        self.checkbutton3 = CheckbuttonCls (self, command=lambda :self.seleccionar(3), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
+        self.checkbutton4 = CheckbuttonCls (self, command=lambda :self.seleccionar(4), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
+        self.checkbutton5 = CheckbuttonCls (self, command=lambda :self.seleccionar(5), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
+        self.checkbutton6 = CheckbuttonCls (self, command=lambda :self.seleccionar(6), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
+        self.checkbutton7 = CheckbuttonCls (self, command=lambda :self.seleccionar(7), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
+        self.checkbutton8 = CheckbuttonCls (self, command=lambda :self.seleccionar(8), bg='#2b313c', activebackground= '#2b313c', bd=0, borderwidth=0,)
     
-        # self.checkbutton1 .grid (column=1, row=0, pady=(5,0), sticky='e')
-        # self.checkbutton2 .grid (column=1, row=1, pady=(5,0), sticky='e')
-        # self.checkbutton3 .grid (column=1, row=2, pady=(5,0), sticky='e')
-        # self.checkbutton4 .grid (column=1, row=3, pady=(5,5), sticky='e')
-        # self.checkbutton5 .grid (column=1, row=0, pady=(5,0), sticky='e')
-        # self.checkbutton6 .grid (column=1, row=1, pady=(5,0), sticky='e')
-        # self.checkbutton7 .grid (column=1, row=2, pady=(5,0), sticky='e')
-        # self.checkbutton8 .grid (column=1, row=3, pady=(5,5), sticky='e')
+        self.checkbutton1 .grid (column=1, row=0, pady=(10,0))
+        self.checkbutton2 .grid (column=1, row=1, pady=(0,0))
+        self.checkbutton3 .grid (column=3, row=0, pady=(10,0))
+        self.checkbutton4 .grid (column=3, row=1, pady=(0,0))
+        self.checkbutton5 .grid (column=5, row=0, pady=(10,0))
+        self.checkbutton6 .grid (column=5, row=1, pady=(0,0))
+        self.checkbutton7 .grid (column=7, row=0, padx=(0,200), pady=(10,0),)
+        self.checkbutton8 .grid (column=7, row=1, padx=(0,200), pady=(0,0),)
+
 
     # Tarea: - Marca las casillas por defecto
     def check_checkbox(self):
-        self.list_checkbutton[0].check()
-        self.list_checkbutton[2].check()
-
-        # self.checkbutton1 .check()
-        # self.checkbutton3 .check()
+        self.checkbutton1 .check()
+        self.checkbutton3 .check()
 
 
     def seleccionar(self, number=None):
@@ -2369,41 +2282,40 @@ class MoveAllCls():
         # [self.movable]   : Lista que permite mover su ventana
         # [self.immovable] : Lista que no permite mover su ventana
 
-        if not isinstance(event.widget, (Button, ttk.Sizegrip, Spinbox, Checkbutton, LabelFrame, Scrollbar, Canvas)):
-            deltax = event.x - self._x
-            deltay = event.y - self._y
+        deltax = event.x - self._x
+        deltay = event.y - self._y
 
-            self.widget = event.widget
-            self.window = event.widget.winfo_toplevel()
-            #____Nueva Posición:
-            self.new_position = "+{}+{}".format (self.window.winfo_x() + deltax, self.window.winfo_y() + deltay)
+        self.widget = event.widget
+        self.window = event.widget.winfo_toplevel()
+        #____Nueva Posición:
+        self.new_position = "+{}+{}".format (self.window.winfo_x() + deltax, self.window.winfo_y() + deltay)
 
 
-            #----------------------------------CONTROLADOR DE MOVIMIENTO----------------------------------------------------
+        #----------------------------------CONTROLADOR DE MOVIMIENTO----------------------------------------------------
 
-            # Description: Mueve la ventana principal
-            if self.window == self.principal and self._boolean:
+        # Description: Mueve la ventana principal
+        if self.window == self.principal and self._boolean:
+                self.on_move_all()
+
+        # Description: Mueve la ventana secundaria
+        for i in range(3):
+            if self.window == self.secundarias[i] and self._booleans[i]:
+                if not self._disabled[i]:
+                    #self._displace = 'desplazando ventana'
                     self.on_move_all()
-
-            # Description: Mueve la ventana secundaria
-            for i in range(3):
-                if self.window == self.secundarias[i] and self._booleans[i]:
-                    if not self._disabled[i]:
-                        #self._displace = 'desplazando ventana'
-                        self.on_move_all()
-                        #print('___access move____', self._displace)
+                    #print('___access move____', self._displace)
         
         
 
     def on_move_all(self):
         # Dice: [ Si no es una instancia de... ] and [ No está en la lista (self.immovable) ] or [ Esta en la lista (self.movable) ]
-            if not isinstance(self.widget, (Button, ttk.Sizegrip, Spinbox, Checkbutton, LabelFrame, Scrollbar, Canvas)) == True and not self.is_immovable(self.widget) == True or self.is_movable(self.widget):     #self._is_movable(widget): Devuelve True
+            if not isinstance(self.widget, (Button, ttk.Sizegrip, Spinbox)) == True and not self.is_immovable(self.widget) == True or self.is_movable(self.widget):     #self._is_movable(widget): Devuelve True
                 # Descripción: Mueve la ventana a excepción de root
                 self.window.geometry(self.new_position)
             #------------------------------------------------------------------------------------------------------------------------------------------
 
             # Dice: [ Si es una instancia de... ] and [ No es una instancia de... ] or [  Esta en la lista (self.movable) ]
-            if isinstance(self.window.master, Tk) == True and not isinstance(self.widget, (Button, ttk.Sizegrip, Spinbox, Checkbutton, LabelFrame, Scrollbar, Canvas)) == True and not self.is_immovable(self.widget) == True or self.is_movable(self.widget):               
+            if isinstance(self.window.master, Tk) == True and not isinstance(self.widget, (Button, ttk.Sizegrip, Spinbox)) == True and not self.is_immovable(self.widget) == True or self.is_movable(self.widget):               
                 # Descripción: Mueve root                                        # otro: if _tops.master == RootCls:
                 self.window.master.geometry(self.new_position)
             #------------------------------------------------------------------------------------------------------------------------------------------
@@ -2429,6 +2341,23 @@ class FrameManagerCls(Frame):
 
 
     def create_buttons_manager(self, pack):  # arg 1 ( pack )  : Es una lista de diccionarios con el posicionamiento de los botones
+
+        #----------------------------------------------ARGUMENTOS---------------------------------------------------------
+
+        # Description: Posicion de los botones: ( PRINCIPAL )
+        close1, minimize1 = {'side':TOP}, {'side':BOTTOM}                 
+        # Description: Posicion de los botones: ( SECUNDARIA )
+        close2, minimize2 = {'side':RIGHT}, {'side':RIGHT, 'padx':(0,3)}
+
+        #-----------------------------------------------------------------------------------------------------------------
+
+        # Description: Actualiza la geometria de la ventana:
+        self.update_idletasks()
+
+        # Description: Solicita el ancho y alto de la ventana:
+        x = self.winfo_toplevel().winfo_width()
+        y = self.winfo_toplevel().winfo_height()
+        
 
         #____BOTONES: 2 ( Cerrar - Minimizar )
         self.button_close    = Button(self, image=self.Icons[0], command=self.close, bd=0, bg='#1b1d22', activebackground='red')
@@ -2456,7 +2385,7 @@ class FrameManagerCls(Frame):
 
     def enter_mouse_minimize(self, event):
         # Entrada del mouse sobre el boton (Imagen: change)
-        event.widget.config(image=self.Icons[3], bg='#4ca6ff')
+        event.widget.config(image=self.Icons[3], bg='#2b313c')
 
     def leave_mouse_minimize(self, event):
         # Salida del mouse sobre el boton (Imagen: default)
@@ -2784,8 +2713,6 @@ class RootCls(Tk):
         self.interfaz = InterfazCls(self.window_principal, self.main_lst, self.mini_lst, self.ico1_lst, self.ico2_lst, self.ico3_lst, self.ico4_lst)
         self.interfaz .pack(side='left', fill='both')
 
-        self.interfaz .pack_propagate(1)
-
 
     # Tarea: 1- Oculta la ventana principal
     def iconify_on(self, event=None):
@@ -2934,11 +2861,8 @@ class InterfazCls(Frame, MoveAllCls):
         self.widgets()
 
         #____Métodos Heredados Llamados:
-        self.make_movable(self.frame_static .btn_logotipo)                  # Class MoveAllCls: Añade a la lista de widget que permite mover la ventana
-        self.make_immovable(self.frame_botones    .frame_1)
-
-        for i in self.frame_configurer.list_label:
-            self.make_immovable(i)
+        self.make_movable(self.frame_static.btn_logotipo)                  # Class MoveAllCls: Añade a la lista de widget que permite mover la ventana
+        self.make_immovable(self.frame_botones.frame_1)
 
 
     # Tarea: 1- Asignar el tamaño y posicion de todas las ventanas a excepción de root:
@@ -2953,11 +2877,11 @@ class InterfazCls(Frame, MoveAllCls):
 
         #____VENTANA PRINCIPAL:                         # Redimensionable : No
         width = 834                                     # Tamaño Ancho
-        height = 70                                     # Tamaño Alto
+        height = 67                                     # Tamaño Alto
         posx = self.screen_x // 2 - width // 2               # Posicion (x)    : (1280 / 2) - (830 / 2)
         posy = 0                                        # Posición (y)
         #____Tamaño y Posición: 
-        window = '+{}+{}'.format( posx, posy)
+        window = '{}x{}+{}+{}'.format(width, height, posx, posy)
         self.geo_principal .set(window)
         #---------------------------------------------------------------------------------------------------------
 
@@ -2979,10 +2903,10 @@ class InterfazCls(Frame, MoveAllCls):
         #---------------------------------------------------------------------------------------------------------
 
         #____VENTANA STUFF:                             # Redimensionable : Si
-        width_3 = self.screen_x - self.width_1 * 2                                    # Tamaño Ancho    : 860
+        width_3 = 860                                   # Tamaño Ancho    : 860
         height_3 =  self.screen_y // 2                                   # Tamaño Alto     : 75             ANTES: 75
         posx_3 = self.screen_x // 2 - width_3 // 2           # Posicion (x)    : (1280 / 2) - (860 / 2)
-        posy_3 = self.screen_y - height_3 - 150               # Posición (y)    : (768 - 75) - 40           ANTES: self.screen_y - height_3 - 120
+        posy_3 = self.screen_y - height_3 - 120               # Posición (y)    : (768 - 75) - 40           ANTES: self.screen_y - height_3 - 120
         #____Tamaño y Posición:
         window_3 = '{}x{}+{}+{}'.format(width_3, height_3, posx_3, posy_3)
         self.geo_stuf .set(window_3)
@@ -3010,33 +2934,27 @@ class InterfazCls(Frame, MoveAllCls):
         # [ 4 ] self.frame_listmode   : Spinbox y Listbox
 
         #____INTERFACES DE CONTROL: ( 4 instancias )
-        self.frame_static     = LogotipoCls(self, self.ico3_lst, bg='#11161d')    # Posicionado     # Color: Azul
+        self.frame_static     = LogotipoCls(self, self.ico3_lst, bg='#11161d', width=60, height=67)    # Posicionado     # Color: Azul
+        self.frame_botones    = ModeButtonsCls(self, bg='#2b313c', width=756, height=67)               # Posicionado     # Color: Plomo
+        self.frame_configurer = ModeConfigurerCls(self, bg='#2b313c', width=756, height=67)            # No posicionado  # Color: Plomo
+        self.frame_listmode   = ModeListCls(self, self.mobiles, self.mini_lst)                                       # No posicionado  # Color: Azul y Plomo
+         
+        #____Posicionamiento:
         self.frame_static .pack(side=LEFT, fill=BOTH)
-
-        self.frame_botones    = ModeButtonsCls(self, bg='#2b313c', cursor='fleur')               # Posicionado     # Color: Plomo
         self.frame_botones .pack(side=LEFT, fill=BOTH)
 
-        self.update_idletasks()
-        height = self.winfo_toplevel().winfo_height()
-        print(height)
-
-        self.frame_configurer = ModeConfigurerCls(self, x=200, y=70, bg='#2b313c', cursor='fleur')            # No posicionado  # Color: Plomo
-        self.frame_listmode   = ModeListCls(self, self.mobiles, self.mini_lst)                                       # No posicionado  # Color: Azul y Plomo
-        
         #____Propagación:
-        # self.frame_static .pack_propagate(True)
-        # self.frame_botones .pack_propagate(True)
+        self.frame_static .pack_propagate(False)
+        self.frame_botones .pack_propagate(False)
 
 
     # Tarea: 1- Gestiona los widgets de la ventana principal
     def configure_app(self):
 
-        """ x, y = self.winfo_width(), self.winfo_height()
-        self.master.maxsize(x,y) """
-
         # Dice: Si [self._gear] es falso: ( Predeterminado False )
         if not self._gear:
             self._gear = True
+            self.master.geometry('834x67')
 
             # Description: Desactiva el evento y cambia la imagen a default
             self.frame_static .settings_enter_deactivate()
@@ -3044,11 +2962,10 @@ class InterfazCls(Frame, MoveAllCls):
             self.frame_botones .pack_forget()
             self.frame_listmode .pack_forget()
 
-            self.frame_configurer .pack(side='left', fill='both', ipadx=10)
+            self.frame_configurer .pack(side=LEFT, fill=BOTH, expand=True)
             self.frame_configurer .focus_set()
 
         else:
-
             self._gear = False
             self.frame_configurer .pack_forget()
 
@@ -3056,7 +2973,7 @@ class InterfazCls(Frame, MoveAllCls):
             self.frame_static .settings_enter_activate()
 
             # Dice: Si la casilla N°5 está marcada:
-            if self.frame_configurer .list_checkbutton[1] .variable.get():
+            if self.frame_configurer .checkbutton2 .variable.get():
                 self.master.geometry('254x67')
                 # Description: Posiciona la interface de lista
                 self.frame_listmode .pack(side=LEFT, fill=BOTH)
@@ -3152,12 +3069,7 @@ class InterfazCls(Frame, MoveAllCls):
                     window = ToplevelCls (self, self.main_lst, self.ico2_lst, self._frame)
                     #____Métodos Llamados:
                     window .configure_toplevel(title[i], size[i],  x[i], y[i], x[i+3], y[i+3])
-                    if i != 2:
-                        window .create_frame_manager(self.ico1_lst, side='top', fill='both')
-                    else:
-                        window .create_frame_manager(self.ico1_lst, side='top', fill='both')
-                        window .frame_manager.config(bg='magenta2')
-
+                    window .create_frame_manager(self.ico1_lst, side='top', fill='both')
                     window .frame_manager .create_buttons_manager(_pack)
 
                     window .create_menu_interface(indice_mobil, i)
